@@ -1,0 +1,41 @@
+# Dataset, pitch and processing configuration. Edit values here, not in code.
+
+[pitch]
+# Metrica documents 105 x 68 m for its sample games. Other providers MUST set their own values.
+length_m = 105.0
+width_m = 68.0
+goal_width_m = 7.32
+
+[metrica]
+# Pinned upstream commit for reproducibility (https://github.com/metrica-sports/sample-data).
+commit = "e706dd506b360d69d9d123d5b8026e7294b13996"
+base_url = "https://raw.githubusercontent.com/metrica-sports/sample-data/{commit}/data/{game}/{file}"
+local_dir = "data/metrica"
+# Metrica CSV frame rate (25 Hz); used only as the expected value in validation.
+expected_fps = 25.0
+
+[metrica.games.1]
+name = "Sample_Game_1"
+files = [
+  "Sample_Game_1_RawTrackingData_Home_Team.csv",
+  "Sample_Game_1_RawTrackingData_Away_Team.csv",
+  "Sample_Game_1_RawEventsData.csv",
+]
+
+[metrica.games.2]
+name = "Sample_Game_2"
+files = [
+  "Sample_Game_2_RawTrackingData_Home_Team.csv",
+  "Sample_Game_2_RawTrackingData_Away_Team.csv",
+  "Sample_Game_2_RawEventsData.csv",
+]
+
+[sync]
+# Max |event time - frame time| in seconds. Half a frame (0.02 s @ 25 Hz) = nearest frame.
+tolerance_s = 0.02
+
+[validation]
+coord_margin_m = 3.0        # points further than this outside the pitch are flagged
+max_player_speed_ms = 12.0  # implausible frame-to-frame player speed
+max_ball_speed_ms = 45.0    # implausible frame-to-frame ball speed
+dt_tolerance_s = 0.001      # allowed deviation of frame spacing from the median

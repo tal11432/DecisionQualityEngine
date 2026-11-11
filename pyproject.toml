@@ -1,0 +1,16 @@
+[project]
+name = "decision-quality-engine"
+version = "0.1.0"
+description = "Football tracking-data pipeline: foundation for a Decision Quality research engine."
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26", "pandas>=2.1", "matplotlib>=3.8"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+include = ["src*"]
