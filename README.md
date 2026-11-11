@@ -37,7 +37,7 @@ Python API: `read_tracking`, `read_events` (`src/ingestion/metrica.py`),
 | `src/schema.py` | `TrackingData` (wide frame table, metres), `Snapshot`, `Pitch` |
 | `src/ingestion/` | `metrica.py` (CSV adapter), `download.py` (opt-in, commit-pinned) |
 | `src/processing/` | `coordinates.py` (normalized→metres, attack direction), `sync.py`, `validation.py` |
-| `src/analytics/` | `geometry.py` (provider-independent features), `interfaces.py` (future modules) |
+| `src/analytics/` | `geometry.py` (features), `feasibility.py` (time-to-intercept pass feasibility), `interfaces.py` (future modules) |
 | `src/visualization/pitch.py` | pitch, players, ball, labels, event overlay |
 | `tests/` | synthetic fixtures only |
 
@@ -61,6 +61,18 @@ completion, alternative-action generation, Execution Quality, and
 `decision_quality = Q(selected) − max Q(alternatives)`. This is a **design interface, not a
 validated model**; DQ and EQ are kept as separate quantities.
 
+## Pass feasibility (baseline)
+`src/analytics/feasibility.py`: ball moves along the pass line at constant speed; an opponent
+can intercept if `reaction + distance/speed` ≤ ball time at some lane point. Returns the worst
+`margin_s` (≥ 0 ⇒ interceptable) and the threatening opponent; `pass_options(snapshot, passer)`
+tabulates all teammates. Parameters (`[feasibility]` in config) are **assumed, uncalibrated**
+defaults; players are static at the snapshot instant. It is not a completion probability.
+Sanity check on Sample Game 1 (799 passes with tracked passer and end point; passes judged by
+whether the next event stayed with the same team): 15.3% of 752 retained passes vs 21.3% of
+47 turnovers were flagged interceptable (median margin −0.43 s vs −0.32 s). The direction is
+right but the signal is weak and the sample small, so calibration (ball speed from observed
+passes, player velocities, receiver movement) is required before using it for Decision Quality.
+
 ## Data provenance & licence
 Source: <https://github.com/metrica-sports/sample-data>, pinned to commit
 `e706dd506b360d69d9d123d5b8026e7294b13996`. The repository carries no formal licence
@@ -74,6 +86,6 @@ written next to the download; the hashes are local records, not upstream-publish
 - Sample Game 1 contains missing data (ball untracked ~39% of frames; off-pitch/implausible-speed
   points) which are flagged, not corrected. Substitutes and unused players are NaN.
 - Attack direction relies on kick-off formation; a second source of truth (GK position, metadata) is not yet used.
-- Passing-lane obstruction is a static geometric heuristic, not pass feasibility.
+- Passing-lane obstruction is a static geometric heuristic; pass feasibility is an uncalibrated kinematic baseline (see above).
 - Event end times are not synchronized by default (`synchronize_events(time_col="end_time_s")` supports it).
 - Tracking is in wide format (one row per frame); fine for one match, not tuned for many.

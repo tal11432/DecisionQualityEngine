@@ -39,3 +39,11 @@ coord_margin_m = 3.0        # points further than this outside the pitch are fla
 max_player_speed_ms = 12.0  # implausible frame-to-frame player speed
 max_ball_speed_ms = 45.0    # implausible frame-to-frame ball speed
 dt_tolerance_s = 0.001      # allowed deviation of frame spacing from the median
+
+[feasibility]
+# ASSUMED kinematic defaults (not calibrated on data). Treat results as a transparent
+# baseline; calibrate against observed pass speeds / interception outcomes before use.
+ball_speed_ms = 15.0       # constant ball speed along the pass line
+player_speed_ms = 7.0      # effective max running speed (no acceleration model)
+reaction_time_s = 0.3      # delay before a defender starts moving
+lane_samples = 60          # points sampled along the pass line
