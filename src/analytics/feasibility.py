@@ -2,9 +2,9 @@
 
 Model: the ball travels the straight pass line at constant speed. An opponent can
 intercept at a lane point if ``reaction + distance / player_speed <= ball_time`` there.
-Players are treated as stationary at the snapshot instant (no velocity, no acceleration),
-so this is a deterministic, *uncalibrated* baseline with ASSUMED parameters, not a
-probability of completion. It is the geometric prerequisite for alternative-action generation.
+Opponents are static unless velocities are supplied (then they drift at their current
+velocity during the reaction time); there is no acceleration model. It is a deterministic
+baseline, not a probability of completion; parameters should come from ``src/calibration.py``. It is the geometric prerequisite for alternative-action generation.
 """
 from __future__ import annotations
 
@@ -33,17 +33,26 @@ class FeasibilityParams:
             raise ValueError("invalid feasibility parameters")
 
 
-def interception_margin(origin, target, opponents: np.ndarray, params: FeasibilityParams = FeasibilityParams()) -> dict:
+def interception_margin(origin, target, opponents: np.ndarray, params: FeasibilityParams = FeasibilityParams(),
+                        opp_velocities: np.ndarray | None = None) -> dict:
     """Earliest-threat margin for a pass origin->target.
 
     margin_s = min over lane points and opponents of (ball_time - opponent_time).
     margin_s >= 0 means some opponent can reach a lane point no later than the ball
     (interceptable); more negative = safer. NaN opponents are ignored; with none, margin is +inf-safe
     (returned as ``-inf``) and ``interceptable`` is False. Also returns the intercepting opponent index.
+
+    ``opp_velocities`` (m/s, same shape as ``opponents``) are optional. If given, each opponent is
+    first advanced by ``velocity * reaction_time`` (they keep their current motion until they react);
+    NaN velocities are treated as zero (static). Without it, opponents are static.
     """
     o, t = np.asarray(origin, float), np.asarray(target, float)
     opp = np.asarray(opponents, float).reshape(-1, 2)
-    opp = opp[np.isfinite(opp).all(axis=1)]
+    keep = np.isfinite(opp).all(axis=1)
+    opp = opp[keep]
+    if opp_velocities is not None:
+        vel = np.nan_to_num(np.asarray(opp_velocities, float).reshape(-1, 2)[keep])
+        opp = opp + vel * params.reaction_time
     length = float(np.linalg.norm(t - o))
     if len(opp) == 0:
         return {"interceptable": False, "margin_s": -np.inf, "pass_length": length, "threat_idx": None}
@@ -79,8 +88,9 @@ def pass_options(snap: Snapshot, passer_id: str, params: FeasibilityParams = Fea
     me = me.iloc[0]
     opp = p[p["team"] != me["team"]].reset_index(drop=True)
     rows = []
+    vel = opp[["vx", "vy"]].to_numpy() if {"vx", "vy"} <= set(opp.columns) else None
     for r in p[(p["team"] == me["team"]) & (p["player_id"] != passer_id)].itertuples():
-        m = interception_margin((me["x"], me["y"]), (r.x, r.y), opp[["x", "y"]].to_numpy(), params)
+        m = interception_margin((me["x"], me["y"]), (r.x, r.y), opp[["x", "y"]].to_numpy(), params, vel)
         threat = None if m["threat_idx"] is None else str(opp.loc[m["threat_idx"], "player_id"])
         rows.append((r.player_id, m["pass_length"], m["interceptable"], m["margin_s"], threat))
     return pd.DataFrame(rows, columns=["receiver", "pass_length", "interceptable", "margin_s", "threat_player"])

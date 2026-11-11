@@ -41,9 +41,12 @@ max_ball_speed_ms = 45.0    # implausible frame-to-frame ball speed
 dt_tolerance_s = 0.001      # allowed deviation of frame spacing from the median
 
 [feasibility]
-# ASSUMED kinematic defaults (not calibrated on data). Treat results as a transparent
-# baseline; calibrate against observed pass speeds / interception outcomes before use.
-ball_speed_ms = 15.0       # constant ball speed along the pass line
-player_speed_ms = 7.0      # effective max running speed (no acceleration model)
-reaction_time_s = 0.3      # delay before a defender starts moving
-lane_samples = 60          # points sampled along the pass line
+# Calibrated on Metrica Sample Game 1 only via `python -m src.calibration --train 1 --test 2`
+# (held-out check on Sample Game 2). Original assumed values were 15.0 / 7.0 / 0.3.
+# ball_speed: median average speed of 723 completed ground passes (tracking ball, start->end frame).
+# player_speed: EFFECTIVE closing speed (p90 of observed speeds, selected on train AUC), not top sprint speed;
+#   it sat at the edge of the tested grid. reaction_time: fitted jointly (0.2-0.5 s tested), weakly identified.
+ball_speed_ms = 11.9
+player_speed_ms = 3.7
+reaction_time_s = 0.2
+lane_samples = 60
