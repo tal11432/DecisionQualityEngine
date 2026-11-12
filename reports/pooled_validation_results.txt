@@ -1,0 +1,158 @@
+Pooled leave-one-game-out validation. Games 1,2,3 as supplied (see cross_game_validation.md for the Game 3 identity-swap caveat).
+contract DecisionContract(offset_frames=0, velocity_window_frames=5, possession_max_ball_dist_m=3.0, min_pass_length_m=3.0, heading_window_frames=6, heading_min_displacement_m=1.0, heading_max_deviation_deg=15.0, heading_min_gap_deg=5.0)
+feasibility params FeasibilityParams(ball_speed=11.9, player_speed=7.0, reaction_time=0.3, lane_samples=60)
+bootstrap 1000 resamples over held-out decisions (paired); '*' = 95% CI excludes 0; calibration CIs 300 resamples
+
+====================================================================================================
+SCENARIO A: DECISION TIME (target-free), prediction frame = release; M3 score = best_margin
+====================================================================================================
+-- samples and exclusion rates (first failing check) per game
+game    n  intercepted  completed  excl_rate_completed  excl_rate_intercepted
+  G1  872          126        746                0.012                  0.016
+  G2 1023          111        912                0.004                  0.026
+  G3 1088           97        991                0.071                  0.076
+-- BASE-RATE VARIATION: interception rate per game (Wilson 95% CI); chi-square for equal rates = 15.10 on 2 df, p = 0.0005
+game    n  intercepted  rate  wilson_lo  wilson_hi
+  G1  872          126 0.144      0.123      0.169
+  G2 1023          111 0.109      0.091      0.129
+  G3 1088           97 0.089      0.074      0.108
+(the chi-square treats passes as independent; passes within a match are not, so p-values are optimistic)
+
+--- A: train G2+G3 (n=2111, 208 intercepted; interception rate per training game G2 0.109, G3 0.089; pooled 0.099) -> test G1 (n=872, 126 intercepted / 746 completed; rate 0.144) ---
+model                                                ROC-AUC                  PR-AUC                dBrier vs base              dLogLoss vs base           cal.slope       cal.intercept
+base rate (pooled train)                      0.500 (const.)        (no-skill 0.144)                  Brier 0.1257               log-loss 0.4236                   -                   -
+M2 existing baseline (ridge+Platt)      0.612 [0.554, 0.662]                   0.226   -0.0028 [-0.0049, -0.0006]*   -0.0114 [-0.0213, -0.0006]*    0.98 [0.52,1.36] +0.38 [-0.63,+1.23]
+M3 logistic on single score             0.597 [0.542, 0.649]                   0.218   -0.0025 [-0.0046, -0.0004]*   -0.0093 [-0.0196, +0.0020]     0.82 [0.38,1.21] +0.05 [-0.92,+0.81]
+M3x + cross-game Platt                  0.597 [0.542, 0.649]                   0.218   -0.0014 [-0.0022, -0.0006]*   -0.0073 [-0.0114, -0.0031]*    2.34 [1.09,3.43] +3.32 [+0.59,+5.62]
+  separate single-game training of M3 on the same held-out samples (does pooling help?):
+    train G2 only: ROC-AUC 0.597  Brier 0.1231 (base 0.1257)  log-loss 0.4109 (base 0.4236)  cal. slope 1.74 intercept +1.84
+    train G3 only: ROC-AUC 0.597  Brier 0.1244 (base 0.1257)  log-loss 0.4324 (base 0.4236)  cal. slope 0.45 intercept -0.66
+    pooled M3     : ROC-AUC 0.597  Brier 0.1232  log-loss 0.4143  cal. slope 0.82 intercept +0.05
+  DIAGNOSTIC ONLY (uses held-out labels; not deployable): how much of the probability error is the base rate vs the relationship?
+    base-rate offset needed on the logit scale (slope fixed at 1): delta = -0.43; share of the log-loss gap to full recalibration recovered by that intercept shift alone: 96%
+    M3 as deployed                 Brier 0.1232 (dBase -0.0025)  log-loss 0.4143 (dBase -0.0093)  mean predicted completion 0.900 vs observed 0.856
+    M3 + oracle intercept shift    Brier 0.1213 (dBase -0.0044)  log-loss 0.4044 (dBase -0.0192)  mean predicted completion 0.856 vs observed 0.856
+    M3 + oracle slope&intercept    Brier 0.1213 (dBase -0.0044)  log-loss 0.4040 (dBase -0.0196)  mean predicted completion 0.856 vs observed 0.856
+
+--- A: train G1+G3 (n=1960, 223 intercepted; interception rate per training game G1 0.144, G3 0.089; pooled 0.114) -> test G2 (n=1023, 111 intercepted / 912 completed; rate 0.109) ---
+model                                                ROC-AUC                  PR-AUC                dBrier vs base              dLogLoss vs base           cal.slope       cal.intercept
+base rate (pooled train)                      0.500 (const.)        (no-skill 0.109)                  Brier 0.0968               log-loss 0.3435                   -                   -
+M2 existing baseline (ridge+Platt)      0.570 [0.517, 0.630]                   0.148   -0.0004 [-0.0026, +0.0015]    -0.0020 [-0.0118, +0.0071]     0.57 [0.21,1.06] -0.88 [-1.66,+0.06]
+M3 logistic on single score             0.550 [0.496, 0.613]                   0.143   +0.0003 [-0.0021, +0.0024]    +0.0028 [-0.0096, +0.0142]     0.39 [0.10,0.82] -1.27 [-1.98,-0.34]
+M3x + cross-game Platt                  0.550 [0.496, 0.613]                   0.143   -0.0005 [-0.0015, +0.0003]    -0.0027 [-0.0079, +0.0018]     0.94 [0.25,2.01] -0.14 [-1.60,+2.03]
+  separate single-game training of M3 on the same held-out samples (does pooling help?):
+    train G1 only: ROC-AUC 0.550  Brier 0.0977 (base 0.0968)  log-loss 0.3466 (base 0.3435)  cal. slope 0.58 intercept -1.04
+    train G3 only: ROC-AUC 0.549  Brier 0.0982 (base 0.0968)  log-loss 0.3619 (base 0.3435)  cal. slope 0.25 intercept -1.45
+    pooled M3     : ROC-AUC 0.550  Brier 0.0971  log-loss 0.3463  cal. slope 0.39 intercept -1.27
+  DIAGNOSTIC ONLY (uses held-out labels; not deployable): how much of the probability error is the base rate vs the relationship?
+    base-rate offset needed on the logit scale (slope fixed at 1): delta = +0.01; share of the log-loss gap to full recalibration recovered by that intercept shift alone: 0%
+    M3 as deployed                 Brier 0.0971 (dBase +0.0003)  log-loss 0.3463 (dBase +0.0028)  mean predicted completion 0.890 vs observed 0.891
+    M3 + oracle intercept shift    Brier 0.0970 (dBase +0.0003)  log-loss 0.3463 (dBase +0.0028)  mean predicted completion 0.891 vs observed 0.891
+    M3 + oracle slope&intercept    Brier 0.0962 (dBase -0.0005)  log-loss 0.3408 (dBase -0.0027)  mean predicted completion 0.891 vs observed 0.891
+
+--- A: train G1+G2 (n=1895, 237 intercepted; interception rate per training game G1 0.144, G2 0.109; pooled 0.125) -> test G3 (n=1088, 97 intercepted / 991 completed; rate 0.089) ---
+model                                                ROC-AUC                  PR-AUC                dBrier vs base              dLogLoss vs base           cal.slope       cal.intercept
+base rate (pooled train)                      0.500 (const.)        (no-skill 0.089)                  Brier 0.0825               log-loss 0.3070                   -                   -
+M2 existing baseline (ridge+Platt)      0.684 [0.629, 0.739]                   0.236   -0.0027 [-0.0043, -0.0012]*   -0.0122 [-0.0181, -0.0066]*    2.37 [1.71,3.19] +2.06 [+0.87,+3.50]
+M3 logistic on single score             0.697 [0.642, 0.750]                   0.240   -0.0030 [-0.0044, -0.0017]*   -0.0151 [-0.0204, -0.0098]*    2.76 [1.99,3.77] +2.83 [+1.40,+4.60]
+M3x + cross-game Platt                  0.697 [0.642, 0.750]                   0.240   -0.0020 [-0.0027, -0.0013]*   -0.0097 [-0.0126, -0.0067]*    5.10 [3.68,6.96]+7.36 [+4.66,+10.77]
+  separate single-game training of M3 on the same held-out samples (does pooling help?):
+    train G1 only: ROC-AUC 0.697  Brier 0.0805 (base 0.0825)  log-loss 0.2965 (base 0.3070)  cal. slope 2.21 intercept +1.45
+    train G2 only: ROC-AUC 0.697  Brier 0.0794 (base 0.0825)  log-loss 0.2909 (base 0.3070)  cal. slope 3.86 intercept +5.51
+    pooled M3     : ROC-AUC 0.697  Brier 0.0795  log-loss 0.2919  cal. slope 2.76 intercept +2.83
+  DIAGNOSTIC ONLY (uses held-out labels; not deployable): how much of the probability error is the base rate vs the relationship?
+    base-rate offset needed on the logit scale (slope fixed at 1): delta = +0.39; share of the log-loss gap to full recalibration recovered by that intercept shift alone: 44%
+    M3 as deployed                 Brier 0.0795 (dBase -0.0030)  log-loss 0.2919 (dBase -0.0151)  mean predicted completion 0.874 vs observed 0.911
+    M3 + oracle intercept shift    Brier 0.0786 (dBase -0.0038)  log-loss 0.2851 (dBase -0.0219)  mean predicted completion 0.911 vs observed 0.911
+    M3 + oracle slope&intercept    Brier 0.0766 (dBase -0.0059)  log-loss 0.2764 (dBase -0.0306)  mean predicted completion 0.911 vs observed 0.911
+
+-- CROSS-FOLD SUMMARY (deployable M3 unless stated; d* = model minus pooled-training base-rate predictor, negative = better; dB/dL pooled-minus-single = pooled M3 minus mean of the two single-game-trained M3)
+   fold  train_int_rate  test_int_rate  mean_pred_int  AUC_M3  dBrier_M3  dLL_M3  dBrier_M2  dBrier_M3x  cal_slope_M3  base_rate_offset_delta  share_LL_gap_by_intercept  pooled_minus_single_Brier  pooled_minus_single_LL
+test G1          0.0985         0.1445         0.1002  0.5966    -0.0025 -0.0093    -0.0028     -0.0014        0.8246                 -0.4255                     0.9649                    -0.0005                 -0.0073
+test G2          0.1138         0.1085         0.1097  0.5496     0.0003  0.0028    -0.0004     -0.0005        0.3863                  0.0129                     0.0014                    -0.0009                 -0.0080
+test G3          0.1251         0.0892         0.1258  0.6969    -0.0030 -0.0151    -0.0027     -0.0020        2.7646                  0.3896                     0.4373                    -0.0005                 -0.0018
+
+-- SCORE-OUTCOME RELATIONSHIP PER GAME (DESCRIPTIVE, all three games, common scaling; slope = change in logit P(completed) per +1 SD of best_margin); AUC = ranking of intercepted by the score
+game    n  slope_per_SD  slope_lo  slope_hi  intercept  int_lo  int_hi  AUC_score
+  G1  872        -0.445    -0.650    -0.209      1.856   1.649   2.055      0.597
+  G2 1023        -0.254    -0.514    -0.021      2.120   1.948   2.327      0.550
+  G3 1088        -0.986    -1.344    -0.702      2.662   2.397   3.006      0.697
+common slope -0.511 with game-specific intercepts G1 +1.876, G2 +2.176, G3 +2.428  (diagnostic fit on all three games; not a prediction)
+
+====================================================================================================
+SCENARIO B: EARLY FLIGHT (identified target), prediction frame = release + 6 frames, NOT decision time; M3 score = margin_static
+====================================================================================================
+-- samples and exclusion rates (first failing check) per game
+game   n  intercepted  completed  excl_rate_completed  excl_rate_intercepted
+  G1 487           45        442                0.415                  0.648
+  G2 591           37        554                0.395                  0.675
+  G3 642           36        606                0.432                  0.657
+-- BASE-RATE VARIATION: interception rate per game (Wilson 95% CI); chi-square for equal rates = 6.23 on 2 df, p = 0.0445
+game   n  intercepted  rate  wilson_lo  wilson_hi
+  G1 487           45 0.092      0.070      0.121
+  G2 591           37 0.063      0.046      0.085
+  G3 642           36 0.056      0.041      0.077
+(the chi-square treats passes as independent; passes within a match are not, so p-values are optimistic)
+
+--- B: train G2+G3 (n=1233, 73 intercepted; interception rate per training game G2 0.063, G3 0.056; pooled 0.059) -> test G1 (n=487, 45 intercepted / 442 completed; rate 0.092) ---
+model                                                ROC-AUC                  PR-AUC                dBrier vs base              dLogLoss vs base           cal.slope       cal.intercept
+base rate (pooled train)                      0.500 (const.)        (no-skill 0.092)                  Brier 0.0850               log-loss 0.3166                   -                   -
+M2 existing baseline (ridge+Platt)      0.829 [0.762, 0.884]                   0.292   -0.0081 [-0.0141, -0.0028]*   -0.0500 [-0.0754, -0.0263]*    1.19 [0.92,1.59] +0.86 [+0.06,+1.90]
+M3 logistic on single score             0.829 [0.762, 0.884]                   0.292   -0.0082 [-0.0147, -0.0026]*   -0.0509 [-0.0774, -0.0262]*    1.12 [0.88,1.50] +0.70 [-0.07,+1.68]
+M3x + cross-game Platt                  0.829 [0.762, 0.884]                   0.292   -0.0072 [-0.0117, -0.0031]*   -0.0453 [-0.0670, -0.0254]*    1.46 [1.13,1.95] +1.58 [+0.60,+2.86]
+  separate single-game training of M3 on the same held-out samples (does pooling help?):
+    train G2 only: ROC-AUC 0.828  Brier 0.0766 (base 0.0850)  log-loss 0.2615 (base 0.3166)  cal. slope 0.84 intercept -0.07
+    train G3 only: ROC-AUC 0.829  Brier 0.0788 (base 0.0850)  log-loss 0.2758 (base 0.3166)  cal. slope 1.61 intercept +2.08
+    pooled M3     : ROC-AUC 0.829  Brier 0.0767  log-loss 0.2656  cal. slope 1.12 intercept +0.70
+  DIAGNOSTIC ONLY (uses held-out labels; not deployable): how much of the probability error is the base rate vs the relationship?
+    base-rate offset needed on the logit scale (slope fixed at 1): delta = -0.41; share of the log-loss gap to full recalibration recovered by that intercept shift alone: 91%
+    M3 as deployed                 Brier 0.0767 (dBase -0.0082)  log-loss 0.2656 (dBase -0.0509)  mean predicted completion 0.934 vs observed 0.908
+    M3 + oracle intercept shift    Brier 0.0753 (dBase -0.0097)  log-loss 0.2601 (dBase -0.0565)  mean predicted completion 0.908 vs observed 0.908
+    M3 + oracle slope&intercept    Brier 0.0758 (dBase -0.0092)  log-loss 0.2595 (dBase -0.0571)  mean predicted completion 0.908 vs observed 0.908
+
+--- B: train G1+G3 (n=1129, 81 intercepted; interception rate per training game G1 0.092, G3 0.056; pooled 0.072) -> test G2 (n=591, 37 intercepted / 554 completed; rate 0.063) ---
+model                                                ROC-AUC                  PR-AUC                dBrier vs base              dLogLoss vs base           cal.slope       cal.intercept
+base rate (pooled train)                      0.500 (const.)        (no-skill 0.063)                  Brier 0.0588               log-loss 0.2347                   -                   -
+M2 existing baseline (ridge+Platt)      0.863 [0.810, 0.907]                   0.282   -0.0063 [-0.0107, -0.0023]*   -0.0395 [-0.0557, -0.0233]*    1.60 [1.27,2.00] +1.32 [+0.38,+2.39]
+M3 logistic on single score             0.863 [0.810, 0.907]                   0.282   -0.0065 [-0.0112, -0.0021]*   -0.0411 [-0.0582, -0.0240]*    1.48 [1.18,1.86] +1.06 [+0.17,+2.06]
+M3x + cross-game Platt                  0.863 [0.810, 0.907]                   0.282   -0.0056 [-0.0090, -0.0025]*   -0.0353 [-0.0493, -0.0218]*    1.91 [1.52,2.40] +2.13 [+1.05,+3.40]
+  separate single-game training of M3 on the same held-out samples (does pooling help?):
+    train G1 only: ROC-AUC 0.863  Brier 0.0522 (base 0.0588)  log-loss 0.1923 (base 0.2347)  cal. slope 1.21 intercept +0.15
+    train G3 only: ROC-AUC 0.863  Brier 0.0539 (base 0.0588)  log-loss 0.2006 (base 0.2347)  cal. slope 1.96 intercept +2.67
+    pooled M3     : ROC-AUC 0.863  Brier 0.0523  log-loss 0.1936  cal. slope 1.48 intercept +1.06
+  DIAGNOSTIC ONLY (uses held-out labels; not deployable): how much of the probability error is the base rate vs the relationship?
+    base-rate offset needed on the logit scale (slope fixed at 1): delta = +0.05; share of the log-loss gap to full recalibration recovered by that intercept shift alone: 1%
+    M3 as deployed                 Brier 0.0523 (dBase -0.0065)  log-loss 0.1936 (dBase -0.0411)  mean predicted completion 0.935 vs observed 0.937
+    M3 + oracle intercept shift    Brier 0.0523 (dBase -0.0064)  log-loss 0.1935 (dBase -0.0412)  mean predicted completion 0.937 vs observed 0.937
+    M3 + oracle slope&intercept    Brier 0.0526 (dBase -0.0061)  log-loss 0.1887 (dBase -0.0460)  mean predicted completion 0.937 vs observed 0.937
+
+--- B: train G1+G2 (n=1078, 82 intercepted; interception rate per training game G1 0.092, G2 0.063; pooled 0.076) -> test G3 (n=642, 36 intercepted / 606 completed; rate 0.056) ---
+model                                                ROC-AUC                  PR-AUC                dBrier vs base              dLogLoss vs base           cal.slope       cal.intercept
+base rate (pooled train)                      0.500 (const.)        (no-skill 0.056)                  Brier 0.0533               log-loss 0.2191                   -                   -
+M2 existing baseline (ridge+Platt)      0.776 [0.721, 0.825]                   0.118   +0.0057 [+0.0010, +0.0105]*   -0.0048 [-0.0203, +0.0118]     0.59 [0.40,0.79] -1.26 [-1.84,-0.66]
+M3 logistic on single score             0.776 [0.721, 0.825]                   0.118   +0.0064 [+0.0015, +0.0115]*   -0.0035 [-0.0197, +0.0138]     0.57 [0.39,0.76] -1.30 [-1.87,-0.71]
+M3x + cross-game Platt                  0.776 [0.721, 0.825]                   0.118   +0.0059 [+0.0012, +0.0109]*   -0.0044 [-0.0202, +0.0124]     0.58 [0.39,0.77] -1.28 [-1.85,-0.68]
+  separate single-game training of M3 on the same held-out samples (does pooling help?):
+    train G1 only: ROC-AUC 0.776  Brier 0.0594 (base 0.0533)  log-loss 0.2167 (base 0.2191)  cal. slope 0.62 intercept -1.29
+    train G2 only: ROC-AUC 0.776  Brier 0.0598 (base 0.0533)  log-loss 0.2156 (base 0.2191)  cal. slope 0.54 intercept -1.30
+    pooled M3     : ROC-AUC 0.776  Brier 0.0597  log-loss 0.2156  cal. slope 0.57 intercept -1.30
+  DIAGNOSTIC ONLY (uses held-out labels; not deployable): how much of the probability error is the base rate vs the relationship?
+    base-rate offset needed on the logit scale (slope fixed at 1): delta = +0.39; share of the log-loss gap to full recalibration recovered by that intercept shift alone: 34%
+    M3 as deployed                 Brier 0.0597 (dBase +0.0064)  log-loss 0.2156 (dBase -0.0035)  mean predicted completion 0.923 vs observed 0.944
+    M3 + oracle intercept shift    Brier 0.0568 (dBase +0.0035)  log-loss 0.2118 (dBase -0.0073)  mean predicted completion 0.944 vs observed 0.944
+    M3 + oracle slope&intercept    Brier 0.0525 (dBase -0.0008)  log-loss 0.2043 (dBase -0.0148)  mean predicted completion 0.944 vs observed 0.944
+
+-- CROSS-FOLD SUMMARY (deployable M3 unless stated; d* = model minus pooled-training base-rate predictor, negative = better; dB/dL pooled-minus-single = pooled M3 minus mean of the two single-game-trained M3)
+   fold  train_int_rate  test_int_rate  mean_pred_int  AUC_M3  dBrier_M3  dLL_M3  dBrier_M2  dBrier_M3x  cal_slope_M3  base_rate_offset_delta  share_LL_gap_by_intercept  pooled_minus_single_Brier  pooled_minus_single_LL
+test G1          0.0592         0.0924         0.0660  0.8286    -0.0082 -0.0509    -0.0081     -0.0072        1.1237                 -0.4051                     0.9065                    -0.0009                 -0.0030
+test G2          0.0717         0.0626         0.0652  0.8625    -0.0065 -0.0411    -0.0063     -0.0056        1.4799                  0.0464                     0.0123                    -0.0008                 -0.0029
+test G3          0.0761         0.0561         0.0766  0.7759     0.0064 -0.0035     0.0057      0.0059        0.5700                  0.3893                     0.3379                     0.0001                 -0.0006
+
+-- SCORE-OUTCOME RELATIONSHIP PER GAME (DESCRIPTIVE, all three games, common scaling; slope = change in logit P(completed) per +1 SD of margin_static); AUC = ranking of intercepted by the score
+game   n  slope_per_SD  slope_lo  slope_hi  intercept  int_lo  int_hi  AUC_score
+  G1 487        -0.871    -1.167    -0.678      2.723   2.441   3.133      0.829
+  G2 591        -1.056    -1.322    -0.811      3.156   2.809   3.566      0.863
+  G3 642        -0.542    -0.718    -0.358      2.977   2.641   3.425      0.776
+common slope -0.813 with game-specific intercepts G1 +2.672, G2 +2.961, G3 +3.184  (diagnostic fit on all three games; not a prediction)
+figure: reports/pooled_reliability_A.png
+figure: reports/pooled_reliability_B.png

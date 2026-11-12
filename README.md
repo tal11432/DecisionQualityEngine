@@ -109,6 +109,16 @@ separately, with unchanged features/models and train-only fitting. Findings (`re
 differ; probability skill vs the training base rate in only about half of the runs) and B covers a biased third of interceptions. Game 3 has a second-half
 tracking-identity swap (shirts 6/13) that is detected and reported; by default those passers are excluded by the possession filter.
 
+## Pooled leave-one-game-out validation (feasibility as a probability)
+```bash
+python -m src.pooled_validation --out reports/pooled_validation_results.txt --figdir reports      # needs Games 1-3
+```
+Train on two games pooled, test on the third, scenarios A and B separately, models: pooled base rate, existing feasibility baseline, plain logistic on the single
+feasibility score (+ a cross-game Platt variant). Result (`reports/pooled_validation.md`): the score keeps its *ranking* value after pooling (B AUC 0.78-0.86, A 0.55-0.70) and
+beats the base rate in about half of the folds, but probabilities do not transfer: interception rates differ by game (A 9-14%, B 6-9%) and the score-outcome slope varies 2-4x, so
+poor calibration is neither purely a base-rate nor purely a slope problem. Pooling helps only modestly and training-only calibration does not help consistently. With three games the
+between-game variance cannot be estimated; use the margin as a risk score, not a probability.
+
 ## Data provenance & licence
 Source: <https://github.com/metrica-sports/sample-data>, pinned to commit
 `e706dd506b360d69d9d123d5b8026e7294b13996`. The repository carries no formal licence
