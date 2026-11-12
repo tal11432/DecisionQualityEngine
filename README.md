@@ -66,7 +66,7 @@ validated model**; DQ and EQ are kept as separate quantities.
 intercept if `reaction + distance/speed` ≤ ball time at some lane point. Output `margin_s` (≥ 0 ⇒
 interceptable) is a geometric **score, not a probability**; no acceleration model.
 
-**Methodology (leakage-audited; see `reports/pass_feasibility_leakage_audit.md`).** An earlier version used
+**Methodology (leakage-audited; see `reports/pass_feasibility_leakage_audit.md`; note that its target is identified from 0.24 s of post-release ball flight, so it is an early-flight evaluation, not decision-time).** An earlier version used
 the event's end point as the pass target (the interception location for intercepted passes) and
 central-difference velocities; both leak outcome/future information and were removed. Now:
 - Decision frame = ball-release frame (+ optional earlier offset). Inputs: passer, target-teammate and
@@ -85,6 +85,18 @@ Run: `python -m src.calibration --dev 1 --test 2 --out reports/pass_feasibility_
 AUC 0.85-0.86 vs 0.66 for pass length alone; calibration and velocities give no significant gain.
 Evidence of decision-time signal for *identified-target* passes only; no probabilities, no coverage of
 passes into space, ~1/3 of intercepted passes evaluable. Details and caveats in the report.
+
+## Pass completion probability (research, leakage-safe)
+`python -m src.pass_completion --train 1 --test 2 --out reports/pass_completion_results.txt --figdir reports` trains on Sample Game 1 and
+scores Game 2 once (needs both games). Full methodology, results and limits: `reports/pass_completion_model.md`.
+- **Target:** P(completed) among *completed* (`PASS`) vs *intercepted* (`BALL LOST/INTERCEPTION`) passes; other possession losses are unknown and excluded, not relabelled.
+- **Two separate scenarios.** **A (decision time, target-free):** features at ball release from passer state, pressure and option-set feasibility aggregates;
+  ROC-AUC 0.58 [0.53, 0.64] (exploratory boosted trees 0.65): weak, probabilities close to the base rate. **B (early flight, release + 0.24 s, identified target):** includes
+  pass-specific geometry; ROC-AUC 0.77-0.88, only ~1/3 of interceptions evaluable, 37 held-out positives. B is **not** a decision-time prediction.
+  The intended receiver cannot be identified at/before release (30-35% top-1 vs 10% chance), and failed passes carry no receiver label.
+- Primary model = ridge logistic regression (numpy); boosted trees are exploratory; all fitting and calibration on Game 1 only; reliability diagrams in `reports/`.
+- Limits: two games, small positive classes, selection bias in B (retains 60% of completed but ~35% of intercepted passes), no passes into space, no Ronaldo inference.
+  Not yet suitable for action-value or Decision Quality scoring.
 
 ## Data provenance & licence
 Source: <https://github.com/metrica-sports/sample-data>, pinned to commit

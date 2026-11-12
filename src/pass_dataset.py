@@ -90,6 +90,24 @@ class BuildResult:
         return ex
 
 
+def assign_target_by_heading(origin, mates_xy: np.ndarray, heading: np.ndarray, c: DecisionContract):
+    """Teammate whose bearing from ``origin`` best matches ``heading`` (label-side rule).
+
+    Returns (index into ``mates_xy`` or None, exclusion reason or None). Uses only the supplied
+    geometry: no event end point, no outcome.
+    """
+    v = np.asarray(mates_xy, float) - np.asarray(origin, float)
+    ang = np.degrees(np.abs(np.arctan2(heading[0] * v[:, 1] - heading[1] * v[:, 0], v @ heading)))
+    order = np.argsort(ang)
+    best = ang[order[0]]
+    gap = ang[order[1]] - best if len(order) > 1 else np.inf
+    if best > c.heading_max_deviation_deg:
+        return None, "no teammate within heading cone (pass into space / unidentified target)"
+    if gap < c.heading_min_gap_deg:
+        return None, "ambiguous receiver (runner-up within heading gap)"
+    return int(order[0]), None
+
+
 def candidate_events(events: pd.DataFrame) -> pd.DataFrame:
     """In-universe events with label from type/subtype ONLY. Other columns are not read here."""
     comp = events[(events["type"] == "PASS") & events["subtype"].isna()].assign(label=0)
@@ -170,21 +188,13 @@ def build_decision_samples(td: TrackingData, events: pd.DataFrame, tolerance_s: 
         if len(mates) == 0:
             skip("no teammate tracked at decision frame")
             continue
-        v = np.column_stack([X[r_d, mates] - origin[0], Y[r_d, mates] - origin[1]])
-        ang = np.degrees(np.abs(np.arctan2(h[0] * v[:, 1] - h[1] * v[:, 0], v @ h)))
-        order = np.argsort(ang)
-        best = ang[order[0]]
-        gap = ang[order[1]] - best if len(order) > 1 else np.inf
+        pick, why = assign_target_by_heading(origin, np.column_stack([X[r_d, mates], Y[r_d, mates]]), h, c)
         true = e["to_player"] if has_true and pd.notna(e["to_player"]) else None
-        if best > c.heading_max_deviation_deg:
+        if pick is None:
             assign.append((idx, lab, None, true))
-            skip("no teammate within heading cone (pass into space / unidentified target)")
+            skip(why)
             continue
-        if gap < c.heading_min_gap_deg:
-            assign.append((idx, lab, None, true))
-            skip("ambiguous receiver (runner-up within heading gap)")
-            continue
-        k = mates[order[0]]
+        k = mates[pick]
         assign.append((idx, lab, pid_of[k], true))
         target = np.array([X[r_d, k], Y[r_d, k]])
         length = float(np.hypot(*(target - origin)))

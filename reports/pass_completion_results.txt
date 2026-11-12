@@ -1,0 +1,276 @@
+TRAIN game 1 (fit, select, calibrate, threshold)  |  TEST game 2 (held out, scored once)
+contract DecisionContract(offset_frames=0, velocity_window_frames=5, possession_max_ball_dist_m=3.0, min_pass_length_m=3.0, heading_window_frames=6, heading_min_displacement_m=1.0, heading_max_deviation_deg=15.0, heading_min_gap_deg=5.0)
+feasibility params FeasibilityParams(ball_speed=11.9, player_speed=7.0, reaction_time=0.3, lane_samples=60)
+
+== LABEL VERIFICATION (provider semantics; labels use event type/subtype only) ==
+G1: completed 755; chain check (next event same team and by the receiver): 95.0%
+G1: intercepted 128; next event by the opponent: 89.1% (not used as a filter)
+G1: unknown/excluded outcomes (173): unknown: possession loss without subtype (not an identified pass interception) x51; unknown: PASS with subtype (aerial/special) x42; unknown: non-ground interception (cross/head/goal kick) x24; unknown: possession loss 'THEFT' (not a pass interception) x21; unknown: possession loss 'HEAD' (not a pass interception) x14; unknown: possession loss 'CLEARANCE' (not a pass interception) x6; unknown: possession loss 'FORCED' (not a pass interception) x3; unknown: possession loss 'GOAL KICK' (not a pass interception) x3; unknown: PASS with non-positive duration x2; unknown: possession loss 'HEAD-FORCED' (not a pass interception) x1; unknown: possession loss 'OFFSIDE' (not a pass interception) x1; unknown: possession loss 'END HALF' (not a pass interception) x1; unknown: possession loss 'HEAD-CLEARANCE' (not a pass interception) x1; unknown: possession loss 'DEEP BALL' (not a pass interception) x1; unknown: possession loss 'WOODWORK' (not a pass interception) x1; unknown: possession loss 'REFEREE HIT' (not a pass interception) x1
+   e.g. completed: idx 1 Away PASS/nan P1 t=0.04-0.12s Player19->Player21
+   e.g. completed: idx 2 Away PASS/nan P1 t=0.12-0.68s Player21->Player15
+   e.g. intercepted: idx 7 Away BALL LOST/INTERCEPTION P1 t=13.84-15.20s Player17->nan
+   e.g. intercepted: idx 9 Home BALL LOST/INTERCEPTION P1 t=15.12-18.08s Player2->nan
+G2: completed 916; chain check (next event same team and by the receiver): 92.0%
+G2: intercepted 114; next event by the opponent: 91.2% (not used as a filter)
+G2: unknown/excluded outcomes (167): unknown: PASS with subtype (aerial/special) x48; unknown: possession loss 'THEFT' (not a pass interception) x38; unknown: possession loss without subtype (not an identified pass interception) x30; unknown: non-ground interception (cross/head/goal kick) x28; unknown: possession loss 'HEAD' (not a pass interception) x10; unknown: possession loss 'FORCED' (not a pass interception) x6; unknown: possession loss 'HAND BALL' (not a pass interception) x3; unknown: possession loss 'CLEARANCE' (not a pass interception) x2; unknown: possession loss 'OFFSIDE' (not a pass interception) x1; unknown: possession loss 'FORCED-END HALF' (not a pass interception) x1
+   e.g. completed: idx 1 Away PASS/nan P1 t=2.04-3.48s Player23->Player20
+   e.g. completed: idx 2 Away PASS/nan P1 t=5.84-7.44s Player20->Player18
+   e.g. intercepted: idx 6 Away BALL LOST/INTERCEPTION P1 t=18.04-20.16s Player15->nan
+   e.g. intercepted: idx 17 Away BALL LOST/INTERCEPTION P1 t=40.64-43.48s Player16->nan
+
+== CAN THE INTENDED RECEIVER BE IDENTIFIED AT/BEFORE RELEASE? (completed passes only; true receiver used for scoring) ==
+  n_completed_with_receiver 753, n_moving_passer 586, chance_top1 0.100, top1_nearest 0.308, top1_safest_lane 0.343, top1_velocity_aligned_(moving passers) 0.346
+  => fixed decision-time rules reach 30-35% top-1 (chance ~10%): the receiver is NOT reliably identifiable before release, and
+     intercepted passes carry no receiver label at all. Scenario A is therefore target-free; scenario B is early-flight only.
+
+[scenario A] sample accounting (first failing check)
+-- TRAIN G1  (outcome-unknown events excluded before this table: 173)
+outcome                                           completed  intercepted
+reason                                                                  
+ball not with passer at release                           7            2
+prediction frame or velocity history unavailable          2            0
+KEPT                                                    746          126
+   exclusion rate: completed 1.2%, intercepted 1.6%
+-- TEST  G2  (outcome-unknown events excluded before this table: 167)
+outcome                          completed  intercepted
+reason                                                 
+ball not with passer at release          4            3
+KEPT                                   912          111
+   exclusion rate: completed 0.4%, intercepted 2.6%
+
+==============================================================================
+SCENARIO A: DECISION-TIME (target-free), prediction frame = ball release
+==============================================================================
+train: n=872 (126 intercepted / 746 completed; completion rate 0.856)
+test : n=1023 (111 intercepted / 912 completed; completion rate 0.891)
+
+[train-only] feature-set selection: 5-block contiguous-time CV log-loss; rule = simplest set within 1 SE of the best
+                feature_set  n_features  best_l2  cv_log_loss     se
+                A1 location           2    100.0       0.4140 0.0213
+                A2 pressure           2      1.0       0.4122 0.0215
+A3 feasibility (option set)           2     10.0       0.4064 0.0213
+  A4 feasibility + movement           4     10.0       0.4061 0.0215
+          A5 no feasibility           6    100.0       0.4121 0.0214
+                    A6 full           8     10.0       0.4035 0.0216
+SELECTED primary feature set: A3 feasibility (option set) -> ['n_safe_options', 'best_margin'] (ridge l2=10.0)
+
+== TEST (1023 passes, 111 intercepted): all models on identical samples; probabilities are Platt-calibrated on train OOF ==
+ROC-AUC measures ranking only. PR-AUC is for the minority class (intercepted); no-skill PR-AUC = 0.109. Brier/log-loss assess the probabilities (lower is better). 95% bootstrap CIs, 2000 resamples.
+model                                                                              ROC-AUC            PR-AUC(int.)                   Brier                log-loss
+Base rate                                                                 0.500 (constant)        0.500 (constant)    0.098 [0.084, 0.112]    0.349 [0.314, 0.384]
+location-only baseline (no pass distance exists at t_d)               0.461 [0.398, 0.524]    0.116 [0.088, 0.163]    0.098 [0.084, 0.112]    0.349 [0.315, 0.384]
+feasibility-aggregate baseline                                        0.583 [0.529, 0.636]    0.153 [0.115, 0.217]    0.097 [0.083, 0.111]    0.343 [0.308, 0.378]
+PRIMARY logistic [A3 feasibility (option set)]                        0.583 [0.529, 0.636]    0.153 [0.115, 0.217]    0.097 [0.083, 0.111]    0.343 [0.308, 0.378]
+EXPLORATORY boosted trees [A6 full, 25 rounds]                        0.645 [0.593, 0.696]    0.173 [0.133, 0.229]    0.096 [0.083, 0.110]    0.339 [0.305, 0.374]
+PRIMARY logistic [A3 feasibility (option set)] (uncalibrated)         0.583 [0.529, 0.636]    0.153 [0.115, 0.217]    0.097 [0.083, 0.111]    0.343 [0.308, 0.378]
+
+== TEST: calibration (diagnostic fits on the test set, never applied back). slope 1 / intercept 0 = ideal on the logit(P(intercepted)) scale ==
+  location-only baseline (no pass distance exists at t_d): slope -7.01, intercept -14.57
+  feasibility-aggregate baseline: slope 0.96, intercept -0.36
+  PRIMARY logistic [A3 feasibility (option set)]: slope 0.96, intercept -0.36
+  EXPLORATORY boosted trees [A6 full, 25 rounds]: slope 1.41, intercept +0.42
+  reliability table, primary (5 equal-count bins; each holds ~>=10 intercepted):
+  n  mean_predicted_P(intercepted)  observed_rate
+205                          0.090          0.063
+205                          0.117          0.088
+205                          0.136          0.117
+204                          0.156          0.137
+204                          0.200          0.137
+  figure: reports/pass_completion_reliability_A.png
+
+== TEST: paired differences on identical samples (95% CI; * = CI excludes 0). Brier/log-loss: negative = first model better ==
+  brier     [PRIMARY logistic [A3 feasibility (option set)]] - [Base rate]: -0.0012 [-0.0028, +0.0004] 
+  log_loss  [PRIMARY logistic [A3 feasibility (option set)]] - [Base rate]: -0.0061 [-0.0123, -0.0003] *
+  brier     [EXPLORATORY boosted trees [A6 full, 25 rounds]] - [Base rate]: -0.0021 [-0.0038, -0.0005] *
+  log_loss  [EXPLORATORY boosted trees [A6 full, 25 rounds]] - [Base rate]: -0.0101 [-0.0159, -0.0046] *
+  roc_auc   [PRIMARY logistic [A3 feasibility (option set)]] - [location-only baseline (no pass distance exists at t_d)]: +0.1218 [+0.0397, +0.1992] *
+  brier     [PRIMARY logistic [A3 feasibility (option set)]] - [location-only baseline (no pass distance exists at t_d)]: -0.0012 [-0.0029, +0.0003] 
+  log_loss  [PRIMARY logistic [A3 feasibility (option set)]] - [location-only baseline (no pass distance exists at t_d)]: -0.0063 [-0.0124, -0.0004] *
+  roc_auc   [PRIMARY logistic [A3 feasibility (option set)]] - [feasibility-aggregate baseline]: +0.0000 [+0.0000, +0.0000] 
+  brier     [PRIMARY logistic [A3 feasibility (option set)]] - [feasibility-aggregate baseline]: +0.0000 [+0.0000, +0.0000] 
+  log_loss  [PRIMARY logistic [A3 feasibility (option set)]] - [feasibility-aggregate baseline]: +0.0000 [+0.0000, +0.0000] 
+  roc_auc   [EXPLORATORY boosted trees [A6 full, 25 rounds]] - [PRIMARY logistic [A3 feasibility (option set)]]: +0.0627 [+0.0041, +0.1236] *
+  brier     [EXPLORATORY boosted trees [A6 full, 25 rounds]] - [PRIMARY logistic [A3 feasibility (option set)]]: -0.0009 [-0.0026, +0.0007] 
+  log_loss  [EXPLORATORY boosted trees [A6 full, 25 rounds]] - [PRIMARY logistic [A3 feasibility (option set)]]: -0.0040 [-0.0102, +0.0020] 
+
+== TEST: confusion at the F1-optimal threshold chosen on TRAIN OOF (flag 'intercepted' if P(completed) <= tau; positive = intercepted) ==
+  Base rate: constant prediction; precision/recall undefined (nothing flagged)
+  location-only baseline (no pass distance exists at t_d)            tau=0.859  TP 111 FP 912 FN   0 TN    0  P 0.109 R 1.000 F1 0.196
+  feasibility-aggregate baseline                                     tau=0.873  TP  79 FP 530 FN  32 TN  382  P 0.130 R 0.712 F1 0.219
+  PRIMARY logistic [A3 feasibility (option set)]                     tau=0.873  TP  79 FP 530 FN  32 TN  382  P 0.130 R 0.712 F1 0.219
+  EXPLORATORY boosted trees [A6 full, 25 rounds]                     tau=0.859  TP  58 FP 274 FN  53 TN  638  P 0.175 R 0.523 F1 0.262
+
+== ABLATION on TEST (feature sets chosen/trained on train; same test samples) ==
+feature set                               #                 ROC-AUC                   Brier                log-loss
+A1 location                               2    0.461 [0.398, 0.524]    0.098 [0.084, 0.112]    0.349 [0.315, 0.384]
+A2 pressure                               2    0.526 [0.470, 0.579]    0.098 [0.085, 0.112]    0.349 [0.315, 0.384]
+A3 feasibility (option set)               2    0.583 [0.529, 0.636]    0.097 [0.083, 0.111]    0.343 [0.308, 0.378]
+A4 feasibility + movement                 4    0.592 [0.540, 0.645]    0.097 [0.083, 0.111]    0.342 [0.308, 0.377]
+A5 no feasibility                         6    0.523 [0.464, 0.580]    0.098 [0.085, 0.112]    0.349 [0.315, 0.384]
+A6 full                                   8    0.582 [0.529, 0.634]    0.097 [0.084, 0.112]    0.344 [0.309, 0.380]
+  roc_auc   [A6 full] - [A5 no feasibility]: +0.0585 [+0.0031, +0.1147] *
+  log_loss  [A6 full] - [A5 no feasibility]: -0.0052 [-0.0116, +0.0007] 
+  roc_auc   [A3 feasibility (option set)] - [A1 location]: +0.1218 [+0.0397, +0.1992] *
+  log_loss  [A3 feasibility (option set)] - [A1 location]: -0.0063 [-0.0124, -0.0004] *
+
+== INTERPRETATION: primary logistic, standardised coefficients (train fit). OR = odds-ratio of COMPLETION per +1 SD ==
+  n_safe_options               coef +0.185 [+0.006, +0.350]  OR/SD 1.20   (teammates (>=3 m away) whose lane from the passer is NOT interceptable (margin<0); count)
+  best_margin                  coef -0.294 [-0.454, -0.101]  OR/SD 0.75   (most negative interception margin over all teammate lanes (safest option); clipped +-10; s)
+  note: scenario-A train vs test base rates differ (intercepted 14.4% vs 10.9%); calibration-in-the-large does not transfer perfectly across matches
+  (bootstrap = 300 resamples of the training game; associations, not causal effects; coefficients of correlated features are unstable)
+  boosted-trees gain importance (share of total split gain, train fit): dist_goal 0.49, passer_speed 0.12, best_margin 0.10, n_opp_10m 0.07, n_safe_options 0.06, nearest_opp_closing_speed 0.06, angle_goal 0.06, nearest_opp_dist 0.05
+
+[scenario B] sample accounting (first failing check)
+-- TRAIN G1  (outcome-unknown events excluded before this table: 173)
+outcome                                                                  completed  intercepted
+reason                                                                                         
+ambiguous receiver (runner-up within heading gap)                              201           31
+ball displacement after release too small for heading                            8            8
+ball not with passer at release                                                  7            2
+no teammate within heading cone (pass into space / unidentified target)         97           40
+post-release ball track unavailable                                              0            2
+KEPT                                                                           442           45
+   exclusion rate: completed 41.5%, intercepted 64.8%
+-- TEST  G2  (outcome-unknown events excluded before this table: 167)
+outcome                                                                  completed  intercepted
+reason                                                                                         
+ambiguous receiver (runner-up within heading gap)                              228           29
+ball displacement after release too small for heading                           18            3
+ball not with passer at release                                                  4            3
+no teammate within heading cone (pass into space / unidentified target)        110           37
+post-release ball track unavailable                                              0            5
+target closer than minimum pass length                                           2            0
+KEPT                                                                           554           37
+   exclusion rate: completed 39.5%, intercepted 67.5%
+
+==============================================================================
+SCENARIO B: EARLY-FLIGHT (identified target), prediction frame = release + 6 frames (0.24 s). NOT decision-time.
+==============================================================================
+train: n=487 (45 intercepted / 442 completed; completion rate 0.908)
+test : n=591 (37 intercepted / 554 completed; completion rate 0.937)
+
+[train-only] feature-set selection: 5-block contiguous-time CV log-loss; rule = simplest set within 1 SE of the best
+                   feature_set  n_features  best_l2  cv_log_loss     se
+              B1 pass distance           1     10.0       0.3032 0.0300
+B2 feasibility (static margin)           1      1.0       0.2685 0.0279
+     B3 feasibility + movement           2      1.0       0.2684 0.0277
+     B4 distance + feasibility           2      1.0       0.2637 0.0276
+             B5 no feasibility           6     10.0       0.2453 0.0259
+                       B6 full           9     10.0       0.2253 0.0265
+SELECTED primary feature set: B5 no feasibility -> ['pass_dist', 'early_ball_speed', 'receiver_speed', 'receiver_nearest_opp_dist', 'forward_gain', 'dist_goal_target'] (ridge l2=10.0)
+
+== TEST (591 passes, 37 intercepted): all models on identical samples; probabilities are Platt-calibrated on train OOF ==
+ROC-AUC measures ranking only. PR-AUC is for the minority class (intercepted); no-skill PR-AUC = 0.063. Brier/log-loss assess the probabilities (lower is better). 95% bootstrap CIs, 2000 resamples.
+model                                                                              ROC-AUC            PR-AUC(int.)                   Brier                log-loss
+Base rate                                                                 0.500 (constant)        0.500 (constant)    0.060 [0.044, 0.076]    0.240 [0.197, 0.286]
+pass-distance baseline                                                0.658 [0.558, 0.754]    0.151 [0.086, 0.276]    0.058 [0.043, 0.073]    0.229 [0.188, 0.273]
+existing feasibility-margin baseline                                  0.863 [0.809, 0.910]    0.282 [0.178, 0.446]    0.052 [0.039, 0.066]    0.195 [0.157, 0.233]
+PRIMARY logistic [B5 no feasibility]                                  0.767 [0.671, 0.857]    0.269 [0.157, 0.421]    0.054 [0.041, 0.067]    0.206 [0.161, 0.253]
+EXPLORATORY boosted trees [B6 full, 50 rounds]                        0.884 [0.843, 0.921]    0.313 [0.201, 0.462]    0.051 [0.038, 0.064]    0.176 [0.139, 0.216]
+PRIMARY logistic [B5 no feasibility] (uncalibrated)                   0.767 [0.671, 0.857]    0.269 [0.157, 0.421]    0.053 [0.041, 0.067]    0.206 [0.162, 0.251]
+
+== TEST: calibration (diagnostic fits on the test set, never applied back). slope 1 / intercept 0 = ideal on the logit(P(intercepted)) scale ==
+  pass-distance baseline: slope 1.92, intercept +1.69
+  existing feasibility-margin baseline: slope 1.37, intercept +0.48
+  PRIMARY logistic [B5 no feasibility]: slope 0.81, intercept -0.65
+  EXPLORATORY boosted trees [B6 full, 50 rounds]: slope 1.01, intercept -0.15
+  reliability table, primary (3 equal-count bins; each holds ~>=10 intercepted):
+  n  mean_predicted_P(intercepted)  observed_rate
+197                          0.014          0.025
+197                          0.041          0.015
+197                          0.181          0.147
+  figure: reports/pass_completion_reliability_B.png
+
+== TEST: paired differences on identical samples (95% CI; * = CI excludes 0). Brier/log-loss: negative = first model better ==
+  brier     [PRIMARY logistic [B5 no feasibility]] - [Base rate]: -0.0061 [-0.0132, +0.0003] 
+  log_loss  [PRIMARY logistic [B5 no feasibility]] - [Base rate]: -0.0337 [-0.0617, -0.0051] *
+  brier     [EXPLORATORY boosted trees [B6 full, 50 rounds]] - [Base rate]: -0.0090 [-0.0168, -0.0018] *
+  log_loss  [EXPLORATORY boosted trees [B6 full, 50 rounds]] - [Base rate]: -0.0636 [-0.0878, -0.0406] *
+  roc_auc   [PRIMARY logistic [B5 no feasibility]] - [pass-distance baseline]: +0.1088 [-0.0142, +0.2309] 
+  brier     [PRIMARY logistic [B5 no feasibility]] - [pass-distance baseline]: -0.0041 [-0.0104, +0.0018] 
+  log_loss  [PRIMARY logistic [B5 no feasibility]] - [pass-distance baseline]: -0.0227 [-0.0488, +0.0051] 
+  roc_auc   [PRIMARY logistic [B5 no feasibility]] - [existing feasibility-margin baseline]: -0.0957 [-0.1875, -0.0097] *
+  brier     [PRIMARY logistic [B5 no feasibility]] - [existing feasibility-margin baseline]: +0.0014 [-0.0025, +0.0051] 
+  log_loss  [PRIMARY logistic [B5 no feasibility]] - [existing feasibility-margin baseline]: +0.0118 [-0.0097, +0.0363] 
+  roc_auc   [EXPLORATORY boosted trees [B6 full, 50 rounds]] - [PRIMARY logistic [B5 no feasibility]]: +0.1173 [+0.0510, +0.1913] *
+  brier     [EXPLORATORY boosted trees [B6 full, 50 rounds]] - [PRIMARY logistic [B5 no feasibility]]: -0.0030 [-0.0083, +0.0024] 
+  log_loss  [EXPLORATORY boosted trees [B6 full, 50 rounds]] - [PRIMARY logistic [B5 no feasibility]]: -0.0300 [-0.0503, -0.0109] *
+
+== TEST: confusion at the F1-optimal threshold chosen on TRAIN OOF (flag 'intercepted' if P(completed) <= tau; positive = intercepted) ==
+  Base rate: constant prediction; precision/recall undefined (nothing flagged)
+  pass-distance baseline                                             tau=0.892  TP  14 FP  73 FN  23 TN  481  P 0.161 R 0.378 F1 0.226
+  existing feasibility-margin baseline                               tau=0.898  TP  22 FP  78 FN  15 TN  476  P 0.220 R 0.595 F1 0.321
+  PRIMARY logistic [B5 no feasibility]                               tau=0.818  TP  19 FP  54 FN  18 TN  500  P 0.260 R 0.514 F1 0.345
+  EXPLORATORY boosted trees [B6 full, 50 rounds]                     tau=0.657  TP  11 FP  19 FN  26 TN  535  P 0.367 R 0.297 F1 0.328
+
+== ABLATION on TEST (feature sets chosen/trained on train; same test samples) ==
+feature set                               #                 ROC-AUC                   Brier                log-loss
+B1 pass distance                          1    0.658 [0.558, 0.754]    0.058 [0.043, 0.073]    0.229 [0.188, 0.273]
+B2 feasibility (static margin)            1    0.863 [0.809, 0.910]    0.052 [0.039, 0.066]    0.195 [0.157, 0.233]
+B3 feasibility + movement                 2    0.854 [0.804, 0.899]    0.053 [0.040, 0.066]    0.197 [0.159, 0.236]
+B4 distance + feasibility                 2    0.855 [0.790, 0.906]    0.052 [0.039, 0.065]    0.193 [0.156, 0.229]
+B5 no feasibility                         6    0.767 [0.671, 0.857]    0.054 [0.041, 0.067]    0.206 [0.161, 0.253]
+B6 full                                   9    0.816 [0.737, 0.885]    0.053 [0.041, 0.067]    0.195 [0.153, 0.240]
+  roc_auc   [B6 full] - [B5 no feasibility]: +0.0491 [+0.0052, +0.1036] *
+  log_loss  [B6 full] - [B5 no feasibility]: -0.0113 [-0.0267, +0.0033] 
+  roc_auc   [B2 feasibility (static margin)] - [B1 pass distance]: +0.2044 [+0.1382, +0.2730] *
+  log_loss  [B2 feasibility (static margin)] - [B1 pass distance]: -0.0345 [-0.0476, -0.0219] *
+
+== INTERPRETATION: primary logistic, standardised coefficients (train fit). OR = odds-ratio of COMPLETION per +1 SD ==
+  pass_dist                    coef -0.316 [-0.592, -0.031]  OR/SD 0.73   (distance from ball release point to the target teammate's position at t_p; m)
+  early_ball_speed             coef -0.266 [-0.536, +0.015]  OR/SD 0.77   (ball displacement over the first 6 frames / 0.24 s; m/s)
+  receiver_speed               coef +0.031 [-0.265, +0.296]  OR/SD 1.03   (target teammate speed, causal 5-frame backward difference (history only); m/s)
+  receiver_nearest_opp_dist    coef +0.425 [+0.140, +0.717]  OR/SD 1.53   (distance from target teammate to nearest opponent; m)
+  forward_gain                 coef -0.631 [-0.962, -0.404]  OR/SD 0.53   (passer distance-to-goal at release minus target distance-to-goal at t_p; m)
+  dist_goal_target             coef +0.405 [+0.146, +0.690]  OR/SD 1.50   (target teammate distance to the goal being attacked; m)
+  note: scenario-B train vs test base rates differ (intercepted 9.2% vs 6.3%); calibration-in-the-large does not transfer perfectly across matches
+  (bootstrap = 300 resamples of the training game; associations, not causal effects; coefficients of correlated features are unstable)
+  boosted-trees gain importance (share of total split gain, train fit): forward_gain 0.35, n_opp_corridor 0.20, margin_vel 0.14, receiver_speed 0.07, min_opp_corridor_dist 0.07, early_ball_speed 0.07, dist_goal_target 0.06, pass_dist 0.02, receiver_nearest_opp_dist 0.01
+
+==============================================================================
+SELECTION BIAS: scenario B's target filter vs the full candidate set (decision-time scenario-A features describe all passes)
+==============================================================================
+
+[TRAIN] completion rate: all scenario-A candidates 0.856 (n=872); retained by B filter 0.907 (n=485); excluded 0.791 (n=387)
+[TRAIN] retention rate: completed 59.0%, intercepted 35.7%
+[TRAIN] post-hoc actual pass length (from event end point; descriptive only, never a feature), median m: completed retained 15.0 / excluded 13.1, intercepted retained 23.0 / excluded 18.1
+
+[TEST] completion rate: all scenario-A candidates 0.891 (n=1023); retained by B filter 0.937 (n=591); excluded 0.829 (n=432)
+[TEST] retention rate: completed 60.7%, intercepted 33.3%
+[TEST] post-hoc actual pass length (from event end point; descriptive only, never a feature), median m: completed retained 14.6 / excluded 11.6, intercepted retained 20.0 / excluded 19.0
+      class          feature  n_retained  n_excluded  mean_retained  mean_excluded  std_diff
+  completed        dist_goal         554         358          57.58          53.93      0.20
+  completed nearest_opp_dist         554         358           5.09           4.62      0.13
+  completed        n_opp_10m         554         358           1.90           1.94     -0.04
+  completed     passer_speed         554         358           2.49           2.33      0.10
+  completed      best_margin         554         358          -0.73          -0.55     -0.36
+intercepted        dist_goal          37          74          65.32          53.07      0.54
+intercepted nearest_opp_dist          37          74           4.59           4.74     -0.03
+intercepted        n_opp_10m          37          74           2.05           2.01      0.03
+intercepted     passer_speed          37          74           2.46           2.66     -0.12
+intercepted      best_margin          37          74          -0.73          -0.44     -0.59
+
+retention predictability: logistic on scenario-A decision-time features (trained on G1) predicts which test passes survive B's filter with ROC-AUC 0.619
+
+scenario-A primary model on TEST, split by whether the pass would survive B's filter (ROC-AUC [95% CI]; n/a if either class < 15):
+               group  n_intercepted  n_completed            A primary
+excluded by B filter             74          358 0.585 [0.518, 0.658]
+retained by B filter             37          554 0.494 [0.400, 0.586]
+
+scenario-A primary on TEST by POST-HOC actual pass length (stratifier only, from the event end point):
+  group  n_intercepted  n_completed            A primary
+10-20 m             26          446 0.615 [0.517, 0.719]
+  <10 m             30          266 0.634 [0.538, 0.730]
+ >=20 m             49          200 0.567 [0.478, 0.646]
+
+scenario-A primary on TEST by passer location (decision-time):
+                  group  n_intercepted  n_completed            A primary
+attacking third (<35 m)             24           99 0.442 [0.312, 0.572]
+     defensive (>=70 m)             33          204 0.557 [0.454, 0.657]
+       middle (35-70 m)             54          609 0.613 [0.535, 0.687]
+
+scenario-B primary on TEST by pass_dist (available at t_p):
+  group  n_intercepted  n_completed            B primary
+10-20 m             14          263                  n/a
+  <10 m              4          125                  n/a
+ >=20 m             19          166 0.748 [0.606, 0.869]

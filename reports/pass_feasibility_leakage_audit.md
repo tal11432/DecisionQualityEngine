@@ -1,5 +1,10 @@
 # Pass-feasibility: outcome-leakage audit and correction
 
+> **Clarification added in the pass-completion stage (`reports/pass_completion_model.md`).** The target of every evaluated pass here was identified from the ball's heading over the
+> first 6 frames *after* release, i.e. 0.24 s after the decision. Inputs were taken at release, but the target selection (and therefore the sample) used post-release
+> information. The evaluation is outcome-leak-free but **not a decision-time prediction**; read the wording below as "identified-target, early-flight" evidence. The pass-completion
+> report separates a genuine decision-time (target-free) scenario from an early-flight scenario and reports both.
+
 Scope: the kinematic time-to-intercept score in `src/analytics/feasibility.py` and its evaluation.
 Development game = Metrica Sample Game 1, held-out game = Sample Game 2 (neither is Ronaldo data).
 Raw output: `reports/pass_feasibility_results.txt`

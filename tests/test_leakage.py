@@ -10,6 +10,7 @@ from src.processing.kinematics import decision_velocities, velocity_table
 from src.schema import Pitch, TrackingData
 
 REL = 40  # release row == frame number
+K_FRAMES = 6  # early-flight window
 N = 80
 TOL = 0.02
 
