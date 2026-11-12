@@ -17,10 +17,14 @@ def _paths(cfg: dict, game: int) -> tuple[Path, Path, Path]:
 
 
 def _load(cfg: dict, game: int):
-    from src.ingestion.metrica import read_events, read_tracking
     from src.schema import Pitch
-    home, away, ev = _paths(cfg, game)
     pitch = Pitch.from_config(cfg)
+    if cfg["metrica"]["games"][str(game)].get("format") == "epts":
+        from src.ingestion.epts import read_events as read_epts_events, read_tracking as read_epts_tracking
+        trk, meta, ev = _paths(cfg, game)
+        return read_epts_tracking(trk, meta, pitch), (read_epts_events(ev, meta, pitch) if ev.exists() else None)
+    from src.ingestion.metrica import read_events, read_tracking
+    home, away, ev = _paths(cfg, game)
     td = read_tracking(home, away, pitch)
     return td, (read_events(ev, pitch) if ev.exists() else None)
 

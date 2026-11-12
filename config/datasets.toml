@@ -30,6 +30,16 @@ files = [
   "Sample_Game_2_RawEventsData.csv",
 ]
 
+[metrica.games.3]
+# EPTS/FIFA format: files = tracking .txt, metadata .xml, events .json (order matters for src/ingestion/epts.py)
+name = "Sample_Game_3"
+format = "epts"
+files = [
+  "Sample_Game_3_tracking.txt",
+  "Sample_Game_3_metadata.xml",
+  "Sample_Game_3_events.json",
+]
+
 [sync]
 # Max |event time - frame time| in seconds. Half a frame (0.02 s @ 25 Hz) = nearest frame.
 tolerance_s = 0.02

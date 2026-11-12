@@ -19,13 +19,13 @@ python -m pytest                                      # no downloads needed
 ## Run
 ```bash
 python -m src.cli download --game 1          # lists files + sizes (~66 MB), downloads nothing
-python -m src.cli download --game 1 --yes    # downloads to data/metrica/Sample_Game_1/ (git-ignored)
+python -m src.cli download --game 1 --yes    # downloads to data/metrica/Sample_Game_1/ (git-ignored); games 1, 2, 3 (~66, ~64, ~55 MB)
 python -m src.cli validate --game 1          # load + validation report + event sync summary
 python -m src.cli plot --frame 50000 --out outputs/frame.png
 python -m src.cli plot --time 600.0 --orient Home
 python -m src.cli plot --event 1 --orient Away    # event + its synchronized frame
 ```
-`--orient TEAM` rotates the view so that team attacks towards +x. Game 2 works the same (`--game 2`).
+`--orient TEAM` rotates the view so that team attacks towards +x. Games 2 and 3 work the same (`--game 2`, `--game 3`; Game 3 is read through the EPTS adapter automatically).
 
 Python API: `read_tracking`, `read_events` (`src/ingestion/metrica.py`),
 `synchronize_events`, `validate_tracking`, `snapshot_features`, `plot_frame`, `plot_event`.
@@ -98,6 +98,17 @@ scores Game 2 once (needs both games). Full methodology, results and limits: `re
 - Limits: two games, small positive classes, selection bias in B (retains 60% of completed but ~35% of intercepted passes), no passes into space, no Ronaldo inference.
   Not yet suitable for action-value or Decision Quality scoring.
 
+## Cross-game validation (Games 1, 2, 3)
+```bash
+python -m src.cross_game --out reports/cross_game_results.txt --figdir reports                       # data as supplied
+python -m src.cross_game --fix-identity --out reports/cross_game_results_fix_identity.txt            # sensitivity (opt-in repair)
+```
+Validation gate first (evaluation is skipped if a game fails), then train-on-one/test-on-another for all six ordered pairs, scenarios A and B
+separately, with unchanged features/models and train-only fitting. Findings (`reports/cross_game_validation.md`): geometric feasibility generalises as a
+*ranking* signal (B: AUC 0.78-0.86 on identified-target passes; A: 0.56-0.69, weak) and beats pass distance, but probabilities do not transfer (game base rates
+differ; probability skill vs the training base rate in only about half of the runs) and B covers a biased third of interceptions. Game 3 has a second-half
+tracking-identity swap (shirts 6/13) that is detected and reported; by default those passers are excluded by the possession filter.
+
 ## Data provenance & licence
 Source: <https://github.com/metrica-sports/sample-data>, pinned to commit
 `e706dd506b360d69d9d123d5b8026e7294b13996`. The repository carries no formal licence
@@ -107,7 +118,7 @@ redistributing; this repo never commits the data. `MANIFEST.json` (URLs, sizes, 
 written next to the download; the hashes are local records, not upstream-published checksums.
 
 ## Limitations
-- Only Metrica standard CSV (Sample Games 1–2). Game 3 (EPTS/FIFA + JSON events) not supported yet.
+- Metrica CSV (Sample Games 1–2) and EPTS/FIFA + JSON (Sample Game 3, `src/ingestion/epts.py`) are supported; other providers are not.
 - Sample Game 1 contains missing data (ball untracked ~39% of frames; off-pitch/implausible-speed
   points) which are flagged, not corrected. Substitutes and unused players are NaN.
 - Attack direction relies on kick-off formation; a second source of truth (GK position, metadata) is not yet used.
