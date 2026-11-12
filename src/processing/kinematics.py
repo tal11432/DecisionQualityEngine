@@ -1,4 +1,11 @@
-"""Velocity estimation from adjacent frames (central difference)."""
+"""Velocity estimation from adjacent frames.
+
+Two deliberately separate estimators:
+  * ``decision_velocities``  - CAUSAL (backward difference, frames <= decision frame). The only
+    estimator allowed to feed a decision-time model.
+  * ``velocity_table``       - central difference over a whole match, for OFFLINE population
+    statistics (e.g. speed quantiles). Uses future frames; never use it for per-decision inputs.
+"""
 from __future__ import annotations
 
 import numpy as np
@@ -8,7 +15,7 @@ from src.schema import TrackingData
 
 
 def velocity_table(td: TrackingData, half_window: int = 2) -> tuple[list[tuple[str, str]], np.ndarray, np.ndarray]:
-    """Central-difference velocities (m/s) for every player and frame.
+    """OFFLINE central-difference velocities (m/s) for every player and frame.
 
     v[i] = (pos[i+h] - pos[i-h]) / (t[i+h] - t[i-h]), valid only if both frames exist in the
     same period and are exactly 2h frame numbers apart (no gaps); otherwise NaN.
@@ -36,18 +43,24 @@ def velocity_table(td: TrackingData, half_window: int = 2) -> tuple[list[tuple[s
     return keys, vx, vy
 
 
-def snapshot_velocities(td: TrackingData, row: int, half_window: int = 2) -> pd.DataFrame:
-    """Velocities at one row: columns team, player_id, vx, vy (NaN where unavailable)."""
-    h = half_window
+def decision_velocities(td: TrackingData, row: int, window: int = 5) -> pd.DataFrame:
+    """CAUSAL velocities at positional ``row``: (pos[row] - pos[row-window]) / dt.
+
+    Reads only frames ``row-window`` and ``row`` (nothing after ``row``). NaN where the history is
+    unavailable: start of data, period change, frame-number gap, or an untracked endpoint.
+    Columns: team, player_id, vx, vy.
+    """
+    if window < 1:
+        raise ValueError("window must be >= 1")
     f = td.frames
-    out = []
-    ok = row - h >= 0 and row + h < len(f)
+    i0, i1 = row - window, row
+    ok = i0 >= 0 and i1 < len(f)
     if ok:
-        i0, i1 = row - h, row + h
         ok = bool(f["period"].iloc[i0] == f["period"].iloc[i1]
-                  and f["frame"].iloc[i1] - f["frame"].iloc[i0] == 2 * h
+                  and f["frame"].iloc[i1] - f["frame"].iloc[i0] == window
                   and f["time_s"].iloc[i1] > f["time_s"].iloc[i0])
-        dt = float(f["time_s"].iloc[i1] - f["time_s"].iloc[i0]) if ok else np.nan
+    dt = float(f["time_s"].iloc[i1] - f["time_s"].iloc[i0]) if ok else np.nan
+    out = []
     for team, pid in td.players[["team", "player_id"]].itertuples(index=False, name=None):
         if ok:
             vx, vy = ((float(f[td.col(team, pid, ax)].iloc[i1]) - float(f[td.col(team, pid, ax)].iloc[i0])) / dt

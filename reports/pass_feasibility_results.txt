@@ -1,0 +1,100 @@
+DEV game 1 (calibration/selection)  |  TEST game 2 (held out, scored once)
+contract: DecisionContract(offset_frames=0, velocity_window_frames=5, possession_max_ball_dist_m=3.0, min_pass_length_m=3.0, heading_window_frames=6, heading_min_displacement_m=1.0, heading_max_deviation_deg=15.0, heading_min_gap_deg=5.0)
+
+[dev] ball-speed prior: median 11.91 m/s (IQR 9.44-14.68, n=723/757 completed ground passes)
+[dev] observed player-speed quantiles over all player-frames: p90=3.69, p95=4.49, p99=6.20
+
+[DEV] sample accounting (first failing check; rows are exclusive)
+                                                                         completed  intercepted
+reason                                                                                         
+ambiguous receiver (runner-up within heading gap)                              201           31
+ball displacement after release too small for heading                            8            8
+ball not with passer at decision frame                                           7            2
+no teammate within heading cone (pass into space / unidentified target)         98           40
+post-release ball track unavailable                                              0            2
+velocity history unavailable                                                     2            0
+KEPT                                                                           441           45
+[DEV] target-identification rule on completed passes with known receiver: assigned 441/740, correct 378/441 (85.7%). Intercepted-pass accuracy cannot be measured (no receiver in data).
+
+[TEST] sample accounting (first failing check; rows are exclusive)
+                                                                         completed  intercepted
+reason                                                                                         
+ambiguous receiver (runner-up within heading gap)                              228           29
+ball displacement after release too small for heading                           18            3
+ball not with passer at decision frame                                           4            3
+no teammate within heading cone (pass into space / unidentified target)        110           37
+post-release ball track unavailable                                              0            5
+target closer than minimum pass length                                           2            0
+KEPT                                                                           554           37
+[TEST] target-identification rule on completed passes with known receiver: assigned 556/894, correct 483/556 (86.9%). Intercepted-pass accuracy cannot be measured (no receiver in data).
+
+[dev] player-speed / reaction grid (ball speed fixed; velocities on); dev AUC (diagnostic; weakly identified):
+  speed 7.00 m/s, reaction 0.2s -> 0.829
+  speed 7.00 m/s, reaction 0.3s -> 0.830
+  speed 7.00 m/s, reaction 0.5s -> 0.826
+  speed 3.69 m/s, reaction 0.2s -> 0.822
+  speed 3.69 m/s, reaction 0.3s -> 0.824
+  speed 3.69 m/s, reaction 0.5s -> 0.823
+  speed 4.49 m/s, reaction 0.2s -> 0.824
+  speed 4.49 m/s, reaction 0.3s -> 0.826
+  speed 4.49 m/s, reaction 0.5s -> 0.824
+  speed 6.20 m/s, reaction 0.2s -> 0.829
+  speed 6.20 m/s, reaction 0.3s -> 0.830   <- M4 (selected on dev)
+  speed 6.20 m/s, reaction 0.5s -> 0.826
+
+== DEV: n=486 (45 intercepted / 441 completed; base rate 9.3%) ==
+AUC [95% bootstrap CI over decisions, 2000 resamples]:
+  M1 original static                               0.823 [0.755, 0.880]
+  M2 calibrated ball speed                         0.825 [0.761, 0.880]
+  M3 M2 + causal velocities                        0.830 [0.767, 0.883]
+  M4 dev-refit (v=6.20, rt=0.3) + causal vel       0.830 [0.767, 0.882]
+  Length only                                      0.672 [0.592, 0.750]
+
+== TEST (held out): n=591 (37 intercepted / 554 completed; base rate 6.3%) ==
+AUC [95% bootstrap CI over decisions, 2000 resamples]:
+  M1 original static                               0.860 [0.809, 0.906]
+  M2 calibrated ball speed                         0.852 [0.795, 0.904]
+  M3 M2 + causal velocities                        0.848 [0.791, 0.901]
+  M4 dev-refit (v=6.20, rt=0.3) + causal vel       0.848 [0.792, 0.898]
+  Length only                                      0.662 [0.563, 0.757]
+
+== TEST: paired AUC differences on identical samples (95% CI; significant = CI excludes 0) ==
+  M2 calibrated ball speed - M1 original static: -0.008 [-0.019, +0.003] not significant
+  M3 M2 + causal velocities - M2 calibrated ball speed: -0.004 [-0.013, +0.004] not significant
+  M4 dev-refit (v=6.20, rt=0.3) + causal vel - M3 M2 + causal velocities: +0.000 [-0.006, +0.006] not significant
+  M1 original static - Length only: +0.197 [+0.129, +0.269] SIGNIFICANT
+  M3 M2 + causal velocities - Length only: +0.186 [+0.125, +0.251] SIGNIFICANT
+
+== TEST: confusion (positive = intercepted). The score is a geometric margin (s), NOT a probability. ==
+threshold A = margin >= 0 (the model's own 'interceptable' definition; fixed a priori); threshold B = F1-optimal on DEV, applied unchanged to TEST
+  M1 original static                               A thr=   +0.00  TP  29 FP 114 FN   8 TN  440  P 0.203 R 0.784 F1 0.322
+  M1 original static                               B thr=   +0.53  TP  18 FP  44 FN  19 TN  510  P 0.290 R 0.486 F1 0.364
+  M2 calibrated ball speed                         A thr=   +0.00  TP  32 FP 167 FN   5 TN  387  P 0.161 R 0.865 F1 0.271
+  M2 calibrated ball speed                         B thr=   +0.93  TP  15 FP  41 FN  22 TN  513  P 0.268 R 0.405 F1 0.323
+  M3 M2 + causal velocities                        A thr=   +0.00  TP  31 FP 180 FN   6 TN  374  P 0.147 R 0.838 F1 0.250
+  M3 M2 + causal velocities                        B thr=   +0.80  TP  20 FP  52 FN  17 TN  502  P 0.278 R 0.541 F1 0.367
+  M4 dev-refit (v=6.20, rt=0.3) + causal vel       A thr=   +0.00  TP  31 FP 160 FN   6 TN  394  P 0.162 R 0.838 F1 0.272
+  M4 dev-refit (v=6.20, rt=0.3) + causal vel       B thr=   +0.79  TP  19 FP  47 FN  18 TN  507  P 0.288 R 0.514 F1 0.369
+  Length only                                      B thr=  +20.66  TP  18 FP 151 FN  19 TN  403  P 0.107 R 0.486 F1 0.175
+
+== TEST: subgroups (AUC [CI]; 'n/a' if either class < 15) ==
+-- by pass length
+  group  n_intercepted  n_completed   M1 original static M3 M2 + causal velocities          Length only
+10-20 m             14          267                  n/a                       n/a                  n/a
+ 3-10 m              4          127                  n/a                       n/a                  n/a
+ >=20 m             19          160 0.830 [0.744, 0.901]      0.834 [0.756, 0.898] 0.677 [0.537, 0.810]
+-- by team
+group  n_intercepted  n_completed   M1 original static M3 M2 + causal velocities          Length only
+ Away             17          242 0.868 [0.796, 0.925]      0.853 [0.770, 0.921] 0.669 [0.507, 0.806]
+ Home             20          312 0.850 [0.756, 0.921]      0.843 [0.742, 0.920] 0.662 [0.525, 0.777]
+-- by period
+   group  n_intercepted  n_completed   M1 original static M3 M2 + causal velocities          Length only
+period 1             21          302 0.916 [0.874, 0.951]      0.909 [0.863, 0.946] 0.689 [0.567, 0.801]
+period 2             16          252 0.790 [0.677, 0.889]      0.763 [0.640, 0.876] 0.627 [0.454, 0.785]
+
+== LEAK SIZE: same decisions, target replaced by the ACTUAL end point (discarded legacy protocol) ==
+  DEV: M1 AUC with actual-endpoint target 0.872 [0.805, 0.930]  vs leakage-safe target 0.823 [0.755, 0.880]  (end point missing for 0)
+  TEST: M1 AUC with actual-endpoint target 0.888 [0.822, 0.946]  vs leakage-safe target 0.860 [0.809, 0.906]  (end point missing for 0)
+
+== DEV-ONLY sensitivity: decision frame 5 frames (0.2 s) BEFORE release ==
+  n=415 (37 intercepted); M1 0.804 [0.729, 0.863]; M3 0.802 [0.728, 0.861]

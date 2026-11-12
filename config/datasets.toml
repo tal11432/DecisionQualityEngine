@@ -40,13 +40,28 @@ max_player_speed_ms = 12.0  # implausible frame-to-frame player speed
 max_ball_speed_ms = 45.0    # implausible frame-to-frame ball speed
 dt_tolerance_s = 0.001      # allowed deviation of frame spacing from the median
 
+[decision_time]
+# Strict decision-time contract (see reports/pass_feasibility_leakage_audit.md).
+# Decision frame = the event's release frame (ball at the passer's feet; verified on Game 1)
+# plus offset_frames (<= 0 moves the decision earlier). Model inputs use frames <= decision frame ONLY.
+offset_frames = 0
+velocity_window_frames = 5       # causal backward-difference window (0.2 s @ 25 Hz); fixed a priori
+possession_max_ball_dist_m = 3.0 # ball must be this close to the passer at the decision frame
+min_pass_length_m = 3.0
+# Label-side target identification (NOT a model input): which teammate was the pass aimed at, from the
+# ball's heading over the first N frames after release. Values chosen on Game 1 completed passes only,
+# where the true receiver is known (84.8% correct when assigned, 59.7% assigned).
+heading_window_frames = 6
+heading_min_displacement_m = 1.0
+heading_max_deviation_deg = 15.0
+heading_min_gap_deg = 5.0        # best candidate must beat the runner-up by this margin, else ambiguous
+
 [feasibility]
-# Calibrated on Metrica Sample Game 1 only via `python -m src.calibration --train 1 --test 2`
-# (held-out check on Sample Game 2). Original assumed values were 15.0 / 7.0 / 0.3.
-# ball_speed: median average speed of 723 completed ground passes (tracking ball, start->end frame).
-# player_speed: EFFECTIVE closing speed (p90 of observed speeds, selected on train AUC), not top sprint speed;
-#   it sat at the edge of the tested grid. reaction_time: fitted jointly (0.2-0.5 s tested), weakly identified.
+# Kinematic parameters. ball_speed is a MEASURED population prior (median average speed of completed
+# ground passes in Game 1; a fixed constant, not a per-pass value). player_speed and reaction_time are
+# ASSUMED (originals); the leakage-safe Game 1 grid in reports/pass_feasibility_results.txt is
+# diagnostic, not adopted: it is weakly identified and not an independent physical measurement.
 ball_speed_ms = 11.9
-player_speed_ms = 3.7
-reaction_time_s = 0.2
+player_speed_ms = 7.0
+reaction_time_s = 0.3
 lane_samples = 60

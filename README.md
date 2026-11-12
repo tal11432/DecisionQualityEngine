@@ -61,39 +61,30 @@ completion, alternative-action generation, Execution Quality, and
 `decision_quality = Q(selected) − max Q(alternatives)`. This is a **design interface, not a
 validated model**; DQ and EQ are kept as separate quantities.
 
-## Pass feasibility (calibrated baseline)
-`src/analytics/feasibility.py`: ball moves along the pass line at constant speed; an opponent
-can intercept if `reaction + distance/speed` ≤ ball time at some lane point. Returns the worst
-`margin_s` (≥ 0 ⇒ interceptable) and the threatening opponent; `pass_options(snapshot, passer)`
-tabulates teammates. Optional opponent velocities (`src/processing/kinematics.py`, central
-difference over adjacent frames) advance each opponent during the reaction time. No acceleration
-model; not a completion probability.
+## Pass feasibility (decision-time score)
+`src/analytics/feasibility.py`: ball moves along the pass line at constant speed; an opponent can
+intercept if `reaction + distance/speed` ≤ ball time at some lane point. Output `margin_s` (≥ 0 ⇒
+interceptable) is a geometric **score, not a probability**; no acceleration model.
 
-Calibration/evaluation: `python -m src.calibration --train 1 --test 2` (needs both games).
-Fitted on Game 1 only: ball speed = median of 723 completed ground passes = 11.9 m/s; player
-speed and reaction time chosen on a small grid by Game 1 AUC → 3.7 m/s (an *effective closing
-speed*, p90 of observed speeds — not top speed, and at the edge of the grid) and 0.2 s (weakly identified).
+**Methodology (leakage-audited; see `reports/pass_feasibility_leakage_audit.md`).** An earlier version used
+the event's end point as the pass target (the interception location for intercepted passes) and
+central-difference velocities; both leak outcome/future information and were removed. Now:
+- Decision frame = ball-release frame (+ optional earlier offset). Inputs: passer, target-teammate and
+  opponent positions at that frame; opponent velocities by **causal** backward difference
+  (`processing/kinematics.decision_velocities`); fixed parameters. Never end points, interception
+  locations, later frames or later events (`src/pass_dataset.py`, config `[decision_time]`).
+- Labels from event type only (completed = `PASS`; intercepted = `BALL LOST`/`INTERCEPTION`).
+- Metrica gives no intended receiver for failed passes, so the aimed-at teammate is identified from
+  the ball's early post-release heading (label side only, identical for both classes; ambiguous or
+  unidentified passes, including passes into space, are excluded and counted).
+- Parameters: ball speed is a measured population prior (11.9 m/s, Game 1); player speed (7.0 m/s) and
+  reaction time (0.3 s) are **assumptions**.
 
-Labels (Metrica semantics): completed = `PASS` without subtype; intercepted = `BALL LOST`
-subtype `INTERCEPTION` (that event *is* the failed pass). Held-out Sample Game 2
-(101 intercepted / 904 completed), AUC of `margin_s` for intercepted-vs-completed
-(95% bootstrap CI):
-
-| model | AUC | flagged interceptable (intercepted / completed) |
-|---|---|---|
-| original assumed params (15 m/s, 7 m/s, 0.3 s), static | 0.869 [0.827, 0.906] | 69% / 11% |
-| calibrated, static | 0.883 [0.846, 0.915] | 65% / 11% |
-| calibrated + velocities | 0.882 [0.843, 0.914] | 66% / 10% |
-| pass length alone | 0.630 | – |
-
-Reading it: the geometry separates real interceptions from completions far better than pass
-length does. Calibration and velocities gave only small gains within the confidence intervals.
-**Caveat:** for intercepted passes the event end point is where the opponent actually got
-the ball, so the target is conditioned on the outcome. This checks that the model agrees that
-real interceptions were reachable using start-frame positions; it is not a forecast of pass
-outcomes and does not validate the model for unseen alternative passes. (An earlier
-Game 1 check in this project labelled outcomes from the next event's team, which mislabels
-intercepted passes; it is superseded by this evaluation.)
+Run: `python -m src.calibration --dev 1 --test 2 --out reports/pass_feasibility_results.txt`
+(needs both games downloaded). Held-out Game 2 (37 intercepted / 554 completed after filtering):
+AUC 0.85-0.86 vs 0.66 for pass length alone; calibration and velocities give no significant gain.
+Evidence of decision-time signal for *identified-target* passes only; no probabilities, no coverage of
+passes into space, ~1/3 of intercepted passes evaluable. Details and caveats in the report.
 
 ## Data provenance & licence
 Source: <https://github.com/metrica-sports/sample-data>, pinned to commit
@@ -108,6 +99,6 @@ written next to the download; the hashes are local records, not upstream-publish
 - Sample Game 1 contains missing data (ball untracked ~39% of frames; off-pitch/implausible-speed
   points) which are flagged, not corrected. Substitutes and unused players are NaN.
 - Attack direction relies on kick-off formation; a second source of truth (GK position, metadata) is not yet used.
-- Passing-lane obstruction is a static geometric heuristic; pass feasibility is a lightly calibrated kinematic baseline (see above).
+- Passing-lane obstruction is a static geometric heuristic; pass feasibility is an uncalibrated-probability geometric score evaluated only on identified-target passes (see above).
 - Event end times are not synchronized by default (`synchronize_events(time_col="end_time_s")` supports it).
 - Tracking is in wide format (one row per frame); fine for one match, not tuned for many.

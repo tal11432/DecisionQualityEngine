@@ -2,9 +2,9 @@ import numpy as np
 import pytest
 
 from src.analytics.feasibility import FeasibilityParams, interception_margin
-from src.calibration import auc
+from src.evaluation import auc
 from src.ingestion.metrica import read_tracking
-from src.processing.kinematics import snapshot_velocities, velocity_table
+from src.processing.kinematics import decision_velocities, velocity_table
 from src.schema import Pitch
 
 
@@ -35,7 +35,7 @@ def test_velocity_central_difference(tmp_path):
     assert np.isnan(vx[0, j]) and np.isnan(vx[-1, j])
     assert vx[2, j] == pytest.approx(1.05 / 0.04) and vy[2, j] == pytest.approx(0)
     assert vx[2, keys.index(("Home", "Player2"))] == pytest.approx(0)
-    v = snapshot_velocities(td, 2, 1).set_index("player_id")
+    v = decision_velocities(td, 2, 1).set_index("player_id")   # causal: (pos[2]-pos[1])/dt
     assert v.loc["Player1", "vx"] == pytest.approx(26.25)
 
 
@@ -43,7 +43,8 @@ def test_velocity_nan_across_frame_gap(tmp_path):
     td = _td(tmp_path, [0.30, 0.31, 0.32, 0.33, 0.34], frames=[1, 2, 4, 5, 6])
     _, vx, _ = velocity_table(td, 1)
     assert np.isnan(vx[1, 0]) and np.isnan(vx[2, 0])  # windows spanning the gap
-    assert np.isnan(snapshot_velocities(td, 1, 1)["vx"]).all()
+    assert decision_velocities(td, 1, 1)["vx"].notna().all()     # rows 0->1: frames 1,2, no gap
+    assert np.isnan(decision_velocities(td, 2, 1)["vx"]).all()   # frames 2->4 span the gap
     with pytest.raises(ValueError):
         velocity_table(td, 0)
 
