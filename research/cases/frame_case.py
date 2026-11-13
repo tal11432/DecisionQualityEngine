@@ -26,6 +26,7 @@ LM = {"6yd left side x goal line": ((909, 390), (-9.16, 0)), "6yd left front cor
 CHECK = ((1190, 910), (20.16, 16.5))        # 18-yard-box front-right corner: out-of-sample check
 PL = {"shooter": (765, 450), "R90": (914, 524), "R27": (1017, 623), "R17": (475, 555), "R_midleft": (395, 442), "R_farleft": (222, 385), "R2": (310, 768)}
 OP = {"B_near_shooter": (673, 487), "B_grounded": (865, 437), "GK": (973, 448), "B_post1": (1100, 473), "B_post2": (1152, 499), "B_farleft1": (530, 398), "B_farleft2": (275, 512), "B_farleft3": (185, 405)}
+XG_FN = None; XA_FN = None   # optional replacements: XG_FN(shooter, opps, gk) and XA_FN(target, opps, gk, shooter)
 SHOOTER_UW = None      # optional override (lateral u, depth w in metres), e.g. from official event coordinates
 def to_sb(H, p):
     u, w = apply(H, p); return np.array([GX - w * 120 / 105, 40 + u * 80 / 68]), (u, w)
@@ -38,12 +39,12 @@ def run(jit=0.0, rng=None, verbose=False):
         for k, (s, (u, w)) in pos.items(): print(f"  {k:<15} lateral {u:+6.1f} m  from goal line {w:5.1f} m")
     if SHOOTER_UW is not None: u, w = SHOOTER_UW; pos["shooter"] = (np.array([GX - w * 120 / 105, 40 + u * 80 / 68]), (u, w))
     sh = pos["shooter"][0]; opps = [pos[k][0] for k in OP]; gk = pos["GK"][0]; O = np.array(opps)
-    out = {"xG": xg(sh, opps, gk), "xG_+1def": xg(sh, opps, gk, extra=1), "shot_dist_m": float(np.hypot(*(np.array([GX, 40]) - sh) * np.array([105 / 120, 68 / 80]))), "n_tri": sum(intri(o, sh) for o in opps)}
+    out = {"xG": XG_FN(sh, opps, gk) if XG_FN else xg(sh, opps, gk), "xG_+1def": xg(sh, opps, gk, extra=1), "shot_dist_m": float(np.hypot(*(np.array([GX, 40]) - sh) * np.array([105 / 120, 68 / 80]))), "n_tri": sum(intri(o, sh) for o in opps)}
     line = max(sorted(o[0] for o in opps)[-2], sh[0])
     for k in PL:
         if k == "shooter": continue
         p = pos[k][0]; d = float(np.hypot(*((p - sh) * np.array([105 / 120, 68 / 80]))))
-        ok = 3 <= d <= 40 and not (p[0] > line and p[0] > 60); a, P_ = xg(p, opps, gk), xp(sh, p, O)
+        ok = 3 <= d <= 40 and not (p[0] > line and p[0] > 60); a, P_ = (XA_FN(p, opps, gk, sh) if XA_FN else xg(p, opps, gk)), xp(sh, p, O)
         out[k] = dict(d=d, admissible=ok, xA=a, xP=P_, EPV=P_ * a, from_goal=float(np.hypot(*((np.array([GX, 40]) - p) * np.array([105 / 120, 68 / 80])))))
     return out
 if __name__ == "__main__":

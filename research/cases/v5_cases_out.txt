@@ -1,0 +1,13 @@
+
+Second shot (71:48, official 0.378): xG_geo 0.457 (official 0.378); Monte Carlo median 0.427 [5%-95% 0.290, 0.609]
+  R90: xP 0.98, empirical xA 0.4954, EPV 0.4861; share of draws EPV > shot xG 55%
+  R27: xP 0.95, empirical xA 0.0944, EPV 0.0900; share of draws EPV > shot xG 4%
+  R17: xP 0.94, empirical xA 0.0868, EPV 0.0819; share of draws EPV > shot xG 0%
+  best admissible EPV > shot xG in 42% of draws
+  sg = lambda m, X: float(1 / (1 + np.exp(-(np.concatenate([[1.0], (np.asarray(X, float) - m["mu"]) / m["sd"]]) @ m["b"]))))
+
+First shot (71:47, official 0.166): xG_geo 0.170 (official 0.166); Monte Carlo median 0.195 [5%-95% 0.093, 0.415]
+  R90: xP 0.78, empirical xA 0.1465, EPV 0.1150; share of draws EPV > shot xG 32%
+  R27: xP 0.67, empirical xA 0.0320, EPV 0.0214; share of draws EPV > shot xG 12%
+  R17: xP 0.67, empirical xA 0.0382, EPV 0.0256; share of draws EPV > shot xG 0%
+  best admissible EPV > shot xG in 36% of draws

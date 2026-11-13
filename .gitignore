@@ -11,3 +11,4 @@ research/**/*.pkl
 !research/dq/stage1b_models.pkl
 !research/dq/tf_model.pkl
 !research/dq/tf_model_v3.pkl
+!research/dq/v5_models.pkl

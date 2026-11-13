@@ -6,11 +6,13 @@ Sh = pd.read_pickle(f"{D}/v5_shots.pkl"); Pa = pd.read_pickle(f"{D}/v5_passes.pk
 Sh = Sh.join(Sh.prior.apply(pd.Series).add_prefix("prior_")); Sh["pat_counter"] = (Sh.pattern == "counter").astype(int); Sh["pat_set"] = (Sh.pattern == "setpiece").astype(int)
 Sh["da"] = Sh.dist * Sh.angle; Sh["ldist"] = np.log(Sh.dist)
 XG0 = pd.read_pickle(f"{D}/stage1b_models.pkl")["xG"]; HM = pd.read_pickle(f"{D}/tf_model.pkl")
-def fit(X, y, lam=1.0, it=100):
+def fit(X, y, lam=1.0, it=100, clip=None):
     mu, sd = X.mean(0), X.std(0) + 1e-12; Z = np.column_stack([np.ones(len(X)), (X - mu) / sd]); b = np.zeros(Z.shape[1]); R = lam * np.eye(Z.shape[1]); R[0, 0] = 0
     b[0] = np.log(np.clip(y.mean(), 1e-6, 1 - 1e-6) / (1 - np.clip(y.mean(), 1e-6, 1 - 1e-6)))
     for _ in range(it):
-        p = 1 / (1 + np.exp(-Z @ b)); s = np.linalg.solve((Z * (p * (1 - p))[:, None]).T @ Z + R, Z.T @ (y - p) - R @ b); b += s
+        p = 1 / (1 + np.exp(-Z @ b)); s = np.linalg.solve((Z * (p * (1 - p))[:, None]).T @ Z + R, Z.T @ (y - p) - R @ b)
+        if clip: s = np.clip(s, -clip, clip)
+        b += s
         if np.abs(s).max() < 1e-9: break
     f = lambda Xn: 1 / (1 + np.exp(-(np.column_stack([np.ones(len(Xn)), (Xn - mu) / sd]) @ b))); f.coef = dict(mu=mu, sd=sd, b=b); return f
 ll = lambda y, p: -(y * np.log(np.clip(p, 1e-9, 1 - 1e-9)) + (1 - y) * np.log(1 - np.clip(p, 1e-9, 1 - 1e-9)))
@@ -52,7 +54,7 @@ foot = te[te.header == 0]; y = foot.goal.to_numpy(float); print(f"foot shots onl
 Pa["d2"], Pa["ad"], Pa["x"] = Pa.dist ** 2, Pa.angle * Pa.dist, Pa.tx; FA = ["dist", "angle", "x", "d2", "ad", "n_tri", "n3", "n6", "nn", "gk_d", "plen"]
 ptr, pte = Pa[~Pa.test].reset_index(drop=True), Pa[Pa.test].reset_index(drop=True)
 print(f"\npasses (completed, ground, attacking half, target visible): train {len(ptr)} ({ptr.shot_next.sum()} followed by the receiver's shot), test {len(pte)} ({pte.shot_next.sum()}); test comps: {dict(pte.comp.value_counts())}")
-fa = fit(ptr[FA].to_numpy(float), ptr.v.to_numpy(float)); hyp = lambda d: 1 / (1 + np.exp(-(np.column_stack([np.ones(len(d)), (np.column_stack([d.dist, d.angle, np.zeros(len(d)), d.n_tri, d.gk_d]) - XG0["mu"]) / XG0["sd"]]) @ XG0["b"])))
+fa = fit(ptr[FA].to_numpy(float), ptr.v.to_numpy(float), clip=1.0, it=300); hyp = lambda d: 1 / (1 + np.exp(-(np.column_stack([np.ones(len(d)), (np.column_stack([d.dist, d.angle, np.zeros(len(d)), d.n_tri, d.gk_d]) - XG0["mu"]) / XG0["sd"]]) @ XG0["b"])))
 base = ptr.v.mean(); ok = True
 for lab, d in [("POOLED", pte)] + [(c, pte[pte.comp == c]) for c in sorted(pte.comp.unique())]:
     y = d.v.to_numpy(float); p = fa(d[FA].to_numpy(float)); g = ll(y, np.full(len(y), base)) - ll(y, p); lo, hi = mboot(g, d.match.to_numpy()); h = hyp(d)

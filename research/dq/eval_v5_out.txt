@@ -1,0 +1,51 @@
+shots: train 50093 (4993 goals, 21 competitions), test 2983 (272 goals): UEFA Euro 2024 1257, 1. Bundesliga 2023/2024 882, Copa America 2024 709, Major League Soccer 2023 135
+  LOCO log loss on train competitions M1: 0.26426
+  LOCO log loss on train competitions M2: 0.25936
+  LOCO log loss on train competitions M3: 0.25704
+selected xG_new = M3 (17 features)
+
+xG on TEST competitions (pooled and each): n, goals, O/E (pred sum / goals), slope, AUC, LL gain vs M0 [95% match-bootstrap CI]
+[POOLED] n=2983 goals=272
+   M0 (old)         pred/obs 0.970  slope 0.880  AUC 0.757  LL 0.2668  gain vs M0 +0.00000 [+0.00000,+0.00000]
+   M1 refit         pred/obs 1.051  slope 0.866  AUC 0.759  LL 0.2665  gain vs M0 +0.00027 [-0.00132,+0.00188]
+   xG_geo (M2)      pred/obs 1.049  slope 0.886  AUC 0.773  LL 0.2610  gain vs M0 +0.00574 [+0.00201,+0.00930]
+   xG_new (M3)      pred/obs 1.060  slope 0.896  AUC 0.775  LL 0.2591  gain vs M0 +0.00765 [+0.00324,+0.01263]
+   StatsBomb xG     pred/obs 1.035  slope 0.968  AUC 0.785  LL 0.2539  gain vs M0 +0.01290 [+0.00725,+0.01871]
+[1. Bundesliga 2023/2024] n=882 goals=100
+   M0 (old)         pred/obs 0.827  slope 0.977  AUC 0.770  LL 0.2994  gain vs M0 +0.00000 [+0.00000,+0.00000]
+   M1 refit         pred/obs 0.905  slope 0.939  AUC 0.769  LL 0.2983  gain vs M0 +0.00109 [-0.00125,+0.00328]
+   xG_geo (M2)      pred/obs 0.921  slope 0.916  AUC 0.773  LL 0.2959  gain vs M0 +0.00350 [-0.00429,+0.01161]
+   xG_new (M3)      pred/obs 0.947  slope 0.902  AUC 0.770  LL 0.2958  gain vs M0 +0.00359 [-0.00491,+0.01274]
+   StatsBomb xG     pred/obs 0.929  slope 0.966  AUC 0.788  LL 0.2904  gain vs M0 +0.00899 [-0.00591,+0.02415]
+[Copa America 2024] n=709 goals=62
+   M0 (old)         pred/obs 1.017  slope 0.865  AUC 0.774  LL 0.2599  gain vs M0 +0.00000 [+0.00000,+0.00000]
+   M1 refit         pred/obs 1.084  slope 0.873  AUC 0.772  LL 0.2594  gain vs M0 +0.00055 [-0.00356,+0.00462]
+   xG_geo (M2)      pred/obs 1.090  slope 0.896  AUC 0.785  LL 0.2540  gain vs M0 +0.00599 [+0.00168,+0.01017]
+   xG_new (M3)      pred/obs 1.069  slope 0.898  AUC 0.782  LL 0.2531  gain vs M0 +0.00685 [+0.00176,+0.01255]
+   StatsBomb xG     pred/obs 1.044  slope 0.991  AUC 0.791  LL 0.2451  gain vs M0 +0.01485 [+0.00556,+0.02343]
+[UEFA Euro 2024] n=1257 goals=98
+   M0 (old)         pred/obs 1.077  slope 0.803  AUC 0.735  LL 0.2473  gain vs M0 +0.00000 [+0.00000,+0.00000]
+   M1 refit         pred/obs 1.168  slope 0.793  AUC 0.740  LL 0.2476  gain vs M0 -0.00029 [-0.00258,+0.00198]
+   xG_geo (M2)      pred/obs 1.141  slope 0.855  AUC 0.768  LL 0.2394  gain vs M0 +0.00790 [+0.00171,+0.01617]
+   xG_new (M3)      pred/obs 1.153  slope 0.892  AUC 0.778  LL 0.2355  gain vs M0 +0.01182 [+0.00505,+0.01942]
+   StatsBomb xG     pred/obs 1.120  slope 0.961  AUC 0.782  LL 0.2322  gain vs M0 +0.01516 [+0.00850,+0.02270]
+GATE G-xG (pooled): FAIL
+foot shots only: M0 pred/obs 0.927; xG_new pred/obs 1.053
+
+passes (completed, ground, attacking half, target visible): train 20559 (971 followed by the receiver's shot), test 8177 (468); test comps: {'UEFA Euro 2024': np.int64(4760), '1. Bundesliga 2023/2024': np.int64(3247), 'Major League Soccer 2023': np.int64(170)}
+[POOLED] n=8177: observed mean value 0.0044; empirical xA mean 0.0043 (pred/obs 0.974, slope 1.014, LL gain vs constant +0.01075 [+0.00807,+0.01406]); old hypothetical xA mean 0.0221 (x5.0 the observed), its slope 1.621
+[1. Bundesliga 2023/2024] n=3247: observed mean value 0.0052; empirical xA mean 0.0049 (pred/obs 0.942, slope 1.089, LL gain vs constant +0.01328 [+0.00840,+0.02014]); old hypothetical xA mean 0.0241 (x4.6 the observed), its slope 1.713
+[Major League Soccer 2023] n=170: observed mean value 0.0042; empirical xA mean 0.0044 (pred/obs 1.054, slope 1.161, LL gain vs constant +0.01087 [+0.00344,+0.01848]); old hypothetical xA mean 0.0204 (x4.8 the observed), its slope 1.787
+[UEFA Euro 2024] n=4760: observed mean value 0.0039; empirical xA mean 0.0039 (pred/obs 1.000, slope 0.955, LL gain vs constant +0.00902 [+0.00619,+0.01249]); old hypothetical xA mean 0.0208 (x5.3 the observed), its slope 1.544
+GATE G-xA (pooled test): PASS
+by target distance to goal (m): (0, 12]: observed 0.205 | empirical 0.198 | old hypothetical 0.245 (n=60); (12, 20]: observed 0.025 | empirical 0.024 | old hypothetical 0.085 (n=664); (20, 30]: observed 0.003 | empirical 0.003 | old hypothetical 0.030 (n=1991); (30, 80]: observed 0.000 | empirical 0.000 | old hypothetical 0.009 (n=5462)
+
+SHOT vs PASS on test competitions, 2453 foot shots: new (xG_new vs xP x empirical xA): better pass in 42.0%, median gap -0.007, sum xG 233.7 vs sum best EPV 193.1
+  old (xG M0 vs xP x hypothetical xA): better pass in 73.7%, median gap +0.034, sum xG 205.9 vs sum best EPV 281.9
+  <12m: n=501  new 35.5% (gap>0.05: 29.3%)   old 44.1%
+  12-20m: n=1096  new 45.3% (gap>0.05: 23.4%)   old 73.8%
+  >20m: n=856  new 41.5% (gap>0.05: 5.4%)   old 90.9%
+  1. Bundesliga 2023/2024: n=738  new 40.4%  old 73.8%
+  Copa America 2024: n=568  new 39.8%  old 71.7%
+  Major League Soccer 2023: n=118  new 33.1%  old 69.5%
+  UEFA Euro 2024: n=1029  new 45.4%  old 75.2%

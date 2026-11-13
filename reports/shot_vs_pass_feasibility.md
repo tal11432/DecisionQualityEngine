@@ -211,3 +211,51 @@ Pre-registration `research/dq/PREREG_SHOT_SB2.txt` (written before downloading);
 * **The overall share depends on who is playing.** In tournaments it is 72-75%; in the club samples dominated by one team it is 61-68%. A team that creates better close chances has fewer shots where a pass would have been better. This differs between teams and cannot be read as a league average.
 * **The women's results match the men's closely,** although the models were trained on men's data. This is a partial check that the geometry generalises. The xG under-prediction is larger there (pooled ratio 0.89 of goals) and was not tested separately against women's data.
 * **Still not a judgement of players or decisions.** The caveats of section 9 apply: freeze frames show only some of the players, the receiver is assumed to shoot immediately, and the cost of failed passes is ignored.
+
+## 11. DQ-v5: a better xG, and an *empirical* pass value (the old xA was about 5 times too high)
+
+Pre-registration `research/dq/PREREG_DQ_v5.txt` (written before the download); scripts `fetch_v5.py`, `eval_v5.py`, `research/cases/v5_cases.py`; outputs `eval_v5_out.txt` and `v5_cases_out.txt`. Data: StatsBomb open data, all men's competitions from 2015 (2,254 matches; 989 MB transferred and processed in memory, then deleted). The test competitions never enter any training set: Euro 2024, Copa America 2024, Bundesliga 2023/24 (Leverkusen) and MLS 2023 (Inter Miami, 6 matches).
+
+**(A) A better xG. The pre-registered gate failed, narrowly.**
+* The model was retrained on 50,093 open-play shots (21 competitions) with extra features: goalkeeper offset from the shooting line, nearby defenders, first-time shot, volley, play pattern, and the type of the preceding pass. Selected by leave-one-competition-out validation (17 features).
+* **On 2,983 test shots (272 goals):** log-loss gain over the old model +0.0077 [+0.0032, +0.0126]; AUC 0.775 (old 0.757; StatsBomb's own xG 0.785). The goals-to-predicted ratio is 1.06 (the old model was 0.97 pooled, 0.83 on the Bundesliga sample, where it under-predicted).
+* **The gate failed on calibration slope: 0.896 against a floor of 0.9 (compared unrounded).** The model is slightly over-confident at the extremes. The retrain with only the old five features gave no improvement (+0.0003, CI includes 0), so the gain comes entirely from the new features.
+* A geometry-only version (no context fields, the one usable on Israeli data) has +0.0057 [+0.0020, +0.0093].
+
+**(B) Empirical pass value ("xA_emp"). The gate passed.**
+* **Definition:** the expected xG of the shot taken by the *receiver himself* as his next action (within 6 s, same possession), given a completed ground pass to that position in the attacking half. 28,736 passes (visible target and goalkeeper); 20,559 for training and 8,177 on the test set (Euro 2024, Bundesliga, MLS).
+* **Pooled test:** predicted/observed 0.974, slope 1.014, log-likelihood gain over the constant +0.0108 [+0.0081, +0.0141]. Per competition: Euro 2024 slope 0.96, Bundesliga 1.09, MLS 1.16 (170 passes).
+* **The old hypothetical xA (immediate shot from the target, defenders frozen) was 5 times too high** (mean 0.022 vs 0.0044 observed, slope 1.62), and the gap is large in every distance band:
+
+| Target distance to goal | Observed | Empirical | Old hypothetical | n (test) |
+|---|---|---|---|---|
+| < 12 m | 0.205 | 0.198 | 0.245 | 60 |
+| 12-20 m | 0.025 | 0.024 | 0.085 | 664 |
+| 20-30 m | 0.003 | 0.003 | 0.030 | 1,991 |
+| > 30 m | 0.000 | 0.000 | 0.009 | 5,462 |
+
+**(C) Shot vs pass again (2,453 test foot shots).**
+
+| | Better pass existed | Median gap | Sum xG vs sum of best pass |
+|---|---|---|---|
+| Old (xG M0 vs xP x hypothetical xA) | 73.7% | +0.034 | 205.9 vs 281.9 |
+| **New (xG_new vs xP x empirical xA)** | **42.0%** | -0.007 | 233.7 vs 193.1 |
+
+By distance (new vs old): under 12 m 36% (44%); 12-20 m 45% (74%); over 20 m 42% (91%). By competition (new): Euro 2024 45%, Bundesliga 40%, Copa America 40%, MLS 33%.
+
+**How to read this.**
+* **The earlier headline ("the pass was better in ~73% of shots") was largely an artefact of the optimistic xA.** With a calibrated pass value, a better pass existed in about 42% of shots, with no systematic advantage for passing. The distance pattern is much weaker: long shots are no longer almost always worse than a pass.
+* **Neither number is "the truth".** The empirical value counts only the receiver's own immediate shot: it excludes shots by later teammates and the receiver's chance-creating pass, so it is a **lower bound** on a pass's value. The old value is an optimistic **upper bound**. The real answer lies between 42% and 74%, and this analysis cannot narrow it. To narrow it, the pass value must include a value for possession after the pass (xGChain/possession value).
+* **The xP-based comparison is unchanged** (hazard model, not recalibrated).
+
+**The Israeli frames with the new models** (official shot location, camera-side orientation; positions from the frames):
+
+| | xG_geo | Official | Best pass (#90): xP x empirical xA | Better pass in |
+|---|---|---|---|---|
+| First shot (71:47) | 0.170 | 0.166 | 0.78 x 0.147 = **0.115** | 36% of draws |
+| Second shot (71:48) | 0.457 | 0.378 | 0.98 x 0.495 = **0.486** | 42% of draws |
+
+* The first shot matches the official xG almost exactly (0.170 vs 0.166).
+* The second overshoots (0.46 vs 0.38; Monte Carlo 0.29-0.61).
+* **The #90 value for the second shot (0.495) is an extrapolation:** few training passes end that close to goal (60 test passes within 12 m), and only some defenders are visible in the frame, so the features understate crowding. Treat it as an upper estimate.
+* **The conclusion is unchanged: no pass clearly better than the shot in either case.** This now holds under both the optimistic and the empirical value.
