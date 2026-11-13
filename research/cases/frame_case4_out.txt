@@ -1,0 +1,33 @@
+official location (map): lateral 7.8 m, 7.0 m from goal line, 10.5 m from goal centre
+check, 18-yard corner predicted vs true (u,w): [26.1 21. ] vs (20.16, 16.5)
+  shooter         lateral  -10.0 m  from goal line   7.8 m
+  R90             lateral   +3.4 m  from goal line  11.4 m
+  R27             lateral  +10.3 m  from goal line  13.7 m
+  R17             lateral   +1.0 m  from goal line  18.8 m
+  R_a             lateral  -22.1 m  from goal line  17.2 m
+  R_b             lateral  -25.0 m  from goal line  12.7 m
+  R2              lateral  +19.8 m  from goal line  41.3 m
+  B_near_shooter  lateral   -5.0 m  from goal line  11.4 m
+  B_diving        lateral   -6.4 m  from goal line   8.1 m
+  GK              lateral   -4.1 m  from goal line   1.2 m
+  B_post1         lateral   -2.0 m  from goal line   4.7 m
+  B_post2         lateral   +2.7 m  from goal line   6.0 m
+  B_far1          lateral  -17.4 m  from goal line   9.9 m
+  B_far2          lateral  -25.0 m  from goal line  14.1 m
+  B_far3          lateral  -10.1 m  from goal line  25.2 m
+  B_far4          lateral  -26.6 m  from goal line  23.9 m
+  B_far5          lateral  +16.8 m  from goal line  42.0 m
+
+A) shooter at the frame-based position: 12.6 m from goal, triangle opponents 1, xG 0.116
+
+B) official location, camera side (lateral -7.8): 10.5 m from goal, triangle opponents 1, xG 0.165 (league 0.166); Monte Carlo xG median 0.184 [5%-95% 0.122, 0.271]; share >= 0.166: 61%
+  R90: d 12.0 m, from goal 11.9 m, admissible True, xP 0.78, xA 0.169, EPV 0.133; share of draws EPV > shot xG 42%; EPV median 0.164 [5%-95% 0.052, 0.304]
+  R27: d 19.3 m, from goal 17.1 m, admissible True, xP 0.67, xA 0.074, EPV 0.049; share of draws EPV > shot xG 12%; EPV median 0.071 [5%-95% 0.023, 0.240]
+  R17: d 14.7 m, from goal 18.8 m, admissible True, xP 0.67, xA 0.068, EPV 0.045; share of draws EPV > shot xG 3%; EPV median 0.056 [5%-95% 0.004, 0.176]
+  best admissible EPV > shot xG in 42% of draws
+
+C) official location, mirrored (+7.8): 10.5 m from goal, triangle opponents 0, xG 0.213 (league 0.166); Monte Carlo xG median 0.216 [5%-95% 0.151, 0.278]; share >= 0.166: 88%
+  R90: d 6.3 m, from goal 11.9 m, admissible True, xP 1.00, xA 0.169, EPV 0.169; share of draws EPV > shot xG 26%; EPV median 0.185 [5%-95% 0.075, 0.306]
+  R27: d 7.1 m, from goal 17.1 m, admissible True, xP 1.00, xA 0.074, EPV 0.074; share of draws EPV > shot xG 5%; EPV median 0.092 [5%-95% 0.037, 0.258]
+  R17: d 13.6 m, from goal 18.8 m, admissible True, xP 0.99, xA 0.068, EPV 0.067; share of draws EPV > shot xG 0%; EPV median 0.065 [5%-95% 0.011, 0.176]
+  best admissible EPV > shot xG in 27% of draws
