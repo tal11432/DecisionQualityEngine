@@ -1,0 +1,36 @@
+check, 18-yard corner predicted vs true (u,w): [23.1 17.4] vs (20.16, 16.5)
+  shooter         lateral   -6.0 m  from goal line   5.5 m
+  R90             lateral   +1.1 m  from goal line   6.9 m
+  R27             lateral   +8.2 m  from goal line   9.7 m
+  R17             lateral   -0.7 m  from goal line  16.3 m
+  R_midleft       lateral  -12.2 m  from goal line  12.1 m
+  R_farleft       lateral  -22.4 m  from goal line  12.8 m
+  R2              lateral  +13.9 m  from goal line  29.1 m
+  B_near_shooter  lateral   -4.1 m  from goal line   9.0 m
+  B_grounded      lateral   -5.9 m  from goal line   3.2 m
+  GK              lateral   -3.8 m  from goal line   2.2 m
+  B_post1         lateral   -0.8 m  from goal line   1.8 m
+  B_post2         lateral   +1.4 m  from goal line   2.4 m
+  B_farleft1      lateral  -14.3 m  from goal line   6.7 m
+  B_farleft2      lateral   -7.1 m  from goal line  18.9 m
+  B_farleft3      lateral  -20.8 m  from goal line  15.1 m
+
+BASE: shot 8.2 m from goal centre, opponents in shooting triangle 2, xG 0.193 (+1 defender 0.148)
+  R90        d   7.3 m, from goal   6.9 m, admissible True, xP 0.96, xA 0.317, EPV 0.304
+  R27        d  14.9 m, from goal  12.7 m, admissible True, xP 0.89, xA 0.099, EPV 0.089
+  R17        d  12.1 m, from goal  16.3 m, admissible True, xP 0.79, xA 0.071, EPV 0.056
+  R_midleft  d   9.1 m, from goal  17.2 m, admissible True, xP 0.97, xA 0.052, EPV 0.050
+  R_farleft  d  17.9 m, from goal  25.8 m, admissible True, xP 0.48, xA 0.012, EPV 0.006
+  R2         d  31.0 m, from goal  32.3 m, admissible True, xP 0.74, xA 0.010, EPV 0.007
+/home/user/DecisionQualityEngine/research/cases/frame_case.py:14: RuntimeWarning: overflow encountered in exp
+  return float(1 / (1 + np.exp(-(np.column_stack([np.ones(1), (x - XG["mu"]) / XG["sd"]]) @ XG["b"])))[0])
+/home/user/DecisionQualityEngine/research/cases/frame_case.py:17: RuntimeWarning: overflow encountered in exp
+  return float(np.exp(np.log1p(-1 / (1 + np.exp(-lg))).sum()))
+
+MONTE CARLO (500 draws; every landmark and player pixel jittered N(0, 10 px)):
+  xG shot: median 0.211 [5%-95% 0.132, 0.374]
+  R90: xP median 0.960 [5%-95% 0.869, 0.988]; xA median 0.315 [5%-95% 0.146, 0.421]; EPV median 0.300 [5%-95% 0.134, 0.403]
+  R27: xP median 0.896 [5%-95% 0.746, 0.955]; xA median 0.103 [5%-95% 0.055, 0.265]; EPV median 0.092 [5%-95% 0.046, 0.243]
+  R17: xP median 0.817 [5%-95% 0.624, 0.900]; xA median 0.074 [5%-95% 0.017, 0.156]; EPV median 0.058 [5%-95% 0.011, 0.137]
+  best EPV among admissible teammates: median 0.299 [5%-95% 0.130, 0.403] ; share of draws with best EPV > xG(shot): 72%
+  share of draws with R90 EPV > shot xG: 72%; with R27: 15%
