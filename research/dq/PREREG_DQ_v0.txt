@@ -1,0 +1,30 @@
+DQ-v0 PRE-REGISTRATION (Stage 0). Written 2026-11-13T10:53:48Z, before any download of event data or any model fit.
+User authorisation: run all stages until blocked; downloads <= 1.5 GB total; delete downloaded data after use. No commit.
+
+TARGET QUANTITY (frozen)
+Unit: one on-ball decision at the release frame of an open-play ground pass or open-play foot shot (Metrica tracking, existing decision contract).
+Actions: pass to each realistic teammate (rule R0: 3-40 m, onside proxy) and shoot. Carries/dribbles excluded (no model).
+EV(pass a) = Ps(a)*Vsucc(a) + (1-Ps(a))*Vfail(a);  EV(shot) = xG(shot).
+ Vsucc(a)  = V(location of receiver at release)    [possession value for the team in possession; ignores receiver's time to control]
+ Vfail(a)  = -Vopp(mirror(receiver location))      [turnover assumed at receiver location: a stated simplification]
+DQ_w   = EV(chosen) - sum_a w(a) EV(a), w = choice-model probabilities (primary).  DQ_max = EV(chosen) - max_a EV(a) (secondary).
+Reporting unit until Stage 6: situation, never player.
+
+STAGE 1 - value models from StatsBomb open event data (Premier League 2015/16, all 380 matches; plus 40 FIFA WC 2018 matches as out-of-competition test). Raw files are streamed, reduced to compact tables, and deleted.
+ V(x,y): P(current possession ends in a goal by the team in possession), on-ball events with location, open play and set play included; logistic model on fixed basis (distance to goal, goal-mouth angle, x, distance^2, angle*distance); fitted with Newton + ridge 1.0, numpy only.
+ Vopp: same model fitted on the FIRST event of possessions that start after an open-play turnover.
+ xG: open-play, non-penalty shots; features distance, angle, header, number of opponents in the shooter-posts triangle, goalkeeper distance from goal centre (from shot freeze frames); same fitting.
+ Split: train = PL matches before the season's median match date; test A = PL matches after it; test B = WC 2018 sample. CIs by match bootstrap (1000).
+ GATE G1 (all on test A AND test B):
+  - log loss better than the constant (train base rate) with match-bootstrap 95% CI excluding 0;
+  - calibration slope (logistic recalibration of y on logit p) in [0.8, 1.2]; calibration-in-the-large mean(p)/mean(y) in [0.85, 1.15];
+  - xG additionally AUC >= 0.75.
+  - Transfer to Metrica (StatsBomb 120x80 mapped linearly to 105x68 m): sum of predicted xG on the 50 Metrica open-play foot shots must lie inside a Poisson 95% interval around observed goals (weak check; failing it fails G1).
+STAGE 2 - calibrated pass-success probability Ps for hypothetical passes.
+ GATE G2: a dataset with decision-time state AND an outcome-independent intended target for both completed and failed passes, >= 10 matches, on which a model's held-out calibration slope is in [0.8, 1.2] per held-out match.
+ Candidates to examine: Metrica (3 matches; existing pooled validation), StatsBomb events/360 (check whether failed-pass end_location is outcome-dependent), IDSSE/SkillCorner (already failed release gates).
+STAGE 3 - realistic option set: choice model incl. motion direction confirmed on untouched tracking matches. GATE G3: pre-registered H1 criteria pass on >= 1 new match.
+STAGE 4 - DQ prototype on held-out matches with uncertainty. GATE G4: sign of DQ stable for >= 80% of situations across sensitivity settings (ball speed +-15%, R0/R_loose, V vs V with ridge 10).
+STAGE 5 - external validity: expert panel, inter-rater kappa >= 0.4 before any comparison; then DQ-expert agreement. GATE G5 as stated.
+STAGE 6 - player aggregation only after G1-G5.
+STOP RULE: the run stops at the first gate that fails and cannot be fixed within the authorised data; no gate threshold is changed after seeing results.

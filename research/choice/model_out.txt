@@ -1,0 +1,128 @@
+
+################ R0_primary (3, 40, True) ################
+
+held-out G1: train G2+G3; n passes 730 (mean set size 8.14); ridge 1.0
+  method                                           top-1                       MRR                  log loss
+  uniform (analytic)               0.127  [0.125, 0.129]     0.341  [0.338, 0.344]     2.082  [2.069, 2.095]
+  nearest teammate                 0.319  [0.286, 0.352]     0.546  [0.521, 0.570]                       n/a
+  safest lane (min margin)         0.333  [0.297, 0.363]     0.563  [0.538, 0.585]                       n/a
+  conditional logit (5 feat.)      0.437  [0.401, 0.474]     0.641  [0.618, 0.665]     1.473  [1.407, 1.540]
+  velocity-aligned (moving passers, n=570): top-1 0.409, MRR 0.615; model on same subset 0.444 / 0.644; uniform 0.126 / 0.339
+  paired model - uniform: top-1 +0.310 [0.276, 0.347], MRR +0.300 [0.277, 0.324], log loss -0.607 [-0.672, -0.541]
+  paired model - nearest: top-1 +0.118 [0.082, 0.153], MRR +0.096 [0.073, 0.118]
+
+held-out G2: train G1+G3; n passes 892 (mean set size 8.26); ridge 1.0
+  method                                           top-1                       MRR                  log loss
+  uniform (analytic)               0.125  [0.123, 0.127]     0.337  [0.335, 0.340]     2.098  [2.085, 2.108]
+  nearest teammate                 0.364  [0.332, 0.393]     0.578  [0.555, 0.599]                       n/a
+  safest lane (min margin)         0.311  [0.281, 0.341]     0.553  [0.533, 0.575]                       n/a
+  conditional logit (5 feat.)      0.430  [0.398, 0.464]     0.642  [0.621, 0.664]     1.451  [1.403, 1.498]
+  velocity-aligned (moving passers, n=691): top-1 0.430, MRR 0.618; model on same subset 0.414 / 0.630; uniform 0.124 / 0.336
+  paired model - uniform: top-1 +0.306 [0.273, 0.339], MRR +0.305 [0.284, 0.327], log loss -0.648 [-0.692, -0.602]
+  paired model - nearest: top-1 +0.067 [0.031, 0.103], MRR +0.064 [0.042, 0.087]
+
+held-out G3: train G1+G2; n passes 946 (mean set size 7.84); ridge 0.1
+  method                                           top-1                       MRR                  log loss
+  uniform (analytic)               0.132  [0.130, 0.134]     0.350  [0.347, 0.353]     2.044  [2.032, 2.055]
+  nearest teammate                 0.312  [0.282, 0.342]     0.536  [0.514, 0.558]                       n/a
+  safest lane (min margin)         0.339  [0.311, 0.371]     0.571  [0.551, 0.593]                       n/a
+  conditional logit (5 feat.)      0.414  [0.382, 0.446]     0.622  [0.600, 0.645]     1.578  [1.505, 1.648]
+  velocity-aligned (moving passers, n=713): top-1 0.431, MRR 0.625; model on same subset 0.412 / 0.616; uniform 0.129 / 0.346
+  paired model - uniform: top-1 +0.283 [0.250, 0.315], MRR +0.272 [0.250, 0.295], log loss -0.466 [-0.539, -0.394]
+  paired model - nearest: top-1 +0.103 [0.071, 0.135], MRR +0.086 [0.065, 0.106]
+
+################ R_tight (3, 25, True) ################
+
+held-out G1: train G2+G3; n passes 651 (mean set size 5.23); ridge 1.0
+  method                                           top-1                       MRR                  log loss
+  uniform (analytic)               0.218  [0.211, 0.225]     0.468  [0.460, 0.476]     1.593  [1.565, 1.620]
+  nearest teammate                 0.352  [0.315, 0.390]     0.586  [0.562, 0.612]                       n/a
+  safest lane (min margin)         0.425  [0.386, 0.462]     0.643  [0.617, 0.667]                       n/a
+  conditional logit (5 feat.)      0.493  [0.453, 0.533]     0.693  [0.668, 0.718]     1.206  [1.149, 1.269]
+  velocity-aligned (moving passers, n=506): top-1 0.530, MRR 0.715; model on same subset 0.494 / 0.692; uniform 0.213 / 0.462
+  paired model - uniform: top-1 +0.275 [0.238, 0.316], MRR +0.224 [0.202, 0.248], log loss -0.386 [-0.438, -0.330]
+  paired model - nearest: top-1 +0.141 [0.098, 0.187], MRR +0.106 [0.079, 0.136]
+
+held-out G2: train G1+G3; n passes 835 (mean set size 5.28); ridge 1.0
+  method                                           top-1                       MRR                  log loss
+  uniform (analytic)               0.216  [0.210, 0.222]     0.466  [0.458, 0.473]     1.602  [1.576, 1.627]
+  nearest teammate                 0.382  [0.351, 0.416]     0.600  [0.578, 0.623]                       n/a
+  safest lane (min margin)         0.405  [0.374, 0.438]     0.630  [0.608, 0.651]                       n/a
+  conditional logit (5 feat.)      0.472  [0.441, 0.509]     0.677  [0.657, 0.700]     1.252  [1.201, 1.297]
+  velocity-aligned (moving passers, n=643): top-1 0.516, MRR 0.704; model on same subset 0.473 / 0.677; uniform 0.214 / 0.463
+  paired model - uniform: top-1 +0.258 [0.225, 0.292], MRR +0.212 [0.192, 0.232], log loss -0.351 [-0.392, -0.308]
+  paired model - nearest: top-1 +0.091 [0.051, 0.132], MRR +0.078 [0.053, 0.104]
+
+held-out G3: train G1+G2; n passes 826 (mean set size 5.03); ridge 0.1
+  method                                           top-1                       MRR                  log loss
+  uniform (analytic)               0.226  [0.220, 0.232]     0.479  [0.472, 0.486]     1.554  [1.530, 1.579]
+  nearest teammate                 0.346  [0.315, 0.380]     0.579  [0.557, 0.602]                       n/a
+  safest lane (min margin)         0.437  [0.403, 0.470]     0.650  [0.629, 0.672]                       n/a
+  conditional logit (5 feat.)      0.488  [0.452, 0.523]     0.688  [0.665, 0.710]     1.261  [1.202, 1.322]
+  velocity-aligned (moving passers, n=619): top-1 0.540, MRR 0.718; model on same subset 0.478 / 0.681; uniform 0.219 / 0.470
+  paired model - uniform: top-1 +0.262 [0.227, 0.296], MRR +0.210 [0.186, 0.232], log loss -0.294 [-0.351, -0.235]
+  paired model - nearest: top-1 +0.143 [0.105, 0.180], MRR +0.110 [0.088, 0.134]
+
+################ R_loose (3, 60, True) ################
+
+held-out G1: train G2+G3; n passes 738 (mean set size 9.60); ridge 1.0
+  method                                           top-1                       MRR                  log loss
+  uniform (analytic)               0.105  [0.104, 0.105]     0.302  [0.301, 0.303]     2.260  [2.255, 2.265]
+  nearest teammate                 0.316  [0.285, 0.350]     0.541  [0.517, 0.565]                       n/a
+  safest lane (min margin)         0.308  [0.276, 0.343]     0.537  [0.514, 0.561]                       n/a
+  conditional logit (5 feat.)      0.425  [0.390, 0.461]     0.631  [0.608, 0.655]     1.520  [1.456, 1.588]
+  velocity-aligned (moving passers, n=576): top-1 0.363, MRR 0.575; model on same subset 0.425 / 0.631; uniform 0.105 / 0.302
+  paired model - uniform: top-1 +0.321 [0.286, 0.356], MRR +0.330 [0.307, 0.354], log loss -0.739 [-0.804, -0.672]
+  paired model - nearest: top-1 +0.110 [0.073, 0.148], MRR +0.090 [0.066, 0.113]
+
+held-out G2: train G1+G3; n passes 903 (mean set size 9.72); ridge 1.0
+  method                                           top-1                       MRR                  log loss
+  uniform (analytic)               0.103  [0.103, 0.104]     0.299  [0.298, 0.300]     2.272  [2.268, 2.276]
+  nearest teammate                 0.360  [0.330, 0.392]     0.572  [0.551, 0.596]                       n/a
+  safest lane (min margin)         0.269  [0.240, 0.300]     0.515  [0.495, 0.537]                       n/a
+  conditional logit (5 feat.)      0.432  [0.400, 0.465]     0.637  [0.615, 0.657]     1.520  [1.468, 1.573]
+  velocity-aligned (moving passers, n=701): top-1 0.402, MRR 0.588; model on same subset 0.412 / 0.623; uniform 0.103 / 0.299
+  paired model - uniform: top-1 +0.329 [0.296, 0.362], MRR +0.338 [0.316, 0.358], log loss -0.752 [-0.804, -0.700]
+  paired model - nearest: top-1 +0.072 [0.035, 0.106], MRR +0.064 [0.042, 0.085]
+
+held-out G3: train G1+G2; n passes 974 (mean set size 9.47); ridge 0.1
+  method                                           top-1                       MRR                  log loss
+  uniform (analytic)               0.106  [0.106, 0.107]     0.305  [0.304, 0.306]     2.245  [2.241, 2.250]
+  nearest teammate                 0.303  [0.274, 0.332]     0.524  [0.503, 0.546]                       n/a
+  safest lane (min margin)         0.286  [0.259, 0.314]     0.526  [0.506, 0.545]                       n/a
+  conditional logit (5 feat.)      0.406  [0.376, 0.435]     0.609  [0.588, 0.630]     1.701  [1.620, 1.778]
+  velocity-aligned (moving passers, n=738): top-1 0.378, MRR 0.577; model on same subset 0.400 / 0.600; uniform 0.106 / 0.304
+  paired model - uniform: top-1 +0.300 [0.269, 0.329], MRR +0.304 [0.283, 0.325], log loss -0.546 [-0.624, -0.470]
+  paired model - nearest: top-1 +0.104 [0.073, 0.134], MRR +0.085 [0.065, 0.104]
+
+################ R_existing (3, 1000000000.0, False) ################
+
+held-out G1: train G2+G3; n passes 741 (mean set size 9.97); ridge 1.0
+  method                                           top-1                       MRR                  log loss
+  uniform (analytic)               0.100  [0.100, 0.100]     0.293  [0.293, 0.294]     2.300  [2.298, 2.301]
+  nearest teammate                 0.312  [0.275, 0.343]     0.538  [0.512, 0.561]                       n/a
+  safest lane (min margin)         0.301  [0.269, 0.332]     0.532  [0.508, 0.554]                       n/a
+  conditional logit (5 feat.)      0.422  [0.387, 0.456]     0.628  [0.603, 0.652]     1.534  [1.471, 1.606]
+  velocity-aligned (moving passers, n=577): top-1 0.350, MRR 0.564; model on same subset 0.423 / 0.629; uniform 0.100 / 0.293
+  paired model - uniform: top-1 +0.322 [0.287, 0.356], MRR +0.335 [0.309, 0.358], log loss -0.765 [-0.829, -0.694]
+  paired model - nearest: top-1 +0.111 [0.076, 0.144], MRR +0.090 [0.068, 0.112]
+
+held-out G2: train G1+G3; n passes 904 (mean set size 9.97); ridge 1.0
+  method                                           top-1                       MRR                  log loss
+  uniform (analytic)               0.100  [0.100, 0.100]     0.293  [0.293, 0.294]     2.300  [2.299, 2.301]
+  nearest teammate                 0.360  [0.329, 0.392]     0.572  [0.550, 0.594]                       n/a
+  safest lane (min margin)         0.269  [0.243, 0.300]     0.513  [0.494, 0.534]                       n/a
+  conditional logit (5 feat.)      0.429  [0.397, 0.463]     0.635  [0.615, 0.657]     1.523  [1.472, 1.576]
+  velocity-aligned (moving passers, n=701): top-1 0.392, MRR 0.581; model on same subset 0.408 / 0.621; uniform 0.100 / 0.293
+  paired model - uniform: top-1 +0.329 [0.297, 0.363], MRR +0.342 [0.322, 0.364], log loss -0.777 [-0.828, -0.724]
+  paired model - nearest: top-1 +0.070 [0.034, 0.106], MRR +0.063 [0.041, 0.086]
+
+held-out G3: train G1+G2; n passes 979 (mean set size 9.98); ridge 0.1
+  method                                           top-1                       MRR                  log loss
+  uniform (analytic)               0.100  [0.100, 0.100]     0.293  [0.293, 0.294]     2.300  [2.299, 2.301]
+  nearest teammate                 0.302  [0.274, 0.331]     0.524  [0.502, 0.544]                       n/a
+  safest lane (min margin)         0.277  [0.248, 0.306]     0.518  [0.498, 0.538]                       n/a
+  conditional logit (5 feat.)      0.402  [0.370, 0.435]     0.606  [0.583, 0.629]     1.711  [1.636, 1.792]
+  velocity-aligned (moving passers, n=742): top-1 0.371, MRR 0.568; model on same subset 0.398 / 0.597; uniform 0.100 / 0.293
+  paired model - uniform: top-1 +0.302 [0.270, 0.335], MRR +0.312 [0.290, 0.335], log loss -0.589 [-0.665, -0.508]
+  paired model - nearest: top-1 +0.100 [0.072, 0.129], MRR +0.082 [0.064, 0.101]

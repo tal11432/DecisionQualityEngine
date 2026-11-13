@@ -1,0 +1,23 @@
+DQ-v2 PRE-REGISTRATION: target-free pass-success model (Stage 2 retry). Written 2026-11-13T11:19:56Z, before any download or fit for this model.
+Motivation (post-hoc, stated): v1 showed that requiring an intended receiver removes failed passes selectively (59% vs 41% identified).
+
+MODEL: discrete-time interception hazard along the pass line. The ball travels from the passer along direction theta. Distance is cut into 2-unit steps
+(StatsBomb units; Metrica metres mapped linearly to 120x80). A failed pass is an EVENT in the step containing the point where the ball was stopped;
+a completed pass is CENSORED at its length (it survived to the end). No receiver identity and no intended length are used.
+Assumption (untestable here, stated): the intended length is independent of the step hazard given the covariates (non-informative censoring).
+Success probability of a hypothetical pass to a teammate at distance d in direction theta: Ps = prod over steps < d of (1 - h(step)).
+Step covariates (positions at the release frame only; no velocities, because 360 has none): s (step start), s^2, dmin = distance of the nearest opponent
+to the step segment (capped 20), log(1+dmin), ratio dmin/(s+2), number of opponents within 3 units of the segment, segment midpoint x and |y-40|,
+passer pressure (nearest opponent to the passer, capped 20), in_view (segment midpoint inside the 360 visible area; 1 for Metrica).
+Fit: logistic discrete hazard, ridge 1.0, numpy Newton. Scope as v1: open-play ground passes, not head/cross/through ball, length >= 5 units, outcome complete or Incomplete, 360 frame present.
+Data: StatsBomb events + 360 for Euro 2020 and WC 2022, gzip, decompressed in memory; derived tables deleted at the end.
+
+GATE G2-cal (all must hold):
+ (1) Cross-competition, both directions (train EU20 -> test WC22, train WC22 -> test EU20): step-level log-likelihood gain over the training constant hazard
+     with match-bootstrap 95% CI excluding 0; calibration slope of step hazards in [0.8, 1.2]; observed/expected events in [0.85, 1.15].
+ (2) Between-match level stability in each test competition: tau = sqrt(max(0, var(log((O_m+0.5)/E_m)) - mean(1/E_m))) <= 0.20 (O/E per match).
+ (3) Transfer to Metrica (the data DQ must be computed on): model fitted on EU20+WC22, applied to Metrica scenario-A eligible completed and intercepted passes
+     with ALL opponents at the release frame; pass direction = start -> stop point; stop point = tracking ball position at the event end frame
+     (label side only). Step-level slope in [0.8, 1.2] and O/E in [0.85, 1.15], pooled over the 3 games; per-game values reported.
+Reported, not gating: per-match O/E distribution; coefficient table; pass-level AUC is NOT used (truncated failed lengths bias it).
+If G2-cal passes, Stage 3/4 may proceed; otherwise the run stops (stop rule).

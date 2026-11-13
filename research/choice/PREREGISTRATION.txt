@@ -1,0 +1,21 @@
+PRE-REGISTRATION (written before any choice-model result was computed; exploratory; all three games already influenced earlier work)
+
+Population: completed passes (label_events outcome == "completed") that are Scenario-A eligible (existing build_features A kept set). Failed passes are never used.
+Decision frame: existing release frame (event start frame). All candidate features use frames <= release only (positions at release; opponent velocities causal, 5-frame backward difference).
+Receiver identity (provider to_player) is used ONLY as the choice label. Admissibility and features are computed for every teammate before the label is looked up.
+
+Admissibility rules (a-priori constants, NOT estimated from data, not tuned):
+  R0 PRIMARY: teammate tracked at release; 3 m <= distance from passer <= 40 m; not in an offside position at release
+              (offside: receiver oriented-x > max(second-last-opponent oriented-x, passer oriented-x) AND receiver oriented-x > 0; oriented = attacking team's goal at +x).
+  Sensitivity: R_tight (3-25 m, offside), R_loose (3-60 m, offside), R_existing (>= 3 m only; the existing option rule, no offside).
+  No risk/lane/pressure criterion is used in any rule.
+Choice-set requirement for modelling: >= 2 admissible candidates AND the actual receiver admissible ("conditional on coverage"). End-to-end metrics (receiver excluded = miss) are also reported for R0.
+
+Candidate features (all decision-time): dist (m); forward = oriented dx (receiver - passer, m); lateral = |dy| (m); rec_pressure = nearest-opponent distance to the receiver (m);
+  margin = existing velocity-aware interception margin passer->receiver (s, clipped +-10, existing code and parameters).
+Primary model: conditional (multinomial) logit, ridge penalty chosen from {0.1, 1, 10, 100} by inner leave-one-training-game-out log loss; features winsorised/standardised with the existing Prep fitted on TRAINING candidates only.
+Baselines: uniform random among admissible candidates (analytic expectation); nearest admissible teammate; safest admissible lane (lowest margin); velocity-aligned (existing rule, passers moving >= 1 m/s only).
+Metrics: top-1, MRR, log loss (model and uniform only); bootstrap over passes (1000) for CIs and paired differences; results by held-out game; by candidate-set size.
+Evaluation: leave-one-game-out (train on two games, test on the third), reported per held-out game. Rules, features, model and metrics are NOT changed after results are seen.
+Reporting groups: game; passer pitch third (oriented x < -17.5, -17.5..17.5, > 17.5 m); passer role proxy = tercile of the passer's match-average oriented x within the team (players with >= 25,000 tracked frames).
+2026-11-13T10:29:27Z

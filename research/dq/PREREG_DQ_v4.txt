@@ -1,0 +1,25 @@
+DQ-v4 PRE-REGISTRATION: Stage 4 prototype on Metrica, RUN PAST GATE G3 (realistic-option model not confirmed on new data) at the user's request.
+Written 2026-11-13T11:57:38Z, before any prototype computation. Exploratory; no player-level output.
+
+SITUATIONS (Metrica G1-G3, scenario-A eligible, release frame, existing contract):
+ P1 primary: completed passes whose provider receiver is R0-admissible (chosen = provider receiver).
+ P2 secondary: intercepted passes whose heading-rule target (existing assign_target_by_heading via build_decision_samples; post-release frames, label side only) is R0-admissible.
+ P2 is outcome-selected AND target-selected (35% coverage of interceptions); P1 is success-selected. Neither is representative.
+ACTIONS: passes to R0 teammates only. The shot option is NOT included: xG is on an absolute scale and V only on a relative one (level unknown for Metrica).
+COMPONENTS (all frozen, nothing refitted on Metrica except the pre-registered LOGO recalibration):
+ V(x) = DQ-v1 V model (PL-trained), candidate position at release mapped to 120x80 units.
+ Vfail = -k*m, k = 0.814 (k_train), m = 0.0168 (train mean V).  Both V and Vfail share the unknown competition factor c, so DQ signs and rankings do not depend on c.
+ Ps_j = prod over steps passer->candidate of (1 - h_cal); h = DQ-v2 hazard model (in_view = 1, all opponents at release); h_cal = LOGO recalibration
+   with the v2 fold parameters for the held-out game: G1 a=-0.764 b=0.793; G2 a=-0.713 b=0.778; G3 a=-0.581 b=0.819.
+ EV_j = Ps_j*V_j - (1-Ps_j)*k*m.  Reported x100 (percentage points of the possession-goal probability).
+ w_j = conditional-logit choice probabilities, features dist, forward, lateral, rec_press, margin + motion feature F1, ridge 1.0, trained on P1 passes of the
+   OTHER two games (LOGO), applied to the held-out game.
+ DQ_w = EV_chosen - sum_j w_j EV_j (primary);  DQ_max = EV_chosen - max_j EV_j (secondary).
+GATE G4 (sensitivity): for each setting separately, the sign of DQ_w equals the baseline sign in >= 80% of P1 situations:
+ (a) k x0.83 and x1.17; (b) recalibration parameters of each other fold, and no recalibration; (c) candidate rule R_loose instead of R0;
+ (d) weights from the model without the motion feature.  Spearman correlation with baseline reported.
+ Deviation from v0 stated: "ball speed +-15%" does not apply (the hazard model has no ball-speed parameter); "V with ridge 10" is not possible (V training data deleted).
+KNOWN-GROUPS CHECK (direction predicted in advance): DQ_w lower for P2 (intercepted) than P1; reported as AUC with bootstrap CI. Outcome is never an input; but
+ P2's selection differs, so this is a sanity check, not validation.
+OUTPUTS: distributions, by game / third / passer pressure, share chosen = argmax EV, worked examples, a stratified pilot list of 120 situations for the expert panel
+ (24 per DQ_w quintile of P1+P2, games balanced, seed 0). No player summaries.

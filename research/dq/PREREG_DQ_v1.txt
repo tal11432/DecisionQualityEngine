@@ -1,0 +1,24 @@
+DQ-v1 RE-REGISTRATION (post-hoc repairs of Stage 1 + Stage 2 360 test). Written 2026-11-13T11:02:53Z, before re-downloading or refitting anything.
+HONEST STATUS: both Stage-1 repairs were chosen AFTER seeing the v0 failures (WC 2018 = test B suggested them). They are therefore tested on two
+competitions never used before: C = UEFA Euro 2020 (51 matches), D = FIFA World Cup 2022 (64 matches). A (PL late season) and B (WC 2018) are re-reported but do not count.
+Models, basis, ridge, train set (PL 2015/16 matches before 2016-01-02) are refitted exactly as in v0 (deterministic). Coefficients are saved this time.
+
+REPAIR 1 (relative scale): DQ is reported only as DQ_rel = DQ / mean_a EV(a) within the situation, so a competition-wide multiplicative level of V cancels.
+ Gate for V on each of C, D: (a) log-loss gain over the constant after a single level rescaling p*c, c = mean(y)/mean(p) on that test set
+ (allowed because the level is not used by DQ_rel), match-bootstrap 95% CI excluding 0; (b) calibration slope in [0.8, 1.2];
+ (c) after rescaling, every quintile bin has observed/predicted in [0.75, 1.33].
+REPAIR 2 (constant failure value): Vfail = -k * mean(V), k = (goal rate of possessions starting after open-play turnovers) / (mean V over on-ball events), estimated on train.
+ Gate on each of C, D: k_test within +-25% of k_train. Informational: whether a location model for Vopp beats the constant on C, D.
+xG gate unchanged from v0 (AUC >= 0.75, slope 0.8-1.2, mean p/mean y 0.85-1.15, log-loss CI excluding 0), now also on C and D.
+G1' = PASS only if V (repair 1), k (repair 2) and xG all pass on BOTH C and D.
+
+STAGE 2 TEST WITH 360 FREEZE FRAMES (question: do player positions reveal the intended receiver of an intercepted pass?)
+ Passes: open play (no pass.type), ground pass, not head, not cross/through ball, length >= 5 units, outcome complete (no outcome) or Incomplete; Euro 2020 and WC 2022.
+ Target rule = existing Metrica heading rule, parameters unchanged: direction passer -> end_location; candidates = teammates (not actor) in the 360 frame,
+ >= 3 units from the passer, angular deviation <= 15 deg; identified if the best is >= 5 deg better than the runner-up.
+ Gate G2-target: (i) identified share completed vs incomplete differs by <= 10 pp; (ii) on completed passes the identified teammate is the frame teammate nearest
+ to end_location in >= 80%; (iii) 360 frame present for completed and incomplete passes within 10 pp.
+ If G2-target passes: Ps model (logistic, ridge 1) on release-frame features to the identified target (distance, |angle to goal direction|, min opponent distance
+ to the passer-target segment, opponents within 5 units of target, number of visible opponents) trained on Euro 2020, tested on WC 2022:
+ Gate G2-cal: pooled slope in [0.8,1.2], mean p/mean y in [0.85,1.15], log-loss CI (match bootstrap) excluding 0; per-match slopes reported.
+Downloads: events (gzip) for PL 2015/16 (380), the same 40 WC 2018 matches (seed 0), Euro 2020, WC 2022; 360 for Euro 2020 and WC 2022. Raw deleted immediately.

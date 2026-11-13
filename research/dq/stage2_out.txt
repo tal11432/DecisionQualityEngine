@@ -1,0 +1,10 @@
+incomplete passes with a following opponent event: 63794
+  next opponent event Ball Recovery    n=  9730: |end_location - opponent event location| median 0.14 units, share <= 2 units 99.9%
+  next opponent event Block            n=  8388: |end_location - opponent event location| median 0.14 units, share <= 2 units 99.9%
+  next opponent event Clearance        n= 15947: |end_location - opponent event location| median 0.14 units, share <= 2 units 99.8%
+  next opponent event Duel             n=  1764: |end_location - opponent event location| median 12.18 units, share <= 2 units 4.5%
+  next opponent event Goal Keeper      n=  1674: |end_location - opponent event location| median 0.14 units, share <= 2 units 99.9%
+  next opponent event Interception     n=  7308: |end_location - opponent event location| median 0.14 units, share <= 2 units 99.9%
+  next opponent event Pass             n= 18110: |end_location - opponent event location| median 0.14 units, share <= 2 units 99.1%
+  next opponent event Pressure         n=   700: |end_location - opponent event location| median 3.56 units, share <= 2 units 30.4%
+  all: median 0.14, share <= 2 units 96.1%, <= 5 units 96.9%

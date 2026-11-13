@@ -1,0 +1,24 @@
+matches: train 190, test A (PL after 2016-01-02) 190, test B (WC 2018) 40
+
+V (possession ends in goal, from any on-ball event): train n=481460 rate 0.0168
+  V (p test A: n=482461 events, 7994 positives (rate 0.0166); log-loss gain vs constant +0.00280 [+0.00230,+0.00334]; slope 0.960; mean p/mean y 1.038  => PASS
+     reliability (5 bins) pred->obs: 0.010->0.009, 0.011->0.011, 0.014->0.014, 0.017->0.016, 0.034->0.032
+  V (p test B: n=103670 events, 1380 positives (rate 0.0133); log-loss gain vs constant +0.00323 [+0.00239,+0.00424]; slope 1.061; mean p/mean y 1.261  => FAIL
+     reliability (5 bins) pred->obs: 0.010->0.007, 0.011->0.008, 0.013->0.010, 0.016->0.015, 0.033->0.027
+
+Vopp (from first event of possessions after open-play turnover): train n=14411 rate 0.0137
+  Vopp test A: n=14347 events, 177 positives (rate 0.0123); log-loss gain vs constant +0.00015 [-0.00013,+0.00042]; slope 0.881; mean p/mean y 1.114  => FAIL
+     reliability (5 bins) pred->obs: 0.012->0.011, 0.012->0.009, 0.013->0.012, 0.014->0.013, 0.018->0.016
+  Vopp test B: n=3348 events, 38 positives (rate 0.0114); log-loss gain vs constant -0.00015 [-0.00065,+0.00044]; slope 0.278; mean p/mean y 1.231  => FAIL
+     reliability (5 bins) pred->obs: 0.012->0.010, 0.012->0.010, 0.013->0.007, 0.014->0.017, 0.018->0.012
+
+xG (open play, non-penalty): train n=4596 goals 420
+  xG test A: n=4715 events, 448 positives (rate 0.0950); log-loss gain vs constant +0.04348 [+0.03513,+0.05221]; slope 0.901; mean p/mean y 0.950; AUC 0.769 (StatsBomb xG 0.789, log loss ours 0.2706 vs StatsBomb 0.2587)  => PASS
+     reliability (5 bins) pred->obs: 0.015->0.016, 0.032->0.037, 0.056->0.063, 0.096->0.108, 0.254->0.251
+  xG test B: n=964 events, 81 positives (rate 0.0840); log-loss gain vs constant +0.05034 [+0.03190,+0.06758]; slope 0.927; mean p/mean y 1.006; AUC 0.794 (StatsBomb xG 0.799, log loss ours 0.2385 vs StatsBomb 0.2350)  => PASS
+     reliability (5 bins) pred->obs: 0.011->0.021, 0.026->0.031, 0.047->0.026, 0.086->0.078, 0.253->0.264
+
+Metrica transfer: 50 open-play foot shots, predicted xG sum 5.53 (StatsBomb-trained), Poisson 95% range [1,11], observed goals 7 => PASS; per-shot xG median 0.067, max 0.728
+by game: G1: xG 1.77 vs goals 2, G2: xG 1.56 vs goals 3, G3: xG 2.20 vs goals 2
+
+GATE G1: FAIL

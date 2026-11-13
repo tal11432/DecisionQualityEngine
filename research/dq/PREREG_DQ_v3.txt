@@ -1,0 +1,18 @@
+DQ-v3 PRE-REGISTRATION (options 2 and 1 after the v2 Metrica failure). Written 2026-11-13T11:39:40Z, before re-downloading or fitting.
+Both options were chosen after seeing v2's Metrica slope 0.798 [0.72, 0.88]; they are post-hoc remedies, labelled as such.
+Data, scope, step definition, covariates and fitting: identical to v2 (PREREG_DQ_v2.txt), except as stated.
+
+OPTION 2 (visibility hypothesis): train the hazard only on what the camera saw.
+ For each StatsBomb pass, keep its steps from the start up to (not including) the first step whose segment midpoint is outside the 360 visible area.
+ If the pass leaves the visible area before it ends, it is CENSORED at that point (no event). A pass whose first step is out of view contributes nothing.
+ The covariate in_view is dropped (constant). Assumption: leaving the visible area is independent of the hazard given covariates.
+ Gate (same as v2): cross-competition both directions on in-view test rows (LL gain CI > 0, slope 0.8-1.2, O/E 0.85-1.15, tau <= 0.20);
+ Metrica transfer (fitted on both competitions, all Metrica steps): pooled slope in [0.8, 1.2] and O/E in [0.85, 1.15], compared UNROUNDED.
+ Prediction made in advance: if the visibility explanation is right, the Metrica slope should move toward 1 relative to v2 (0.798).
+
+OPTION 1 (Metrica recalibration, leave-one-game-out): applied to the option-2 model if it fails the Metrica gate, otherwise reported as secondary;
+ and in either case also applied to the v2 model for comparison.
+ For each held-out Metrica game g: fit logit(h_cal) = a + b*logit(h) on the step rows of the other two games; apply to game g.
+ Gate: pooled out-of-fold slope in [0.8, 1.2] and pooled O/E in [0.85, 1.15]; per-game slope and O/E reported (3 games, 268 events: wide intervals).
+ Caveat stated in advance: recalibration uses Metrica labels from the other two games, i.e. it is a per-data-source calibration that would need re-estimation on any new tracking source.
+Stop rule unchanged. Derived tables deleted at the end.

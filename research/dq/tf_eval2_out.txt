@@ -1,0 +1,49 @@
+StatsBomb: passes 68809 (failed 2832, 4.1%), step rows 650861
+
+train EU20 -> test WC22
+  WC22: step rows 362757, events 1635; LL gain/row +0.00647 [+0.00606,+0.00690]; slope 0.966; O/E 1.128; tau 0.112 over 64 units; O/E per unit range 0.47-1.76  => PASS
+     reliability (5 bins) step hazard pred->obs: 0.0000->0.0000, 0.0001->0.0002, 0.0007->0.0008, 0.0022->0.0025, 0.0169->0.0190
+
+train WC22 -> test EU20
+  EU20: step rows 288104, events 1197; LL gain/row +0.00608 [+0.00564,+0.00659]; slope 1.040; O/E 0.879; tau 0.180 over 51 units; O/E per unit range 0.39-1.61  => PASS
+     reliability (5 bins) step hazard pred->obs: 0.0000->0.0000, 0.0002->0.0001, 0.0009->0.0005, 0.0030->0.0025, 0.0196->0.0176
+
+coefficients (standardised, both competitions): const -8.58, s +0.96, s2 -0.26, dmin -0.55, ldmin +0.13, ratio -4.13, n3 +0.01, mx +0.66, my +0.03, ppress -0.96, in_view -0.21
+
+Transfer to Metrica (fitted on EU20+WC22):
+  Metrica pooled (units = games): step rows 29187, events 268; LL gain/row +0.01168 [+0.00742,+0.01403]; slope 0.798; O/E 1.023; tau 0.000 over 3 units; O/E per unit range 0.93-1.12  => FAIL
+     reliability (5 bins) step hazard pred->obs: 0.0000->0.0000, 0.0003->0.0009, 0.0014->0.0022, 0.0050->0.0069, 0.0382->0.0360
+   G1: events 103, O/E 1.124, slope 0.798
+   G2: events 92, O/E 0.930, slope 0.843
+   G3: events 73, O/E 1.022, slope 0.735
+
+GATE G2-cal: cross-competition PASS; Metrica transfer FAIL  => FAIL
+
+============================== OPTION 2 ==============================
+in-view rows kept 93.1% (606260 of 650861); passes that leave the view (censored there) 10630 of 68809; failures lost to censoring 469 of 2832
+train EU20 -> test WC22 (in-view rows)
+  WC22: step rows 339137, events 1367; LL gain/row +0.00591 [+0.00545,+0.00634]; slope 0.979; O/E 1.162; tau 0.139 over 64 units; O/E per unit range 0.53-1.88  => FAIL
+     reliability (5 bins) step hazard pred->obs: 0.0000->0.0000, 0.0001->0.0001, 0.0005->0.0007, 0.0020->0.0022, 0.0147->0.0172
+train WC22 -> test EU20 (in-view rows)
+  EU20: step rows 267123, events 996; LL gain/row +0.00561 [+0.00506,+0.00610]; slope 1.033; O/E 0.861; tau 0.217 over 51 units; O/E per unit range 0.27-1.75  => FAIL
+     reliability (5 bins) step hazard pred->obs: 0.0000->0.0000, 0.0001->0.0001, 0.0007->0.0005, 0.0026->0.0019, 0.0181->0.0162
+coefficients (option 2): const -8.81, s +1.26, s2 -0.51, dmin -0.88, ldmin +0.29, ratio -4.00, n3 +0.04, mx +0.58, my +0.05, ppress -1.06
+Transfer to Metrica (option 2):
+  Metrica pooled: step rows 29187, events 268; LL gain/row +0.00982 [+0.00673,+0.01155]; slope 0.705; O/E 1.182; tau 0.000 over 3 units; O/E per unit range 1.06-1.32  => FAIL
+     reliability (5 bins) step hazard pred->obs: 0.0000->0.0000, 0.0003->0.0019, 0.0013->0.0036, 0.0045->0.0069, 0.0327->0.0336
+   unrounded pooled slope 0.7045; O/E 1.1820; per game: G1 slope 0.672 O/E 1.320, G2 slope 0.737 O/E 1.060, G3 slope 0.697 O/E 1.179
+OPTION 2 gate: cross-competition FAIL; Metrica FAIL; prediction 'slope moves toward 1 vs 0.798': NO
+
+============================== OPTION 1: LOGO recalibration on Metrica ==============================
+   [option-2 model] fold G1: fitted a=-0.952 b=0.720
+   [option-2 model] fold G2: fitted a=-0.950 b=0.692
+   [option-2 model] fold G3: fitted a=-0.910 b=0.701
+   [option-2 model] pooled out-of-fold slope 0.9963, O/E 0.9999; per game G1 slope 0.933 O/E 1.239, G2 slope 1.066 O/E 0.903, G3 slope 0.994 O/E 0.879; log loss per row before 0.04499 after 0.04405  => PASS
+   reliability: 0.0001->0.0000, 0.0012->0.0017, 0.0036->0.0038, 0.0086->0.0072, 0.0323->0.0332
+   [v2 model (comparison)] fold G1: fitted a=-0.764 b=0.793
+   [v2 model (comparison)] fold G2: fitted a=-0.713 b=0.778
+   [v2 model (comparison)] fold G3: fitted a=-0.581 b=0.819
+   [v2 model (comparison)] pooled out-of-fold slope 0.9992, O/E 1.0047; per game G1 slope 1.005 O/E 1.196, G2 slope 1.083 O/E 0.901, G3 slope 0.898 O/E 0.930; log loss per row before 0.04257 after 0.04223  => PASS
+   reliability: 0.0001->0.0000, 0.0008->0.0007, 0.0027->0.0024, 0.0073->0.0067, 0.0349->0.0361
+
+GATE G2-cal (v3): PASS  (option 2 Metrica FAIL; option 1 on option-2 model PASS)

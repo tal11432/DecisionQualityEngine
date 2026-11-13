@@ -1,0 +1,12 @@
+in-scope open-play ground passes: 77270 (EU20 34460, WC22 42810); complete 96.4%
+[EU20] 360 frame present: complete 88.0% vs incomplete 89.3%
+      identified: complete 57.3% (n=29299) vs incomplete 40.0% (n=1035); no teammate in cone: 30.6% vs 47.7%; mean visible teammates 6.5 vs 6.1
+      completed: identified teammate == teammate nearest end_location in 86.8% of identified
+[WC22] 360 frame present: complete 87.8% vs incomplete 87.2%
+      identified: complete 60.6% (n=36157) vs incomplete 41.2% (n=1404); no teammate in cone: 27.8% vs 45.4%; mean visible teammates 6.5 vs 6.3
+      completed: identified teammate == teammate nearest end_location in 87.8% of identified
+[ALL] 360 frame present: complete 87.9% vs incomplete 88.1%
+      identified: complete 59.1% (n=65456) vs incomplete 40.7% (n=2439); no teammate in cone: 29.1% vs 46.4%; mean visible teammates 6.5 vs 6.2
+      completed: identified teammate == teammate nearest end_location in 87.4% of identified
+
+GATE G2-target: (i) coverage gap FAIL; (ii) agreement PASS; (iii) frame availability PASS  => FAIL

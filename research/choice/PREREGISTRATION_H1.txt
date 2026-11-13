@@ -1,0 +1,15 @@
+PRE-REGISTRATION H1 (passer-motion direction). Written 2026-11-13T10:42:33Z, BEFORE any H1 analysis was run.
+HONEST STATUS: the hypothesis was suggested by the same three games (post-hoc extension in the choice study). Freezing the analysis removes analytic flexibility, NOT the selection of the hypothesis. A pass here is NOT independent confirmation; only a new match can be.
+
+Hypothesis H1: among admissible teammates (rule R0, 3-40 m, onside proxy, unchanged), the passer tends to choose receivers in the direction of his own current motion; adding this single feature improves out-of-game prediction of the chosen receiver.
+Feature F1 = 1[passer speed >= 1.0 m/s] * cos(angle between passer velocity and passer->candidate vector). Velocity = existing causal 5-frame backward difference ending at the release frame (frames <= release only). Speed threshold 1.0 m/s is the existing velocity-aligned-rule threshold, fixed before this run, not tuned.
+Population, candidate sets, features of the primary model M0 (dist, forward, |lateral|, rec_press, margin), Prep, ridge grid {0.1,1,10,100} chosen by inner leave-one-training-game-out log loss, LOGO folds: all unchanged from the choice-study pre-registration. M1 = M0 + F1.
+
+Primary criteria (all must hold to call H1 "supported in these data"):
+ P1. Paired held-out log loss M1 - M0 < 0 in each of the 3 held-out games AND pooled 95% bootstrap CI (1000 passes-resamples) excludes 0.
+ P2. Paired held-out top-1 M1 - M0 > 0 in each of the 3 games AND pooled CI excludes 0.
+ P3. Placebo: within each game, shuffle the passer-velocity vectors across passes (200 permutations, seed 0; candidate geometry untouched), refit M1 per fold with ridge fixed at 1.0, record pooled held-out log-loss gain vs M0. The real gain must exceed the 95th percentile of the placebo gains (report p = share of placebo gains >= real).
+ P4. Leakage check: recomputing F1 after replacing every tracking row after the release frame (passer and ball) with NaN must give identical values.
+Secondary (reported, not used for the verdict; no tuning of the primary):
+ S1 thresholds 0.5 and 2.0 m/s. S2 control: lagged velocity (frames release-10..release-5, i.e. one window earlier) in place of current velocity: if H1 is about CURRENT motion, current F1 should beat lagged F1; paired, pooled. S3 rules R_loose, R_existing, R_tight. S4 per-fold coefficient of F1 (standardised). S5 subset of moving passers only. S6 share of candidates/passes where F1 is non-zero.
+Interpretation rules fixed in advance: a pass of P1-P4 means "motion direction predicts choice beyond M0 on these matches; plausible mechanism: passers pass along their run", not that the choice was good. If P1 or P2 fails in any game, or P3 fails, H1 is reported as NOT supported. No criterion or threshold will be changed after seeing results.

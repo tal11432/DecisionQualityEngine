@@ -6,3 +6,8 @@ __pycache__/
 *.egg-info/
 .venv/
 outputs/
+# research: derived data tables are never committed (regenerate with the scripts); fitted coefficients are
+research/**/*.pkl
+!research/dq/stage1b_models.pkl
+!research/dq/tf_model.pkl
+!research/dq/tf_model_v3.pkl

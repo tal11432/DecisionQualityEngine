@@ -1,0 +1,20 @@
+StatsBomb: passes 68809 (failed 2832, 4.1%), step rows 650861
+
+train EU20 -> test WC22
+  WC22: step rows 362757, events 1635; LL gain/row +0.00647 [+0.00606,+0.00690]; slope 0.966; O/E 1.128; tau 0.112 over 64 units; O/E per unit range 0.47-1.76  => PASS
+     reliability (5 bins) step hazard pred->obs: 0.0000->0.0000, 0.0001->0.0002, 0.0007->0.0008, 0.0022->0.0025, 0.0169->0.0190
+
+train WC22 -> test EU20
+  EU20: step rows 288104, events 1197; LL gain/row +0.00608 [+0.00564,+0.00659]; slope 1.040; O/E 0.879; tau 0.180 over 51 units; O/E per unit range 0.39-1.61  => PASS
+     reliability (5 bins) step hazard pred->obs: 0.0000->0.0000, 0.0002->0.0001, 0.0009->0.0005, 0.0030->0.0025, 0.0196->0.0176
+
+coefficients (standardised, both competitions): const -8.58, s +0.96, s2 -0.26, dmin -0.55, ldmin +0.13, ratio -4.13, n3 +0.01, mx +0.66, my +0.03, ppress -0.96, in_view -0.21
+
+Transfer to Metrica (fitted on EU20+WC22):
+  Metrica pooled (units = games): step rows 29187, events 268; LL gain/row +0.01168 [+0.00742,+0.01403]; slope 0.798; O/E 1.023; tau 0.000 over 3 units; O/E per unit range 0.93-1.12  => FAIL
+     reliability (5 bins) step hazard pred->obs: 0.0000->0.0000, 0.0003->0.0009, 0.0014->0.0022, 0.0050->0.0069, 0.0382->0.0360
+   G1: events 103, O/E 1.124, slope 0.798
+   G2: events 92, O/E 0.930, slope 0.843
+   G3: events 73, O/E 1.022, slope 0.735
+
+GATE G2-cal: cross-competition PASS; Metrica transfer FAIL  => FAIL

@@ -1,0 +1,23 @@
+matches per split: {'train': 190, 'A': 190, 'D': 64, 'C': 51, 'B': 40} cut 2016-01-02
+
+REPAIR 2: k_train = turnover-possession goal rate 0.0137 / mean V 0.0168 = 0.814
+
+[A] V: level factor c=0.964; log-loss gain vs constant (level-matched) +0.00281 [+0.00232,+0.00334]; slope 0.962; quintile obs/pred 1.00, 1.05, 1.04, 0.98, 0.98  => PASS
+     k: turnover goal rate 0.0123 (n=14347, 177 goals), k=0.718 vs train 0.814 (-12%)  => PASS;  informational: Vopp location model gain +0.00016 [-0.00010,+0.00045]
+
+[B] V: level factor c=0.793; log-loss gain vs constant (level-matched) +0.00324 [+0.00235,+0.00410]; slope 1.079; quintile obs/pred 0.89, 0.90, 0.92, 1.11, 1.04  => PASS
+     k: turnover goal rate 0.0114 (n=3348, 38 goals), k=0.676 vs train 0.814 (-17%)  => PASS;  informational: Vopp location model gain -0.00009 [-0.00061,+0.00047]
+
+[C] V: level factor c=1.177; log-loss gain vs constant (level-matched) +0.00355 [+0.00232,+0.00476]; slope 1.004; quintile obs/pred 0.93, 0.94, 1.05, 0.94, 1.05  => PASS
+     k: turnover goal rate 0.0151 (n=3500, 53 goals), k=0.931 vs train 0.814 (+14%)  => PASS;  informational: Vopp location model gain +0.00024 [-0.00037,+0.00088]
+
+[D] V: level factor c=1.241; log-loss gain vs constant (level-matched) +0.00325 [+0.00229,+0.00419]; slope 1.023; quintile obs/pred 0.98, 1.07, 1.07, 0.91, 1.00  => PASS
+     k: turnover goal rate 0.0147 (n=4071, 60 goals), k=0.944 vs train 0.814 (+16%)  => PASS;  informational: Vopp location model gain +0.00054 [-0.00012,+0.00125]
+[A] xG: n=4715 goals 448; gain +0.0435 [+0.0346,+0.0527]; slope 0.901; mean p/mean y 0.950; AUC 0.769 (StatsBomb 0.789)  => PASS
+[B] xG: n=964 goals 81; gain +0.0503 [+0.0320,+0.0662]; slope 0.927; mean p/mean y 1.006; AUC 0.794 (StatsBomb 0.799)  => PASS
+[C] xG: n=1180 goals 119; gain +0.0484 [+0.0219,+0.0727]; slope 0.891; mean p/mean y 0.943; AUC 0.776 (StatsBomb 0.814)  => PASS
+[D] xG: n=1367 goals 147; gain +0.0620 [+0.0414,+0.0827]; slope 1.005; mean p/mean y 0.891; AUC 0.800 (StatsBomb 0.819)  => PASS
+Metrica: predicted xG 5.53 vs 7 goals (refit identical to v0 => should match 5.53)
+
+gates by test set: {'A': {'V': True, 'k': np.True_, 'xG': np.True_}, 'B': {'V': True, 'k': np.True_, 'xG': np.True_}, 'C': {'V': True, 'k': np.True_, 'xG': np.True_}, 'D': {'V': True, 'k': np.True_, 'xG': np.True_}} 
+GATE G1' (C and D only): PASS

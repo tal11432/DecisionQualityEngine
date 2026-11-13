@@ -1,0 +1,14 @@
+SHOT vs PASS on Metrica (50 open-play foot shots). Written 2026-11-13T12:07:04Z, before computing any shot-vs-pass value.
+Frame: tracking frame synchronised to the SHOT event start (positions only, nothing after it). StatsBomb units (linear mapping from metres).
+xG(shot)   = DQ-v1 xG model (PL-trained; dist, angle, header=0, n_tri, gk_d). Goalkeeper = opponent nearest his goal centre (assumption).
+             n_tri counts ALL opponents in the shooter-posts triangle INCLUDING the goalkeeper, as in training (the earlier Metrica check excluded the
+             goalkeeper: inconsistency corrected here and reported).
+Candidates = teammates 3-40 m from the shooter, not offside by the position proxy (R0).
+xP_j       = probability the pass reaches teammate j: DQ-v2 target-free hazard model along the straight line, all opponents at the shot frame, in_view=1,
+             recalibrated with the leave-one-game-out Metrica parameters of the shot's game (G1 -0.764/0.793, G2 -0.713/0.778, G3 -0.581/0.819).
+xA_j       = potential xG: the same xG model evaluated at teammate j's position with the same opponents (immediate shot, no control time, defenders frozen).
+EPV_j      = xP_j * xA_j  (ignores value after a failed pass and any continuation; NOT a full action value).
+Comparison per shot: xG(shot) vs max_j EPV_j. Reported: share of shots with max EPV > xG(shot), by distance band and game; differences; examples.
+Sensitivity (pre-stated): (a) xP without recalibration; (b) candidates 3-25 m; (c) control-time penalty: xA evaluated after moving the teammate 0 m but adding
+  one extra opponent in the triangle (crude "defender closes in" bound); (d) xG with goalkeeper excluded from n_tri (the earlier convention).
+No outcome (goal/miss) is used anywhere except to report observed goals next to xG sums.
