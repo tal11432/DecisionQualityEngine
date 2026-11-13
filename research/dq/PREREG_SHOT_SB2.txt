@@ -1,0 +1,15 @@
+SHOT vs PASS replication on additional competitions. Written 2026-11-13T12:29:07Z, before downloading or computing anything for them.
+Models and method: IDENTICAL to PREREG_SHOT_SB.txt (xG, xA, xP unchanged, xP not recalibrated, candidates 3-40 m onside proxy, freeze frames, goalkeeper flagged).
+Competitions (all StatsBomb open data not used before; every match):
+ MEN primary: UEFA Euro 2024; Copa America 2024; 1. Bundesliga 2023/24; MLS 2023; African Cup of Nations 2023; Ligue 1 2022/23 and 2021/22; La Liga 2017/18, 2018/19, 2019/20, 2020/21;
+  Champions League 2017/18, 2018/19.
+ WOMEN secondary (models were trained on men's data; reported separately and never pooled with men): UEFA Women's Euro 2025 and 2022, Women's World Cup 2023 and 2019, FA WSL 2023/24, Liga F 2023/24,
+  Frauen Bundesliga 2023/24, Serie A Women 2023/24, NWSL 2023.
+Current season: StatsBomb open data does not contain 2026/27 matches; the most recent men's competitions available are Euro 2024 and Copa America 2024 (2024 summer), reported as "most recent".
+Replication criteria (men, pooled and per competition where n >= 150 shots):
+ R1 xG calibration on the new men's shots: calibration slope in [0.8, 1.2] and mean predicted / observed goals in [0.85, 1.15] (xG is the base of both sides of the comparison).
+ R2 the ordering of the share with a better pass by shot distance, <12 m < 12-20 m < >20 m, holds in the pooled men's data and in every competition with n >= 150 shots.
+ R3 pooled men's shares by band lie within +-7 percentage points of the first run (43.5%, 72.1%, 90.3%); the overall share within +-5 points of 72.9%.
+ R4 sensitivity (+1 defender in receiver triangle) reduces the median gap by 30-70% in every competition, as in the first run (-50%).
+Also reported: shots, share better, per competition and per band; women's results alongside, as a test of generalisation of the men's-trained models.
+Downloads: events only, gzip, in memory; reduced tables deleted after the run.

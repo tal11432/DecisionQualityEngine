@@ -176,3 +176,38 @@ Pre-registration `research/dq/PREREG_SHOT_SB.txt`, written before downloading; s
 * **The headline share is robust; the size of the advantage is not.** It shrinks by half with one reacting defender.
 * **The candidate set here is incomplete.** Freeze frames show only the players in view (median 4 visible teammates), so better options may have existed off-camera. That pushes in the opposite direction to the optimistic biases: the max over options, the immediate-shot assumption, and the ignored cost of failure.
 * **This is a descriptive statement about situations, not players.**
+
+## 10. Replication on 1,322 more matches (men and women, 2017-2025)
+
+Pre-registration `research/dq/PREREG_SHOT_SB2.txt` (written before downloading); scripts `shot_vs_pass_sb2.py` and `shot_vs_pass_sb2_eval.py`; output `shot_vs_pass_sb2_out.txt`. Models, method and thresholds are unchanged from section 9 (xP not recalibrated). 392 MB were transferred and processed in memory; the reduced tables were deleted.
+
+**Current season.** StatsBomb's open data does not contain 2026/27 matches. The most recent men's competitions are Euro 2024 and Copa America 2024 (summer 2024); the most recent women's is the Women's Euro 2025. Israeli Premier League matches are not in any open source. A current-season run needs licensed data.
+
+**Which matches these are.** Several "league" samples are not whole leagues. I checked the match lists: every La Liga match (2017/18-2020/21) involves Barcelona; Ligue 1 2022/23 is Paris Saint-Germain's matches only; Bundesliga 2023/24 is Bayer Leverkusen's; MLS 2023 is Inter Miami's 6 matches. The shots in those samples come from both teams in each match, but the sample is selected by one club. International tournaments are complete.
+
+**Men (7,357 shots, 801 goals, 12 competitions):**
+
+| Sample | Shots | Better pass existed | < 12 m / 12-20 m / > 20 m | xG-to-goals ratio (xG sum / goals) |
+|---|---|---|---|---|
+| **Pooled** | **7,357** | **68.6%** [67.4, 69.7] | 40 / 69 / 90% | 0.86 |
+| Euro 2024 | 1,029 | 75.2% [72.9, 77.5] | 46 / 76 / 91% | 1.02 |
+| Copa America 2024 | 568 | 71.7% [68.5, 75.6] | 41 / 71 / 88% | 0.97 |
+| AFCON 2023 | 869 | 72.2% [69.5, 74.6] | 44 / 71 / 91% | 1.01 |
+| Bundesliga 2023/24 (Leverkusen) | 738 | 73.8% [70.8, 77.2] | 44 / 76 / 93% | 0.80 |
+| Ligue 1 2021/22 and 2022/23 (PSG in 22/23) | 563 / 700 | 68.0% / 65.7% | 36 / 67 / 93% and 40 / 69 / 88% | 0.80 / 0.78 |
+| La Liga 2017/18-2020/21 (Barcelona) | 770 / 700 / 586 / 667 | 63.8% / 60.6% / 64.0% / 66.4% | 35-39 / 60-72 / 83-92% | 0.88 / 0.76 / 0.77 / 0.86 |
+| Champions League (2 matches), MLS 2023 (6 matches) | 24 / 25 / 118 | too few to assess | | |
+
+**Women (secondary; the models were trained on men's data): 19,773 shots, 2,025 goals, 9 competitions.** The pooled share is 72.8% [72.0, 73.4], and the band shares are 47 / 75 / 90%. Per competition the shares range from 70.6% to 75.9%. The Women's Euro 2025 (the most recent) is 75.9% [71.7, 79.3].
+
+**Replication criteria (men):**
+* **R1, xG calibration: pass.** Slope 0.96. The mean xG is 0.86 times the observed goals, only just inside the 0.85-1.15 band. xG under-predicts by 14% on this data. Per sample the deficit is concentrated in the single-club samples (0.76-0.88), while the international tournaments are close to 1.0 (0.97-1.02). So the xG model is well calibrated for tournaments and low for strong clubs with elite finishers; part of that is selection, not model error.
+* **R2, ordering by shot distance: pass.** In every sample with 150 or more shots, the share with a better pass rises from under 12 m to 12-20 m to over 20 m.
+* **R3, shares near the first run: pass.** Pooled 68.6% (first run 72.9%), and by band 40 / 69 / 90% (first run 43.5 / 72.1 / 90.3%). All within tolerance, but the pooled men's figure is lower than in the first run, driven by the single-club La Liga and Ligue 1 samples (60-68%).
+* **R4, defender sensitivity: fail.** Adding one extra defender cut the median gap by 49-57% in the tournaments, as predicted. In La Liga it cut it by 71-99% (median gap close to 0). In those samples the advantage of passing depends almost entirely on the "receiver shoots at once, defenders frozen" assumption.
+
+**What the extra data shows.**
+* **The distance pattern replicates.** It appears in all 12 men's samples, in 9 women's competitions, and across 2017-2025. This is the most robust finding of the whole study: long-range shots were nearly always less valuable than an available pass; close-range shots were usually the right call.
+* **The overall share depends on who is playing.** In tournaments it is 72-75%; in the club samples dominated by one team it is 61-68%. A team that creates better close chances has fewer shots where a pass would have been better. This differs between teams and cannot be read as a league average.
+* **The women's results match the men's closely,** although the models were trained on men's data. This is a partial check that the geometry generalises. The xG under-prediction is larger there (pooled ratio 0.89 of goals) and was not tested separately against women's data.
+* **Still not a judgement of players or decisions.** The caveats of section 9 apply: freeze frames show only some of the players, the receiver is assumed to shoot immediately, and the cost of failed passes is ignored.

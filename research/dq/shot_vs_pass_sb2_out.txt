@@ -1,0 +1,33 @@
+excluded (no goalkeeper in frame): 7; shots with no admissible candidate: 385
+
+===== MEN =====
+pooled                     shots  7357 goals  801 xG  689.8 (O/E 1.16, slope 0.96) | better 68.6% [67.4,69.7] | <12 40% 12-20 69% >20 90% | median gap +0.026 (+1 def: +0.010, cut 61%)
+  AFCON 2023               shots   869 goals   75 xG   75.4 (O/E 0.99, slope 0.96) | better 72.2% [69.5,74.6] | <12 44% 12-20 71% >20 91% | median gap +0.031 (+1 def: +0.016, cut 50%)
+  Bundesliga 2023/24       shots   738 goals   82 xG   65.8 (O/E 1.25, slope 0.90) | better 73.8% [70.8,77.2] | <12 44% 12-20 76% >20 93% | median gap +0.037 (+1 def: +0.018, cut 52%)
+  Champions League 2017/18 shots 24 (<150, not assessed individually)
+  Champions League 2018/19 shots 25 (<150, not assessed individually)
+  Copa America 2024        shots   568 goals   49 xG   47.8 (O/E 1.03, slope 0.85) | better 71.7% [68.5,75.6] | <12 41% 12-20 71% >20 88% | median gap +0.029 (+1 def: +0.013, cut 57%)
+  Euro 2024                shots  1029 goals   80 xG   81.6 (O/E 0.98, slope 0.75) | better 75.2% [72.9,77.5] | <12 46% 12-20 76% >20 91% | median gap +0.035 (+1 def: +0.018, cut 49%)
+  La Liga 2017/18          shots   770 goals   95 xG   83.4 (O/E 1.14, slope 1.11) | better 63.8% [60.2,66.7] | <12 36% 12-20 63% >20 92% | median gap +0.019 (+1 def: +0.003, cut 82%)
+  La Liga 2018/19          shots   700 goals   89 xG   67.7 (O/E 1.31, slope 0.98) | better 60.6% [56.9,64.3] | <12 35% 12-20 60% >20 83% | median gap +0.014 (+1 def: +0.000, cut 99%)
+  La Liga 2019/20          shots   586 goals   72 xG   55.3 (O/E 1.30, slope 0.83) | better 64.0% [60.3,67.6] | <12 39% 12-20 63% >20 88% | median gap +0.019 (+1 def: +0.004, cut 78%)
+  La Liga 2020/21          shots   667 goals   87 xG   74.7 (O/E 1.17, slope 0.92) | better 66.4% [62.0,70.7] | <12 36% 12-20 72% >20 89% | median gap +0.027 (+1 def: +0.008, cut 71%)
+  Ligue 1 2021/22          shots   563 goals   66 xG   53.0 (O/E 1.25, slope 1.14) | better 68.0% [63.1,72.1] | <12 36% 12-20 67% >20 93% | median gap +0.021 (+1 def: +0.006, cut 73%)
+  Ligue 1 2022/23          shots   700 goals   90 xG   70.6 (O/E 1.28, slope 1.23) | better 65.7% [61.8,69.5] | <12 40% 12-20 69% >20 88% | median gap +0.022 (+1 def: +0.006, cut 72%)
+  MLS 2023                 shots 118 (<150, not assessed individually)
+
+REPLICATION (men): R1 calibration (slope 0.96, mean xG/observed 0.86) PASS; R2 ordering PASS; R3 shares within tolerance PASS; R4 defender sensitivity FAIL (cuts 49-99%)
+
+===== WOMEN =====
+pooled                     shots 19773 goals 2025 xG 1800.9 (O/E 1.12, slope 0.92) | better 72.8% [72.0,73.4] | <12 47% 12-20 75% >20 90% | median gap +0.031 (+1 def: +0.014, cut 53%)
+  FA WSL 2023/24           shots  2787 goals  314 xG  273.9 (O/E 1.15, slope 0.84) | better 70.6% [68.7,72.6] | <12 50% 12-20 76% >20 87% | median gap +0.032 (+1 def: +0.014, cut 57%)
+  Frauen Bundesliga 2023/24 shots  2607 goals  301 xG  261.8 (O/E 1.15, slope 0.86) | better 72.8% [70.9,74.9] | <12 46% 12-20 74% >20 93% | median gap +0.030 (+1 def: +0.013, cut 55%)
+  Liga F 2023/24           shots  4944 goals  561 xG  454.6 (O/E 1.23, slope 0.97) | better 71.7% [70.2,73.1] | <12 44% 12-20 74% >20 88% | median gap +0.026 (+1 def: +0.012, cut 55%)
+  NWSL 2023                shots  2884 goals  242 xG  250.5 (O/E 0.97, slope 0.94) | better 72.7% [71.0,74.4] | <12 46% 12-20 76% >20 89% | median gap +0.032 (+1 def: +0.015, cut 53%)
+  Serie A Women 2023/24    shots  2951 goals  282 xG  242.4 (O/E 1.16, slope 0.93) | better 75.8% [74.1,77.5] | <12 51% 12-20 77% >20 92% | median gap +0.036 (+1 def: +0.020, cut 45%)
+  W Euro 2022              shots   675 goals   56 xG   61.7 (O/E 0.91, slope 0.98) | better 73.6% [70.1,77.2] | <12 49% 12-20 78% >20 87% | median gap +0.036 (+1 def: +0.018, cut 51%)
+  W Euro 2025              shots   700 goals   78 xG   64.7 (O/E 1.21, slope 0.73) | better 75.9% [71.7,79.3] | <12 51% 12-20 79% >20 95% | median gap +0.039 (+1 def: +0.021, cut 47%)
+  WWC 2019                 shots   996 goals   90 xG   86.3 (O/E 1.04, slope 1.02) | better 71.5% [68.5,74.4] | <12 43% 12-20 71% >20 89% | median gap +0.024 (+1 def: +0.011, cut 55%)
+  WWC 2023                 shots  1229 goals  101 xG  105.0 (O/E 0.96, slope 0.96) | better 73.3% [70.3,76.1] | <12 48% 12-20 76% >20 91% | median gap +0.031 (+1 def: +0.015, cut 52%)
+
+Most recent (men, 2024): Euro 2024: 75.2% of 1029, Copa America 2024: 71.7% of 568
