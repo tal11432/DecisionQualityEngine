@@ -1,0 +1,50 @@
+slice: tracking frames 0..9330 (9331 frames, 10 Hz; play from frame 2510); passes with a full window inside the slice: 95 (successful 72, unsuccessful 23; zero-duration events 29)
+detection: ball detected in 64.6% of frames; player positions detected in 42.9% (the rest are extrapolated)
+
+[Q1/Q2] identifiable release (unique departure, passer+ball detected): 62/95 = 65.3% (95% Wilson 55.3%-74.1%)
+non-identified reasons: {'no departure in window (ball never within 1.5 m of the passer, or never leaves)': 19, 'ambiguous: several departures in window': 12, 'passer or ball extrapolated (not detected) around the departure': 2}
+
+[Q3] timing of the tracking-detected release relative to the event frames (frames; 1 frame = 0.1 s):
+  vs end: median +0, IQR -1..+1, mean |e| 1.95; share |e|<=1 frame 74.2%; share |e|=0 33.9%; distribution {-15.0: 1, -12.0: 2, -9.0: 1, -8.0: 1, -3.0: 1, -2.0: 6, -1.0: 6, 0.0: 21, 1.0: 19, 2.0: 2, 7.0: 1, 14.0: 1}
+  vs start: median +12, IQR +7..+18, mean |e| 14.08; share |e|<=1 frame 14.5%; share |e|=0 8.1%; distribution {0.0: 5, 1.0: 4, 2.0: 2, 3.0: 1, 4.0: 1, 6.0: 2, 7.0: 2, 8.0: 5, 9.0: 5, 10.0: 1, 11.0: 3, 12.0: 4, 13.0: 1, 14.0: 2, 15.0: 1, 16.0: 3, 17.0: 3, 18.0: 2, 20.0: 3, 22.0: 1, 23.0: 2, 24.0: 1, 25.0: 1, 28.0: 1, 34.0: 1, 36.0: 1, 43.0: 2, 49.0: 1, 55.0: 1}
+
+[Q4] zero-duration events (frame_start == frame_end) vs others:
+  zero_duration=False: n=66, identifiable 49/66 = 74.2%; median err_end +0, share |err_end|<=1 75.5%
+  zero_duration=True: n=29, identifiable 13/29 = 44.8%; median err_end +1, share |err_end|<=1 69.2%
+
+[outcome] completed vs unsuccessful:
+  successful: n=72, identifiable 50/72 = 69.4%; median err_end +0; share |err_end|<=1 78.0%; ambiguous (several departures) 12.5%; extrapolated 2.8%
+  unsuccessful: n=23, identifiable 12/23 = 52.2%; median err_end +0; share |err_end|<=1 58.3%; ambiguous (several departures) 13.0%; extrapolated 0.0%
+
+[why not identifiable] share of window frames with passer AND ball detected (not extrapolated), median [IQR], by status:
+  ambiguous: n=12, detected share 1.00 [0.89..1.00]
+  identified: n=62, detected share 1.00 [0.78..1.00]
+  no departure in window: n=19, detected share 1.00 [0.73..1.00]
+  passer or ball extrapolated: n=2, detected share 0.61 [0.48..0.73]
+  detected share by outcome successful: median 1.00
+  detected share by outcome unsuccessful: median 0.84
+[ambiguous examples] (several departures in the window)
+  event 20: frames 2599-2623, successful, departures 2, detected share 1.00
+  event 89: frames 3268-3279, unsuccessful, departures 2, detected share 1.00
+  event 97: frames 3297-3322, successful, departures 2, detected share 1.00
+  event 104: frames 3333-3378, successful, departures 2, detected share 1.00
+  event 113: frames 3387-3408, unsuccessful, departures 2, detected share 0.84
+
+[Metrica-comparable] ball-passer distance at frame_end: all passes n=95: median 1.39 m, share > 3 m 9.5%; detected passer+ball only n=91: median 1.39 m, share > 3 m 7.7% (Metrica G1 at its event frame: median 0.09 m, share > 3 m 1.0%; IDSSE: 2.4 m, 47.8%)
+
+[Q5] release vs other ball interactions (identified departures):
+  pass-like speed (>= 5.0 m/s over 0.3 s): 93.5%; sharp deflection (> 60 deg within 0.5 s): 0.0%; pass-like and no deflection: 93.5%; median speed 9.8 m/s
+  frames in contact before release: median 10; 0-1 frames (reception and release not separable at 10 Hz): 9.7%
+
+[Q6] look-ahead needed: re-running the detection with look-ahead 1 frame (0.1 s):
+  identical release frame in 61/62 = 98.4%; changed/lost 1. Look-ahead used by the main rule: 2 frames = 0.2 s (<= the 0.24 s Scenario-B window).
+
+== PRE-REGISTERED CRITERIA ==
+  [FAIL] C1 identifiable release share >= 80%
+  [FAIL] C2 share with |release - event frame| <= 1 frame >= 80% (for frame_end or frame_start)
+  [FAIL] C3 |identifiable share completed - unsuccessful| <= 10 pp
+  [FAIL] C4 zero-duration events: identifiable share within 10 pp of the others and median |error| <= 1 frame
+  [PASS] C5 same release frame with look-ahead 1 vs 2 frames in >= 90% of identified passes
+  [PASS] C6 >= 80% of identified departures pass-like (>= 5 m/s over 0.3 s) with no sharp deflection
+
+VERDICT: NOT ALL CRITERIA MET  (n = 95 passes from one 12 MB slice; no model, no features)
