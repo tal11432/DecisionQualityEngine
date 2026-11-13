@@ -1,0 +1,25 @@
+DQ-v5 PRE-REGISTRATION: (A) better xG from ~all StatsBomb open men's shots, (B) EMPIRICAL pass value (xA_emp) learned from what receivers actually did next,
+(C) re-run of shot-vs-pass and of the two Israeli cases. Written 2026-11-13T13:31:47Z, before downloading or fitting anything for it.
+Data: StatsBomb open data, men's competitions with season >= 2015 (events; 360 frames where available), gzip, in memory; reduced tables deleted after the run.
+SPLITS (fixed now): xG TEST = Euro 2024, Copa America 2024, 1. Bundesliga 2023/24 (Leverkusen), MLS 2023. xG TRAIN = every other men's competition.
+ xA TRAIN = 360 competitions other than the xA test; xA TEST = Euro 2024, Bundesliga 2023/24, MLS 2023 (the 360 ones among the test competitions).
+ xP (interception hazard) is unchanged (DQ-v2 model, trained on Euro 2020 + WC 2022; not recalibrated). Test competitions never enter any training set below.
+(A) xG. Shots: open-play (shot.type Open Play); headers kept with a header flag. Models (logistic, ridge 1.0, standardised, numpy Newton):
+ M0 = existing DQ-v1 xG (trained on 190 PL matches), evaluated as-is.  M1 = same 5 features refit on the full train set (dist, angle, header, n_tri incl. GK, gk_d).
+ M2 = M1 + geometry: GK perpendicular distance to the shooter->goal-centre line, opponents within 2 units of the shooter, nearest-opponent distance, dist x angle, log(dist).
+ M3 = M2 + context: first_time, volley/half-volley/lob/overhead/backheel flag, play pattern (counter / corner-or-free-kick phase / other), prior pass type (cross, through ball, cut-back, other/none).
+ Selection: leave-one-competition-out log loss on the TRAIN set; the best of M1-M3 is "xG_new"; geometry-only model (M2) is ALSO kept as "xG_geo" because Israeli data will not have context fields.
+ Gate G-xG on the TEST competitions (pooled and each with >= 150 shots): log-loss gain of xG_new over M0 with match-bootstrap 95% CI excluding 0; calibration slope in [0.9, 1.1];
+ mean predicted / observed goals in [0.90, 1.10] pooled. AUC and StatsBomb's own xG reported as a benchmark. (Previously M0's O/E was 0.86 on these samples.)
+(B) xA_emp. Passes: open-play, ground, not cross / through ball / header, COMPLETED, end location in the attacking half (x >= 60), with a 360 frame, the target inside the 360 visible area and a visible keeper.
+ Outcome value v = xG (StatsBomb) of the open-play shot taken by the RECEIVER as his next on-ball action (events by him within the same possession, <= 6 s, carries and receipts allowed;
+ a pass, dribble, dispossession, miscontrol, foul or clearance ends the search without a shot); otherwise v = 0. v is the target of a fractional logistic regression (quasi-likelihood).
+ Features (pass-time 360 frame, target = pass end location): basis dist/angle/x/dist^2/angle*dist, opponents within 3 and 6 units of the target, nearest-opponent distance to the target, keeper distance to goal centre, pass length.
+ xA_emp(position, opponents) = fitted E[v | completed pass to that position].
+ Gate G-xA on the xA TEST set: slope in [0.8, 1.2], mean predicted / observed in [0.85, 1.15], fractional log-likelihood gain over the constant with match-bootstrap CI excluding 0.
+ Reported: the old hypothetical xA (immediate shot, frozen defenders, xG model M0 at the target) against v: mean ratio and calibration (expectation: the old xA is far too high).
+(C) Re-run. Shot vs pass on all open-play foot shots of the xG TEST competitions: shot value = xG_new; pass value EPV_j = xP_j * xA_emp,j (candidates: visible teammates 3-40 m, onside proxy, as before;
+ xA_emp features from the shot freeze frame; keeper from the flagged goalkeeper; the pass length is the shooter->teammate distance). Report the share of shots with max EPV_j > xG, by distance band and competition,
+ next to the previous version (hypothetical xA, M0), and the sum comparison. Sensitivity: +/- one defender near the target is NOT applicable (the empirical model includes defenders).
+ Israeli cases: recompute the three frames with xG_geo and xA_emp from the same reconstructed positions; compare with the official 0.166 and 0.378 (official location, camera-side orientation, as before).
+Known limits stated in advance: v counts only the receiver's own next-action shot (no later teammate shots, no failed-pass cost); 360 covers only visible players; competitions are tournaments and a few single-club samples.
