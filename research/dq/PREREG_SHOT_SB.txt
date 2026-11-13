@@ -1,0 +1,16 @@
+SHOT vs PASS at scale on StatsBomb shot freeze frames. Written 2026-11-13T12:10:58Z, before downloading or computing anything for it.
+Shots: open-play (shot.type Open Play), non-header shots in competitions NOT used to train the xG model: Premier League 2015/16 matches on/after 2016-01-02
+ (190), FIFA World Cup 2018 (all 64), UEFA Euro 2020 (51), FIFA World Cup 2022 (64). Events only (gzip, in memory); reduced tables deleted after the run.
+Positions: the shot's freeze frame (players visible to the camera at the shot; the shooter is the event location; goalkeeper = opponent with position Goalkeeper).
+ Shots without a goalkeeper in the frame are excluded (count reported).
+xG(shot) and xA_j (potential xG at teammate j): DQ-v1 xG model unchanged (n_tri counts all opponents incl. goalkeeper; gk_d from the flagged goalkeeper).
+xP_j: DQ-v2 target-free hazard model unchanged, NOT recalibrated (it passed cross-competition calibration on StatsBomb data), in_view = 1, opponents from the frame.
+ Note: the xP model was trained on Euro 2020 / WC 2022 PASSES; results are reported per competition so PL / WC 2018 serve as fully out-of-sample.
+Candidates: visible teammates 3-40 m from the shooter (120x80 units mapped linearly to 105x68 m), not offside by the position proxy (beyond both the second-last
+ visible opponent and the shooter). EPV_j = xP_j * xA_j; compared with xG(shot) via max_j EPV_j.
+Primary outputs: share of shots with max EPV > xG, with match-bootstrap 95% CI, overall / per competition / by distance (<12, 12-20, >20 m);
+ distribution of the gap (> 0, > 0.02, > 0.05, > 0.10).
+Sensitivity (pre-stated): one extra defender in the receiver's triangle; candidates 3-25 m.
+Check (outcome used only here): goals vs sum of xG among shots with and without a better pass option (is xG equally calibrated in both groups?).
+Expected limitations stated in advance: freeze frames omit off-camera players (candidate sets incomplete, opponents possibly missing); max over options inflates
+ the best EPV; immediate-shot assumption for the receiver; failed-pass cost ignored.

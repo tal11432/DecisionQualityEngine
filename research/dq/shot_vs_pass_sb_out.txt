@@ -1,0 +1,21 @@
+open-play foot shots 7292 (excluded: no goalkeeper in frame 4); goals 687; xG sum 624.9 (StatsBomb xG 662.4)
+visible teammates per shot median 4, admissible candidates per shot median 4; shots with no candidate 106
+
+PRIMARY: shots with a pass option of higher EPV: 5319 of 7292 = 72.9% [95% CI 71.7, 74.1]; median gap +0.032; sum xG 624.9 vs sum best EPV 830.8
+gap distribution: > 0: 72.9%, > 0.02: 59.7%, > 0.05: 37.0%, > 0.1: 17.8%
+  EU20: n=972 better 71.9% [68.3, 75.5], median gap +0.035
+  PL: n=3945 better 73.0% [71.6, 74.4], median gap +0.032
+  WC18: n=1245 better 74.6% [72.1, 77.3], median gap +0.030
+  WC22: n=1130 better 71.8% [69.1, 74.6], median gap +0.032
+  <12m: n=1535 better 43.5% [40.9, 46.1]; median shot xG 0.175; median best EPV 0.161; gap>0.05 33.4%
+  12-20m: n=3015 better 72.1% [70.4, 74.0]; median shot xG 0.058; median best EPV 0.102; gap>0.05 45.2%
+  >20m: n=2742 better 90.3% [89.1, 91.5]; median shot xG 0.019; median best EPV 0.054; gap>0.05 29.9%
+best option: median xP 0.81, median xA 0.112, median distance 10.1 m
+
+SENSITIVITY
+  +1 defender in receiver triangle: better 64.9%, median gap +0.016, sum best 657.2; by band <12m 36%, 12-20m 62%, >20m 85%
+  candidates 3-25 m: better 72.9%, median gap +0.032, sum best 830.5; by band <12m 44%, 12-20m 72%, >20m 90%
+
+CHECK (outcome used only here): goals vs xG by group
+  better pass existed: n=5319, goals 287 vs xG 274.2 (ratio 1.05); StatsBomb xG 296.9
+  no better pass: n=1973, goals 400 vs xG 350.7 (ratio 1.14); StatsBomb xG 365.6
