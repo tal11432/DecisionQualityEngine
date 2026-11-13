@@ -1,0 +1,17 @@
+DQ-v6 PRE-REGISTRATION: pass value over the same horizon as the shot (possession chain). Written 2026-11-13T13:55:26Z, before downloading or fitting anything for it.
+Motivation (stated): DQ-v5 gave a LOWER bound for a pass's value (receiver's own next-action shot only, 42% of shots had a better pass) and the old hypothetical xA an UPPER bound (74%).
+Definitions. Horizon H = 10 s. All xG values are StatsBomb's statsbomb_xg of OPEN-PLAY shots; outcomes (goals) are never used.
+ pass chain value  v_chain = sum of xG of open-play shots by the passer's team, in the same possession, within H after the pass (any player, including the receiver).
+ shot continuation c       = sum of xG of LATER open-play shots by the same team, in the same possession, within H after the shot (rebounds / second phases), excluding the shot itself.
+ Value of a shot = xG_new(shot) + c_hat;   value of a pass to teammate j = xP_j * xA_chain,j   (failure of the pass is valued 0: possession is lost; cost of the opponent's counter ignored, stated).
+Data: StatsBomb men's competitions >= 2015 that have 360 frames (events + 360) plus Copa America 2024 (events only, shots), gzip in memory, reduced tables deleted afterwards.
+ TEST (never used for training): Euro 2024, Bundesliga 2023/24, MLS 2023 (passes and shots) and Copa America 2024 (shots). TRAIN: all other competitions in the list.
+Models (fractional logistic, ridge 1, numpy; step clipping 1.0 for the fractional fits):
+ xA_chain: features of DQ-v5 xA_emp (basis dist/angle/x/dist^2/angle*dist, n_tri, opponents within 3 and 6 units, nearest opponent, keeper distance, pass length) PLUS forward gain (target x - passer x) and passer-to-goal distance.
+   Population as in v5: completed open-play ground passes (no cross / through ball / header), end in the attacking half (x >= 60), 360 frame present, target visible, keeper visible.
+ c_hat: fractional logistic of c on the shot features (dist, angle, header, n_tri, gk_d) fit on TRAIN shots.
+Gates on TEST: G-xAc: pooled calibration slope in [0.8, 1.2], predicted/observed mean in [0.85, 1.15], fractional log-likelihood gain over the constant with match-bootstrap 95% CI excluding 0, and no test competition
+ with slope outside [0.6, 1.4]. G-c: pooled predicted/observed mean continuation in [0.85, 1.15] on TEST shots.
+Reported: v_chain vs v_recv (v5) and the old hypothetical xA by distance band (observed vs predicted); share of shots with a better pass under the chain value (new primary), next to v5 (42%) and the hypothetical (74%) bounds;
+ gap distribution; by distance band and competition. Israeli frames recomputed. Expected (stated before looking): the chain-based share lies between the two bounds.
+Limits stated in advance: 360 frames omit invisible players; the chain value is an expected future xG, not a quality judgement; pass cost on failure ignored; tournaments dominate the sample.
