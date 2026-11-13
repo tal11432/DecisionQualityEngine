@@ -259,3 +259,53 @@ By distance (new vs old): under 12 m 36% (44%); 12-20 m 45% (74%); over 20 m 42%
 * The second overshoots (0.46 vs 0.38; Monte Carlo 0.29-0.61).
 * **The #90 value for the second shot (0.495) is an extrapolation:** few training passes end that close to goal (60 test passes within 12 m), and only some defenders are visible in the frame, so the features understate crowding. Treat it as an upper estimate.
 * **The conclusion is unchanged: no pass clearly better than the shot in either case.** This now holds under both the optimistic and the empirical value.
+
+## 12. DQ-v6: pass value over the same horizon as the shot (possession chain). Gate failed, but it narrows the answer.
+
+Pre-registration `research/dq/PREREG_DQ_v6.txt`; scripts `fetch_v6.py`, `eval_v6.py`, `research/cases/v6_cases.py`; outputs `eval_v6_out.txt`, `v6_cases_out.txt`. 447 MB transferred (383 matches of the 360-frame competitions and Copa America 2024), processed in memory, tables deleted. Test sets: Euro 2024, Bundesliga 2023/24 and MLS 2023 for passes; those plus Copa America 2024 for shots. Nothing from the test sets was used for training.
+
+**Definition.** Horizon 10 s, StatsBomb xG of open-play shots, outcomes never used.
+* **Pass chain value:** the expected xG of *all* shots by the team in the same possession within 10 s after a completed pass (receiver or teammates). It fixes the limitation of section 11, which counted only the receiver's own shot.
+* **Shot value:** xG plus a continuation term (later shots in the same possession within 10 s: rebounds and second phases).
+* **Failed pass:** valued 0 (possession lost; the opponent's counter is ignored).
+
+**Calibration of the chain value on the test sets: the pre-registered gate FAILED.**
+* Pooled: observed 0.0140, predicted 0.0164 (ratio **1.18**, outside the 0.85-1.15 band); slope 1.03; log-likelihood gain over the constant +0.0106 [+0.0083, +0.0132].
+* Per competition: Euro 2024 ratio 1.26 (slope 1.07), Bundesliga 1.09 (0.96), MLS 1.15 (slope **1.49** on 170 passes, above the allowed 1.4).
+* So the model ranks well but **over-predicts the level by about 18%**, which favours passing. By distance the fit is close near goal (under 12 m: 0.231 predicted vs 0.246 observed; n = 60) and over-predicts mid-range (12-20 m: 0.062 vs 0.053).
+* The continuation term passed its gate (predicted/observed 1.09). Its size is small: mean 0.012, against a mean shot xG of 0.094.
+
+| Target distance to goal | Receiver-only (v5) | **Chain (observed)** | Old hypothetical | n |
+|---|---|---|---|---|
+| < 12 m | 0.205 | **0.246** | 0.245 | 60 |
+| 12-20 m | 0.025 | **0.053** | 0.085 | 664 |
+| 20-30 m | 0.003 | **0.019** | 0.030 | 1,991 |
+| > 30 m | 0.000 | **0.005** | 0.009 | 5,462 |
+
+Near the goal, the old hypothetical value happens to equal the observed chain value (0.245 vs 0.246). Farther out the old value was too high by factors of 1.6-2.
+
+**Shot vs pass, 2,453 test foot shots (the pass value is bracketed on both sides):**
+
+| Pass value used | Better pass existed |
+|---|---|
+| Lower bound: receiver's own next shot (v5) | 42.4% |
+| **Primary: possession chain vs xG + continuation** | **63.6%** (median gap +0.013; the pass is better by more than 0.05 in 23.7%) |
+| Diagnostic: the same, rescaled to the observed level (uses test labels, so not a prediction) | **55.9%** |
+| Upper bound: old hypothetical xA | 70.9% |
+
+By distance (primary): under 12 m 39%; 12-20 m 62%; over 20 m 80%. By competition: Euro 2024 66%, Bundesliga 62%, Copa America 62%, MLS 59%. For the rescaled diagnostic: 34% / 53% / 73%.
+
+**Reading.**
+* **As predicted before the run, the answer lies between the two bounds.** The best-supported value is about **56-64%**, closer to the upper bound than to the receiver-only lower bound (42%). A pass also helps the team through the possession after reception, so counting only the receiver's own shot undervalued it.
+* **The distance pattern is back:** close shots are mostly right (the pass is better in about 1 of 3), mid-range shots are a toss-up (about 55-60%), and long shots usually have a better pass (73-80%).
+* **The gate failure matters:** the over-prediction of 18% pushes toward passing, which is why the rescaled 56% is more honest than 63.6%. The remaining uncertainty, 56% vs 64%, is what this data cannot resolve. Notably, the rescaling uses test labels, so it is a sensitivity check, not a result.
+* **Still not a judgement of a player or a decision.** The values are expected xG of the chain, with no value for lost possession, the cost of a failed pass, or possession after 10 s.
+
+**The Israeli frames (official shot location, camera side; shot value = xG_geo + continuation; pass = xP x chain xA):**
+
+| | Shot value | Official xG | Best pass (#90) | Better pass in |
+|---|---|---|---|---|
+| First shot (71:47) | 0.188 | 0.166 | 0.78 x 0.204 = **0.160** | 41% of draws |
+| Second shot (71:48) | 0.479 | 0.378 | 0.98 x 0.508 = **0.498** | 39% of draws |
+
+The conclusion is unchanged: in both cases no pass is clearly better than the shot (the best pass exceeds the shot in 39-41% of draws, inside the uncertainty). The value of 0.50 for the second shot is again an extrapolation near goal (few training passes end that close; only some defenders visible), so it is an upper estimate. Note that our shot value there (0.48) is also above the official xG (0.378).

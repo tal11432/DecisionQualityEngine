@@ -12,3 +12,4 @@ research/**/*.pkl
 !research/dq/tf_model.pkl
 !research/dq/tf_model_v3.pkl
 !research/dq/v5_models.pkl
+!research/dq/v6_models.pkl

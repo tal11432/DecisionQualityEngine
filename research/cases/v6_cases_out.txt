@@ -1,0 +1,12 @@
+
+Second shot (71:48): shot value (xG_geo + continuation) 0.479 (official xG 0.378); Monte Carlo median 0.451 [5%-95% 0.316, 0.626]
+  R90: xP 0.98, chain xA 0.5079, pass value 0.4984; share of draws pass > shot 54%
+  R27: xP 0.95, chain xA 0.1705, pass value 0.1625; share of draws pass > shot 2%
+  R17: xP 0.94, chain xA 0.1527, pass value 0.1440; share of draws pass > shot 0%
+  best admissible pass > shot in 39% of draws
+
+First shot (71:47): shot value (xG_geo + continuation) 0.188 (official xG 0.166); Monte Carlo median 0.210 [5%-95% 0.114, 0.429]
+  R90: xP 0.78, chain xA 0.2039, pass value 0.1601; share of draws pass > shot 37%
+  R27: xP 0.67, chain xA 0.0956, pass value 0.0641; share of draws pass > shot 16%
+  R17: xP 0.67, chain xA 0.0893, pass value 0.0597; share of draws pass > shot 3%
+  best admissible pass > shot in 41% of draws
