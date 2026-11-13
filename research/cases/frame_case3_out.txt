@@ -1,0 +1,12 @@
+official location (from the map): lateral 3.7 m from goal centre, 6.4 m from goal line, 7.4 m from goal centre (uncertainty about +-0.5 m)
+reconstruction from the broadcast frame: lateral -7.0 m, 4.4 m from goal line, 8.3 m from goal centre; xG 0.215
+
+official location, same side as the camera view (lateral -3.7):
+  shot 7.4 m from goal, triangle opponents 1, xG 0.341  | with position +-0.5 m and players +-10 px: xG median 0.320 [5%-95% 0.216, 0.447]; share >= 0.378: 24%
+  R90: xP 0.98, xA 0.325, EPV 0.319; share of draws with EPV > shot xG: 53%
+  R27: xP 0.95, xA 0.127, EPV 0.121; share of draws with EPV > shot xG: 3%
+
+official location, mirrored (lateral +3.7):
+  shot 7.4 m from goal, triangle opponents 1, xG 0.341  | with position +-0.5 m and players +-10 px: xG median 0.340 [5%-95% 0.223, 0.476]; share >= 0.378: 32%
+  R90: xP 1.00, xA 0.325, EPV 0.325; share of draws with EPV > shot xG: 45%
+  R27: xP 1.00, xA 0.127, EPV 0.127; share of draws with EPV > shot xG: 0%
