@@ -1,0 +1,75 @@
+[tracking] frames 146211, objects/framesets 55, tracked persons 31 (metadata lists 40; never tracked 9; tracked but not in metadata [])
+[frequency] frame spacing: median 0.040 s -> 25.00 Hz; spacing != 0.040 s in 0 steps; duplicate (period, frame) 0; frame-number gaps 0; T disagreement across objects 0
+[periods] P1: 0.0-2765.2 s, 69131 frames (frames 10000-79130); P2: 3720.6-6803.8 s, 77080 frames (frames 100000-177079)
+[missing] NaN coordinates parsed as NaN: 0; frames without a ball record 0; ball status: {1.0: 81460, 0.0: 64751}
+[players on pitch per frame] min 22, median 22, max 22; frames with fewer than 22 tracked: 0.00%
+[coordinates] pitch 105.0 x 68.0 (metadata) = (105.0, 68.0) (positions); x range -55.5..55.5, y range -36.9..37.9 (centre origin, metres); beyond pitch+3 m: 250 values
+[existing validation report]
+Tracking validation report
+==========================
+[OK  ] player_ids: 31 players, all identified
+[WARN] missing_values: ball missing in 0/146211 frames (0.0%); player-position missing 29.0% overall
+[OK  ] duplicate_frames: 0 duplicate (period, frame), 0 duplicate (period, time)
+[WARN] coordinates: 0 infinite values; 250 coordinates beyond pitch +3.0m margin
+[OK  ] timestamps: rate 25.00 Hz; 0 non-increasing times, 0 irregular steps, 0 frame/time disagreements
+[WARN] continuity: 0 frame gaps (0 missing frames); implausible-speed jumps: players 189, ball 90
+Result: PASS (3 warnings)
+[orientation] KickOff TeamLeft = DFL-CLU-000005 (Away); inferred attack_dir {('Home', 1): -1, ('Away', 1): 1, ('Home', 2): 1, ('Away', 2): -1}; consistent: True
+[identities] Play events 891; passer not tracked 0; recipient not tracked 0; passer on the wrong team 0; recipient missing 13
+[identity-swap detector] none detected
+[event sync] Play events matched to a frame within 0.02 s: 889/890; unmatched reasons {'no frame within 0.02s': 1}; events outside both periods: 1
+[provider frame refs] StartFrame: n=15, EventTime - tracking time of that frame: median +2.749 s, range +0.329..+6.261 s
+[provider frame refs] CalculatedFrame: n=25, EventTime - tracking time of that frame: median +0.324 s, range -2.102..+5.897 s
+[substitutions] out DFL-OBJ-002G5J: sub at 4757s, tracked 0-4779s; in DFL-OBJ-00008K: sub at 4757s, tracked 4779-6804s; out DFL-OBJ-0026RH: sub at 4760s, tracked 0-4773s; in DFL-OBJ-J01CP5: sub at 4760s, tracked 4773-6804s; out DFL-OBJ-J01H9X: sub at 4764s, tracked 0-4775s; in DFL-OBJ-J01NQ8: sub at 4764s, tracked 4775-6804s; out DFL-OBJ-002595: sub at 4887s, tracked 0-4890s; in DFL-OBJ-0026IA: sub at 4887s, tracked 4890-6804s; out DFL-OBJ-J0178P: sub at 4890s, tracked 0-4904s; in DFL-OBJ-002G78: sub at 4890s, tracked 4904-6804s; out DFL-OBJ-002FYC: sub at 5536s, tracked 0-5538s; in DFL-OBJ-00286U: sub at 5536s, tracked 5538-6804s; out DFL-OBJ-0000F8: sub at 5557s, tracked 0-5558s; in DFL-OBJ-002GM1: sub at 5557s, tracked 5558-6804s; out DFL-OBJ-0000EJ: sub at 5987s, tracked 0-5987s; in DFL-OBJ-J01K2L: sub at 5987s, tracked 5987-6804s; out DFL-OBJ-0001LJ: sub at 6005s, tracked 0-6007s; in DFL-OBJ-0001BX: sub at 6005s, tracked 6007-6804s
+
+[frozen eligibility] Play events 891: eligible 760; excluded: {'set piece: ThrowIn': 41, 'cross': 20, 'set piece: FreeKick': 20, 'through ball': 18, 'set piece: GoalKick': 18, 'set piece: CornerKick': 11, 'set piece: KickOff': 3}
+[headers] NOT excludable: IDSSE passes carry no header flag (see idsse_labels.py); header passes remain in the eligible set
+
+== CRITICAL GATE: does EventTime identify the pass release moment? ==
+[release gate] criteria fixed beforehand: {'median_d0_max_m': 0.5, 'share_d0_over_3m_max': 0.03, 'median_tau_diff_max_s': 0.08, 'iqr_ratio_max': 2.0, 'median_speed_after_min_ms': 8.0}
+  IDSSE J03WPY: n 760, median_d0 2.399, share_d0_over_3m 0.478, tau_median -0.240, tau_q25 -0.350, tau_q75 -0.040, censored 0.742, speed_after_median 5.472, tau_never_crosses 0.145
+  Metrica G1 (reference): n 883, median_d0 0.088, share_d0_over_3m 0.010, tau_median 0.120, tau_q25 0.120, tau_q75 0.160, censored 0.240, speed_after_median 11.464, tau_never_crosses 0.015
+  [FAIL] median ball-passer distance at event frame <= 0.5 m
+  [FAIL] share with ball > 3 m from the passer <= 3%
+  [FAIL] median release lag within 0.08 s of Metrica
+  [FAIL] release-lag IQR <= 2x Metrica
+  [FAIL] median ball speed after event >= 8 m/s
+[lag profile] IDSSE (event frame + lag):
+ lag_frames  lag_s  median_dist_m  median_ball_speed_ms
+        -10  -0.40           3.55                  5.90
+         -8  -0.32           3.12                  5.92
+         -6  -0.24           2.68                  5.58
+         -4  -0.16           2.66                  5.62
+         -2  -0.08           2.57                  5.73
+          0   0.00           2.36                  5.51
+          2   0.08           2.35                  5.60
+          4   0.16           2.41                  5.52
+          6   0.24           2.44                  5.43
+          8   0.32           2.33                  5.62
+         10   0.40           2.43                  5.38
+[lag profile] Metrica G1 reference:
+ lag_frames  lag_s  median_dist_m  median_ball_speed_ms
+        -10  -0.40           0.13                  3.23
+         -8  -0.32           0.13                  3.19
+         -6  -0.24           0.12                  3.05
+         -4  -0.16           0.12                  2.95
+         -2  -0.08           0.11                  2.87
+          0   0.00           0.09                  2.86
+          2   0.08           0.65                 12.21
+          4   0.16           1.50                 12.17
+          6   0.24           2.34                 12.15
+          8   0.32           3.17                 12.04
+         10   0.40           4.01                 11.96
+
+GATE FAILED -> STOP. No labels or features were computed.
+[diagnostic] per-event lag at which the ball is closest to the named passer (+-5 s): median -0.38 s, IQR -1.72..+0.64 s; share within +-0.12 s (3 frames): 7.0%; median minimum distance 0.43 m
+[diagnostic] ball-passer distance vs lag (median [IQR]) over +-4 s:
+    lag -4.0 s: 15.37 m [6.59..24.07]
+    lag -3.0 s: 12.79 m [4.38..20.62]
+    lag -2.0 s: 8.95 m [1.87..16.65]
+    lag -1.0 s: 5.19 m [0.98..12.13]
+    lag +0.0 s: 2.36 m [0.82..9.18]
+    lag +1.0 s: 5.13 m [1.00..11.99]
+    lag +2.0 s: 11.57 m [6.62..17.94]
+    lag +3.0 s: 15.51 m [10.07..22.30]
+    lag +4.0 s: 17.72 m [11.06..25.83]
