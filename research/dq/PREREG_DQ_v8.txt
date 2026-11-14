@@ -1,0 +1,15 @@
+DQ-v8 PRE-REGISTRATION: (1) fix the calibration of xG, (8) a "decision moment" dataset: what players actually do and realise in the final third. Written 2026-11-14T17:29:13Z, before downloading or fitting anything for it.
+Data: StatsBomb open data, all men's competitions >= 2015 (events), 360 frames for the 360 competitions; gzip in memory; reduced tables deleted afterwards. Splits unchanged: TEST = Euro 2024, Copa America 2024, 1. Bundesliga 2023/24, MLS 2023.
+(1) xG calibration. Training shots = open-play shots of all non-test competitions. Base = DQ-v5 M3 (17 features) and its geometry-only version M2 (10 features). New variants, all logistic with ridge 1.0:
+ S1 = M3 + piecewise-linear hinge terms (max(0, d - k)): dist knots (10, 16, 24, 34 units) and angle knots (0.15, 0.3, 0.6 rad).   S2 = S1 + interactions (gk_lat x dist, n_tri x dist, first_time x dist).
+ G1 = M2 + the same hinge terms (geometry only, the variant used for Israeli data).
+ Selection of S1 vs S2 and of whether to use Platt recalibration: leave-one-competition-out log loss on the TRAIN set (recalibration fitted on the pooled LOCO predictions, so it never sees a held-out competition).
+ Gate G-xG2 on TEST (pooled): calibration slope in [0.9, 1.1], predicted/observed goals in [0.9, 1.1], log-loss gain over the OLD model (DQ-v1 M0) with match-bootstrap 95% CI excluding 0, and log loss not worse than M3 (the 17-feature DQ-v5 model).
+ Reported next to it: StatsBomb's own xG as a benchmark, per-competition values, and the same for the geometry-only model G1.
+(8) Decision moments. Moments = (a) open-play shots and (b) open-play passes (any type, completed or not) whose actor is at x >= 90 (StatsBomb units, within about 26 m of the goal line), in the 360 competitions, with a visible keeper.
+ Context features (identical for both actions, computed at the actor's location with the freeze frame): dist, angle, x, n_tri, gk_d, gk_lat, n_opp2, nn_opp, dist*angle, log dist.
+ Realised value: shot -> statsbomb xG + later shots of the possession within 10 s (as v6); pass -> chain value (xG of all team shots in the possession within 10 s after the pass; failures count as 0).
+ Models: C = P(shot | context), logistic; Vs = value of a shot, fractional logistic on the context (xG realised value); Vp = value of a typical pass from that context (fractional logistic of the chain value on all pass moments).
+ Gate G-moment on TEST: C pooled slope in [0.8, 1.2] and predicted/observed shot share in [0.9, 1.1], AUC reported; Vs and Vp pooled predicted/observed in [0.85, 1.15] and slopes in [0.8, 1.2].
+ Reported: shot rate by distance band (observed vs C); the share of actual shots whose context value Vs exceeds Vp (shooting was better than the typical pass from there) and, among actual passes from contexts with a shot value >= 0.05, the share where Vs > the realised chain of the pass taken; Israeli frames: C, Vs, Vp for the two shooting contexts.
+ Stated limits: selection bias (players shoot when a shot is good); Vp is a TYPICAL pass, not the best; carries and dribbles excluded; 360 frames only show visible players.
