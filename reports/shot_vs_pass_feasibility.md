@@ -354,3 +354,35 @@ Each competition was predicted by a model fitted on all the others. Observed/pre
 | Second shot (71:48, official xG 0.378) | 0.479 | 0.498 | 8% | **41%** | **52%** |
 
 In both cases the shot was far more often the clearly better choice than the pass. The second shot is the most ambiguous (52%): the pass to #90 is about equal to the shot and the pass value is an extrapolation near goal. The share of draws where the best pass beats the shot (39% and 41%) is lower than that for #90 alone (54% and 37%) because the offside proxy sometimes excludes him in the position draws.
+
+## 14. DQ-v8: xG calibration (negative result) and a decision-moment dataset
+
+Pre-registration `research/dq/PREREG_DQ_v8.txt`; scripts `fetch_v8.py`, `eval_v8.py`, `research/cases/v8_cases.py`; outputs `eval_v8_out.txt`, `v8_cases_out.txt`. 989 MB transferred (2,254 men's matches from 2015; 360 frames for the 360 competitions), processed in memory, tables deleted. Test sets: Euro 2024, Copa America 2024, Bundesliga 2023/24, MLS 2023. Models and gates of v5-v7 are unchanged.
+
+**(1) Fixing the xG calibration did not work. Gate G-xG2 failed.**
+* Added hinge (piecewise-linear) terms on distance and angle, three interactions, and a Platt recalibration fitted on leave-one-competition-out predictions. The best candidate by validation was S2 with Platt (selection on the training competitions only).
+* Leave-one-competition-out log loss barely moved (0.25745 for the 17-feature DQ-v5 model, 0.25707 with the extras), and the fitted recalibration was the identity (slope 1.00, intercept -0.007). That means there is **no systematic miscalibration on the training competitions to fix**.
+* On the test sets the new model is **no better than the DQ-v5 model** (log-loss difference -0.002 [-0.010, +0.002]) and its slope is 0.885 (needs 0.9-1.1). The 17-feature model (slope 0.896) remains the best we have; StatsBomb's own xG (slope 0.968, AUC 0.785) keeps an advantage we cannot reproduce with these inputs.
+* **Reading:** the remaining slope shortfall is not a functional-form issue. It comes from differences between competitions (Euro 2024 and Bundesliga behave differently from the training mix) and from information StatsBomb's model has and we lack. More flexible forms of the same inputs will not close it. No change to the xG used so far.
+
+**(8) Decision moments: what players do and what they realise.**
+Dataset: 1,787 test shots and 7,427 test passes (any type, completed or not) made from x >= 90 (about 26 m of the goal line), with the same context features for both (location, goalkeeper position, defenders near the player and in the shooting triangle). Train: 4,658 shots and 18,296 passes.
+
+| Model | Test result | Gate |
+|---|---|---|
+| **C = P(shoot \| context)** | AUC **0.947**; slope 1.02; predicted shot share 20.5% vs observed 19.4% | PASS |
+| **Vs = value of a shot** (xG + continuation) | predicted/observed 1.00; slope 0.99 | PASS |
+| **Vp = value of a typical pass from that context** | predicted/observed **1.17**; slope 0.91 | FAIL (level) |
+
+**G-moment failed because the pass value is over-predicted by 17%**, the same direction and size as the chain-value finding in section 12. The choice model and the shot value are well calibrated.
+
+* **What players do (observed vs predicted shot share by distance):** within 8 m 81% (model 83%); 8-12 m 71% (72%); 12-16 m 48% (52%); 16-20 m 33% (36%); 20-30 m 13% (14%). This is a much sharper picture of "typical behaviour" than the shot-versus-pass comparison alone: **geometry alone predicts almost perfectly whether a player will shoot** (AUC 0.95).
+* **What they realise.** Among the 1,787 actual shots, the shot was worth more than a typical pass from the same context in 68%. Among **1,290 passes made from contexts where a shot would have been worth at least 0.05**, the shot was worth on average 0.091, while the pass actually taken realised a chain value of **0.044** (difference +0.048 [+0.038, +0.056]). By distance, shot value vs typical pass: under 8 m 0.36 vs 0.12; 8-12 m 0.19 vs 0.11; 12-16 m 0.10 vs 0.07; 16-20 m 0.06 vs 0.05; 20-30 m 0.03 vs 0.03.
+* **Caution.** This is observational and it is selection-biased: players pass precisely when there is no real shooting chance (blocked, bad angle), which the context features only partly capture. The 0.048 gap is therefore an upper bound on the cost of passing instead of shooting. And Vp is a typical pass, not the best available one, so it does not replace the best-alternative comparison of sections 12-13.
+
+**The Israeli shooting contexts.** The value of a shot (0.47 and 0.19) is again above the value of a typical pass (0.14 and 0.11) in 100% of the draws, as expected from a position 7-10 m from goal. The model's P(a typical player shoots from here) is 0.44 and 0.42, but the draw-based range is 0.02-0.98: the feature set is sensitive to the few defenders visible in a broadcast frame, so the behaviour model is **not informative** for these two frames and should not be quoted.
+
+**Where this leaves the model.**
+* xG: unchanged; further tweaks of the same inputs are not worthwhile.
+* Pass value: the level over-prediction (12-17%) now shows up in two independent datasets, which supports the use of a +-30% band rather than a point value.
+* Next steps that need new information rather than more tuning: tracking data with velocities, goalkeeper movement, and, if obtainable lawfully, player attributes.

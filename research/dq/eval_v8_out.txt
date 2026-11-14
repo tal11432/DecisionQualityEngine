@@ -1,0 +1,47 @@
+shots: train 50093 (4993 goals, 21 competitions), test 2983 (272 goals): UEFA Euro 2024 1257, 1. Bundesliga 2023/2024 882, Copa America 2024 709, Major League Soccer 2023 135
+  LOCO log loss M2: raw 0.25978, with Platt 0.25978 (a=-0.003, b=1.000)
+  LOCO log loss M3: raw 0.25745, with Platt 0.25745 (a=-0.004, b=0.999)
+  LOCO log loss S1: raw 0.25727, with Platt 0.25727 (a=-0.007, b=0.997)
+  LOCO log loss S2: raw 0.25707, with Platt 0.25707 (a=-0.007, b=0.997)
+  LOCO log loss G1: raw 0.25956, with Platt 0.25956 (a=-0.006, b=0.999)
+selected: S2 with Platt recalibration
+[POOLED] n=2983 goals=272
+   M0 (old)                   pred/obs 0.970 slope 0.880 AUC 0.757 LL 0.2668 | gain vs M0 +0.00000 [+0.00000,+0.00000] | vs M3 -0.00765 [-0.01246,-0.00316]
+   M3 (DQ-v5 xG_new)          pred/obs 1.060 slope 0.896 AUC 0.775 LL 0.2591 | gain vs M0 +0.00765 [+0.00352,+0.01215] | vs M3 +0.00000 [+0.00000,+0.00000]
+   xG_new2 (S2+Platt)         pred/obs 1.058 slope 0.885 AUC 0.776 LL 0.2611 | gain vs M0 +0.00565 [-0.00253,+0.01290] | vs M3 -0.00200 [-0.00972,+0.00248]
+   xG_geo2 (G1+Platt)         pred/obs 1.051 slope 0.893 AUC 0.775 LL 0.2603 | gain vs M0 +0.00645 [+0.00276,+0.01044] | vs M3 -0.00120 [-0.00351,+0.00121]
+   StatsBomb xG               pred/obs 1.035 slope 0.968 AUC 0.785 LL 0.2539 | gain vs M0 +0.01290 [+0.00640,+0.01887] | vs M3 +0.00525 [-0.00005,+0.01058]
+[1. Bundesliga 2023/2024] n=882 goals=100
+   M0 (old)                   pred/obs 0.827 slope 0.977 AUC 0.770 LL 0.2994 | gain vs M0 +0.00000 [+0.00000,+0.00000] | vs M3 -0.00359 [-0.01380,+0.00590]
+   M3 (DQ-v5 xG_new)          pred/obs 0.947 slope 0.902 AUC 0.770 LL 0.2958 | gain vs M0 +0.00359 [-0.00721,+0.01309] | vs M3 +0.00000 [+0.00000,+0.00000]
+   xG_new2 (S2+Platt)         pred/obs 0.943 slope 0.840 AUC 0.764 LL 0.3042 | gain vs M0 -0.00487 [-0.03209,+0.01340] | vs M3 -0.00845 [-0.03276,+0.00515]
+   xG_geo2 (G1+Platt)         pred/obs 0.924 slope 0.929 AUC 0.775 LL 0.2947 | gain vs M0 +0.00468 [-0.00360,+0.01326] | vs M3 +0.00109 [-0.00367,+0.00642]
+   StatsBomb xG               pred/obs 0.929 slope 0.966 AUC 0.788 LL 0.2904 | gain vs M0 +0.00899 [-0.00672,+0.02438] | vs M3 +0.00540 [-0.01033,+0.01769]
+[Copa America 2024] n=709 goals=62
+   M0 (old)                   pred/obs 1.017 slope 0.865 AUC 0.774 LL 0.2599 | gain vs M0 +0.00000 [+0.00000,+0.00000] | vs M3 -0.00685 [-0.01193,-0.00169]
+   M3 (DQ-v5 xG_new)          pred/obs 1.069 slope 0.898 AUC 0.782 LL 0.2531 | gain vs M0 +0.00685 [+0.00196,+0.01199] | vs M3 +0.00000 [+0.00000,+0.00000]
+   xG_new2 (S2+Platt)         pred/obs 1.077 slope 0.931 AUC 0.792 LL 0.2510 | gain vs M0 +0.00896 [+0.00433,+0.01382] | vs M3 +0.00211 [-0.00082,+0.00607]
+   xG_geo2 (G1+Platt)         pred/obs 1.094 slope 0.892 AUC 0.788 LL 0.2536 | gain vs M0 +0.00636 [+0.00259,+0.01022] | vs M3 -0.00049 [-0.00644,+0.00482]
+   StatsBomb xG               pred/obs 1.044 slope 0.991 AUC 0.791 LL 0.2451 | gain vs M0 +0.01485 [+0.00605,+0.02512] | vs M3 +0.00800 [-0.00158,+0.01760]
+[UEFA Euro 2024] n=1257 goals=98
+   M0 (old)                   pred/obs 1.077 slope 0.803 AUC 0.735 LL 0.2473 | gain vs M0 +0.00000 [+0.00000,+0.00000] | vs M3 -0.01182 [-0.01997,-0.00440]
+   M3 (DQ-v5 xG_new)          pred/obs 1.153 slope 0.892 AUC 0.778 LL 0.2355 | gain vs M0 +0.01182 [+0.00426,+0.01996] | vs M3 +0.00000 [+0.00000,+0.00000]
+   xG_new2 (S2+Platt)         pred/obs 1.148 slope 0.899 AUC 0.780 LL 0.2357 | gain vs M0 +0.01160 [+0.00332,+0.02001] | vs M3 -0.00022 [-0.00209,+0.00154]
+   xG_geo2 (G1+Platt)         pred/obs 1.139 slope 0.861 AUC 0.770 LL 0.2389 | gain vs M0 +0.00842 [+0.00227,+0.01608] | vs M3 -0.00340 [-0.00617,-0.00048]
+   StatsBomb xG               pred/obs 1.120 slope 0.961 AUC 0.782 LL 0.2322 | gain vs M0 +0.01516 [+0.00824,+0.02211] | vs M3 +0.00335 [-0.00181,+0.00828]
+GATE G-xG2 (pooled): FAIL
+
+decision moments: shots 6445 (train 4658, test 1787), passes 25723 (train 18296, test 7427); shot share 20.0%
+C = P(shoot | context): test AUC 0.947, slope 1.015, predicted shot share 20.5% vs observed 19.4%, LL gain +0.2613 [+0.2474,+0.2771]  => PASS
+   shot share by distance (m): (0, 8]: observed 81% | C 83% (n=145); (8, 12]: observed 71% | C 72% (n=399); (12, 16]: observed 48% | C 52% (n=868); (16, 20]: observed 33% | C 36% (n=1262); (20, 30]: observed 13% | C 14% (n=4133)
+Vs (shot): test n=1787, observed mean 0.1090, predicted 0.1092 (ratio 1.002, slope 0.991, LL gain +0.05172 [+0.04582,+0.05804])  => PASS
+Vp (typical pass): test n=7427, observed mean 0.0228, predicted 0.0267 (ratio 1.171, slope 0.906, LL gain +0.00380 [+0.00238,+0.00518])  => FAIL
+GATE G-moment: FAIL
+
+ACTUAL SHOTS (test, n=1787): value of a shot from the context 0.109 vs typical pass 0.069; share with Vs > Vp 68.2%; realised mean value of the shots taken 0.109
+ACTUAL PASSES from contexts where a shot would have been worth >= 0.05 (test, n=1290): mean shot value 0.091 vs mean realised chain of the pass taken 0.044 (difference +0.0475 [+0.0380,+0.0559]); share where typical pass < shot value 91.6%
+   (0, 8]: moments 145; mean Vs 0.359, Vp 0.122; share of moments where the player shot 81%; share of contexts with Vs > Vp 96%
+   (8, 12]: moments 399; mean Vs 0.185, Vp 0.105; share of moments where the player shot 71%; share of contexts with Vs > Vp 87%
+   (12, 16]: moments 868; mean Vs 0.098, Vp 0.071; share of moments where the player shot 48%; share of contexts with Vs > Vp 70%
+   (16, 20]: moments 1262; mean Vs 0.056, Vp 0.048; share of moments where the player shot 33%; share of contexts with Vs > Vp 56%
+   (20, 30]: moments 4133; mean Vs 0.029, Vp 0.027; share of moments where the player shot 13%; share of contexts with Vs > Vp 45%

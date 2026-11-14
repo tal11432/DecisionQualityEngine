@@ -1,0 +1,4 @@
+
+Second shot (71:48): P(a typical player shoots from here) 0.443 (MC 5-95%: 0.052-0.979); value of a shot 0.471 (MC 5-95%: 0.319-0.596); value of a typical pass 0.141 (MC 5-95%: 0.125-0.165); share of draws with shot value > typical pass 100%
+
+First shot (71:47): P(a typical player shoots from here) 0.420 (MC 5-95%: 0.022-0.906); value of a shot 0.194 (MC 5-95%: 0.124-0.363); value of a typical pass 0.106 (MC 5-95%: 0.070-0.157); share of draws with shot value > typical pass 100%
