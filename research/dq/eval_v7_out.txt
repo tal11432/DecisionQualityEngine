@@ -1,0 +1,37 @@
+passes: train 20559 (mean v_recv 0.0038, mean v_chain 0.0159), test 8177 (v_recv 0.0044, v_chain 0.0140); test comps {'UEFA Euro 2024': np.int64(4760), '1. Bundesliga 2023/2024': np.int64(3247), 'Major League Soccer 2023': np.int64(170)}
+[POOLED] n=8177: observed chain value 0.0140; predicted 0.0164 (ratio 1.178, slope 1.033, LL gain vs constant +0.01056 [+0.00833,+0.01319]); receiver-only value 0.0044; old hypothetical xA 0.0221
+[1. Bundesliga 2023/2024] n=3247: observed chain value 0.0162; predicted 0.0177 (ratio 1.090, slope 0.962, LL gain vs constant +0.01053 [+0.00655,+0.01558]); receiver-only value 0.0052; old hypothetical xA 0.0241
+[Major League Soccer 2023] n=170: observed chain value 0.0144; predicted 0.0165 (ratio 1.149, slope 1.486, LL gain vs constant +0.01580 [+0.00204,+0.02864]); receiver-only value 0.0042; old hypothetical xA 0.0204
+[UEFA Euro 2024] n=4760: observed chain value 0.0124; predicted 0.0156 (ratio 1.258, slope 1.072, LL gain vs constant +0.01040 [+0.00795,+0.01336]); receiver-only value 0.0039; old hypothetical xA 0.0208
+GATE G-xAc: FAIL (per-competition slopes [np.float64(0.96), np.float64(1.49), np.float64(1.07)])
+by target distance (m): (0, 12]: observed chain 0.246 | predicted 0.231 | receiver-only 0.205 | hypothetical 0.245 (n=60); (12, 20]: observed chain 0.053 | predicted 0.062 | receiver-only 0.025 | hypothetical 0.085 (n=664); (20, 30]: observed chain 0.019 | predicted 0.023 | receiver-only 0.003 | hypothetical 0.030 (n=1991); (30, 80]: observed chain 0.005 | predicted 0.006 | receiver-only 0.000 | hypothetical 0.009 (n=5462)
+
+shot continuation c (later shots in the possession within 10 s): train 5876 shots mean 0.0128; test 2983 observed 0.0116, predicted 0.0127 (ratio 1.092, slope 1.101); shot xG mean 0.0944
+GATE G-c: PASS
+
+LEVEL VARIABILITY of the chain value across competitions (each predicted by a model fit on all others):
+   1. Bundesliga 2023/2024      n= 3247 passes followed by a chain shot  502  observed 0.0162  predicted 0.0170  ratio 0.952
+   FIFA World Cup 2022          n= 3709 passes followed by a chain shot  620  observed 0.0192  predicted 0.0163  ratio 1.172
+   La Liga 2020/2021            n= 5386 passes followed by a chain shot  612  observed 0.0146  predicted 0.0149  ratio 0.981
+   Ligue 1 2021/2022            n= 3174 passes followed by a chain shot  450  observed 0.0143  predicted 0.0148  ratio 0.968
+   Ligue 1 2022/2023            n= 4641 passes followed by a chain shot  635  observed 0.0153  predicted 0.0139  ratio 1.099
+   Major League Soccer 2023     n=  170 passes followed by a chain shot   26  observed 0.0144  predicted 0.0157  ratio 0.914
+   UEFA Euro 2020               n= 3649 passes followed by a chain shot  487  observed 0.0154  predicted 0.0144  ratio 1.067
+   UEFA Euro 2024               n= 4760 passes followed by a chain shot  700  observed 0.0124  predicted 0.0154  ratio 0.803
+   var(log ratio) 0.0139, expected sampling noise 0.0064 -> tau = 0.087; 95% range of the level multiplier exp(+-1.96 tau) = [0.84, 1.19]
+
+FAILURE COST: failed passes train 10239 (mean opponent chain xG 0.0025), test 4692 (observed 0.0029, predicted 0.0025, ratio 0.872, slope 1.020, LL gain +0.00362 [+0.00221,+0.00558]); opponent shots after 140 test failures
+GATE G-vf: PASS
+   by distance of the loss point to the OPPONENT's goal (m): (0, 20]: observed 0.0002 predicted 0.0001 (n=1381); (20, 40]: observed 0.0006 predicted 0.0004 (n=1395); (40, 60]: observed 0.0025 predicted 0.0021 (n=986); (60, 120]: observed 0.0107 predicted 0.0097 (n=930)
+
+SHOT vs PASS, 2431 test foot shots with at least one admissible candidate:
+  chain value, no failure cost : better pass 64.1%  | with failure cost: 64.0%  (mean failure cost of the best pass: 0.00002; mean shot value 0.106)
+  ROBUSTNESS CURVE (share with pass > shot when the chain value is multiplied by s): s=0.6: 40%, s=0.7: 47%, s=0.8: 54%, s=0.9: 59%, s=1.0: 64%, s=1.1: 67%, s=1.2: 71%, s=1.3: 73%, s=1.4: 76%
+  THREE-WAY (s in [0.7,1.3]): pass clearly better 47.0% [45.1,49.0], shot clearly better 26.7% [24.7,28.7], ambiguous 26.3%
+    <12m: n=500 pass clearly better 27.2%, shot clearly better 50.4%, ambiguous 22.4%
+    12-20m: n=1080 pass clearly better 44.1%, shot clearly better 27.3%, ambiguous 28.6%
+    >20m: n=851 pass clearly better 62.3%, shot clearly better 12.0%, ambiguous 25.7%
+    1. Bundesliga 2023/2024: n=737 pass clearly better 45.7%, shot clearly better 27.4%, ambiguous 26.9%
+    Copa America 2024: n=558 pass clearly better 46.1%, shot clearly better 28.9%, ambiguous 25.1%
+    Major League Soccer 2023: n=117 pass clearly better 39.3%, shot clearly better 33.3%, ambiguous 27.4%
+    UEFA Euro 2024: n=1019 pass clearly better 49.3%, shot clearly better 24.2%, ambiguous 26.5%

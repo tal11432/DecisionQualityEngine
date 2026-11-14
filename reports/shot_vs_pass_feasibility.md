@@ -309,3 +309,48 @@ By distance (primary): under 12 m 39%; 12-20 m 62%; over 20 m 80%. By competitio
 | Second shot (71:48) | 0.479 | 0.378 | 0.98 x 0.508 = **0.498** | 39% of draws |
 
 The conclusion is unchanged: in both cases no pass is clearly better than the shot (the best pass exceeds the shot in 39-41% of draws, inside the uncertainty). The value of 0.50 for the second shot is again an extrapolation near goal (few training passes end that close; only some defenders visible), so it is an upper estimate. Note that our shot value there (0.48) is also above the official xG (0.378).
+
+## 13. DQ-v7: how much the level varies, the failure cost, and a robust three-way verdict
+
+Pre-registration `research/dq/PREREG_DQ_v7.txt` (written before the download); scripts `fetch_v7.py`, `eval_v7.py`, `research/cases/v7_cases.py`; outputs `eval_v7_out.txt`, `v7_cases_out.txt`. 447 MB transferred (the same 383 matches as v6, now also keeping failed passes), processed in memory, tables deleted. Models and gates of v6 are unchanged.
+
+**(1) The level of the pass value varies little between competitions.**
+Each competition was predicted by a model fitted on all the others. Observed/predicted ratios: Bundesliga 0.95, WC 2022 1.17, La Liga 2020/21 0.98, Ligue 1 0.97 and 1.10, MLS 0.91, Euro 2020 1.07, **Euro 2024 0.80**. After removing sampling noise the between-competition spread is **tau = 0.087**, i.e. a 95% range of about **0.84-1.19** for the level multiplier.
+* **The 18% over-prediction found in v6 was mostly Euro 2024 being a low-chance tournament** (0.80), not a general bias; the level otherwise moves by about ±10%. This supports the scale factor around 0.85 as a reasonable sensitivity, not a correction.
+* The pre-registered classification band of ±30% is wider than the observed range (±16%), so the three-way verdict below is conservative.
+
+**(2) The cost of failing a pass is negligible here.** Failed passes (14,931): the opponent scores or shoots from a loss point as expected (observed 0.0029, predicted 0.0025; log-likelihood gain +0.0036 [+0.0022, +0.0056]; the gate passed). Near the opponent's goal, a loss leads to an opponent shot chain worth 0.0002; at 60-120 m from the opponent's goal (our attacking half's mirror) it is 0.0107. For passes in the attacking third, the mean cost of failure of the best pass is **0.00002**, and the share with a better pass does not change (64.1% without the cost, 64.0% with it). The attacking-third comparison therefore does not hinge on it; the failure cost would only matter for deep passes.
+
+**(3) Robustness curve** (2,431 test foot shots; share where the pass value exceeds the shot value when the chain value is multiplied by s):
+
+| s | 0.6 | 0.7 | 0.8 | 0.9 | 1.0 | 1.1 | 1.2 | 1.3 | 1.4 |
+|---|---|---|---|---|---|---|---|---|---|
+| better pass | 40% | 47% | 54% | 59% | **64%** | 67% | 71% | 73% | 76% |
+
+**(4) Three-way verdict, per shot, with the level allowed to vary by ±30%:**
+
+| | Pass clearly better | Shot clearly better | Ambiguous |
+|---|---|---|---|
+| **All 2,431 shots** | **47.0%** [45.1, 49.0] | **26.7%** [24.7, 28.7] | 26.3% |
+| < 12 m | 27.2% | **50.4%** | 22.4% |
+| 12-20 m | 44.1% | 27.3% | 28.6% |
+| > 20 m | **62.3%** | 12.0% | 25.7% |
+| Euro 2024 / Bundesliga / Copa America / MLS | 49% / 46% / 46% / 39% | 24% / 27% / 29% / 33% | 25-27% |
+
+("Clearly" means the verdict holds at both ends of the level range: the pass is better even at 0.7x, or the shot is better even at 1.3x.)
+
+**How to read this.** The pattern is stable across competitions and strongest at the extremes:
+* **Close shots (under 12 m):** the shot is clearly the better choice in half of them, and the pass only in a quarter.
+* **Long shots (over 20 m):** a pass was clearly better in 62%, the shot in only 12%.
+* **Mid-range:** mixed, with the pass clearly better in 44% and the shot in 27%.
+* **About a quarter of all shots are genuinely ambiguous** under this model; about three quarters have a verdict that survives the level uncertainty.
+* **Limits:** only completion and shots in the same possession within 10 s are valued; no value for retaining possession beyond that, no defender reaction, and 360 frames omit some players.
+
+**The Israeli frames (same method, official shot location):**
+
+| | Shot value | Best pass (#90) | Pass clearly better | Shot clearly better | Ambiguous |
+|---|---|---|---|---|---|
+| First shot (71:47, official xG 0.166) | 0.188 | 0.160 | 21% | **49%** | 30% |
+| Second shot (71:48, official xG 0.378) | 0.479 | 0.498 | 8% | **41%** | **52%** |
+
+In both cases the shot was far more often the clearly better choice than the pass. The second shot is the most ambiguous (52%): the pass to #90 is about equal to the shot and the pass value is an extrapolation near goal. The share of draws where the best pass beats the shot (39% and 41%) is lower than that for #90 alone (54% and 37%) because the offside proxy sometimes excludes him in the position draws.
