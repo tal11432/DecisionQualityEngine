@@ -28,7 +28,7 @@ Lo["d2"], Lo["ad"] = Lo.dist_own ** 2, Lo.ang_own * Lo.dist_own
 Lo["adv"] = Lo.n_opp_ahead - Lo.n_cover; Lo["adv_pos"] = Lo.adv.clip(0, 5); Lo["adv_x"] = Lo.adv_pos * (1 - Lo.lx / 120.0)
 F_OLD = ["dist_own", "ang_own", "lx", "d2", "ad", "n_opp3", "n_opp6", "nn_opp", "n_mate10", "nn_mate", "n_opp_ahead", "n_cover", "k_pass", "k_dribble", "k_dispossessed"]
 F_NEW = F_OLD + ["adv", "adv_pos", "n_free_run", "run_x", "nn_run", "adv_x"]
-tr, te = Lo[~Lo.test].copy(), Lo[Lo.test].copy(); Lm = {}
+tr, te = Lo[~Lo.test].copy(), Lo[Lo.test].copy(); Lm = {}; Lm_old = {}
 print(f"\n== L: danger of losing the ball (opponent xG - own xG in the next 10 s), losses anywhere; train {len(tr)}, test {len(te)}")
 for tag, FL in (("old features (v13)", F_OLD), ("with numerical balance (v15)", F_NEW)):
     P = {}
@@ -37,6 +37,7 @@ for tag, FL in (("old features (v13)", F_OLD), ("with numerical balance (v15)", 
         g = ll(y, np.full(len(y), np.clip(tr[col], 0, .99).mean())) - ll(y, p); lo_, hi_ = mboot(g, te.match.to_numpy()); ok = lo_ > 0 and 0.85 <= p.mean() / y.mean() <= 1.15
         print(f"   [{tag}] {nm}: observed mean {y.mean():.4f}, predicted {p.mean():.4f} (ratio {p.mean()/y.mean():.3f}, slope {slope(y, p):.3f}); LL gain over constant {g.mean():+.5f} [{lo_:+.5f},{hi_:+.5f}] => {'PASS' if ok else 'FAIL'}")
         if FL is F_NEW: gates[f"L_{nm}"] = bool(ok); Lm[nm] = f.coef
+        else: Lm_old[nm] = f.coef
     te["L_old" if FL is F_OLD else "L"] = P["opp"] - P["own"]
 te["Lobs"] = te.opp10 - te.own10
 # is the new model better for the opponent part? (paired log-likelihood difference, same test set)
@@ -64,4 +65,6 @@ a_ = auc(y, p); ok = 0.8 <= slope(y, p) <= 1.2 and 0.9 <= p.mean() / y.mean() <=
 print(f"\n== P_dribble (take-on success, features from the frame BEFORE the duel; preceding events {dict(Dr.prev_kind.value_counts())}, median {Dr.dt_prev.median():.1f} s earlier): train {len(dtr)}, test {len(dte)}; observed success {y.mean():.4f}, predicted {p.mean():.4f} (ratio {p.mean()/y.mean():.3f}, slope {slope(y, p):.3f}); AUC {a_:.3f} => {'PASS' if ok else 'FAIL'}" + (" (AUC > 0.80: residual leakage suspected)" if a_ > 0.80 else ""))
 print("   by number of opponents within 6 units of the preceding frame: " + "; ".join(f"{b}: observed {g.y.mean():.3f}, predicted {g.p.mean():.3f} (n={len(g)})" for b, g in dte.assign(p=p, nb=dte.n6.clip(upper=3)).groupby("nb")))
 print("\nGATES:", {k: ("PASS" if v else "FAIL") for k, v in gates.items()})
-pd.to_pickle(dict(L=dict(F=F_NEW, opp=Lm["opp"], own=Lm["own"]), P_dribble=dict(F=FD, **fd.coef), gates=gates, C=C, C_measured=c_meas, C_rule_met=bool(use)), f"{D}/v15_models.pkl")
+# AMENDMENT F (written after this run, before any score was recomputed): the numerical-balance features gave no gain (paired LL gain -0.00004), G-counter failed, the take-on failed its gate and the measured C is far below the rule's band:
+# the Decision Score uses the v13 turnover model (F_OLD, refit on this identical data), C = 0.231, and no take-on. The counter-feature model is stored only for reproducibility.
+pd.to_pickle(dict(L=dict(F=F_OLD, opp=Lm_old["opp"], own=Lm_old["own"]), L_counter_unused=dict(F=F_NEW, opp=Lm["opp"], own=Lm["own"]), P_dribble_unsupported=dict(F=FD, **fd.coef), gates=gates, C=C, C_measured=c_meas, C_rule_met=bool(use)), f"{D}/v15_models.pkl")

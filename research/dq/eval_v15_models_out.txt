@@ -1,0 +1,19 @@
+data: losses 56108 by kind {'pass': np.int64(41464), 'miscontrol': np.int64(6084), 'dispossessed': np.int64(5210), 'dribble': np.int64(3350)}; stand-alone take-ons 1981 (success 51.7%)
+
+== L: danger of losing the ball (opponent xG - own xG in the next 10 s), losses anywhere; train 39806, test 16302
+   [old features (v13)] opp: observed mean 0.0016, predicted 0.0016 (ratio 1.007, slope 0.795); LL gain over constant +0.00174 [+0.00110,+0.00238] => PASS
+   [old features (v13)] own: observed mean 0.0026, predicted 0.0029 (ratio 1.083, slope 1.043); LL gain over constant +0.00180 [+0.00129,+0.00235] => PASS
+   [with numerical balance (v15)] opp: observed mean 0.0016, predicted 0.0016 (ratio 1.012, slope 0.784); LL gain over constant +0.00169 [+0.00110,+0.00228] => PASS
+   [with numerical balance (v15)] own: observed mean 0.0026, predicted 0.0029 (ratio 1.089, slope 1.022); LL gain over constant +0.00180 [+0.00128,+0.00238] => PASS
+   paired LL gain of the numerical-balance features over the old features (opp): -0.00004 [-0.00008,-0.00000]
+   L predicted (new): 1st/10th/50th/90th/99th/99.9th percentile -0.0156, -0.0079, -0.0011, +0.0035, +0.0210, +0.0645; (old) max +0.194, 99.9th +0.0638
+   by opponent numerical advantage (losses at x <= 70; test): adv<=0: n=4630, observed +0.0036, predicted new +0.0045 / old +0.0045; adv=1: n=651, observed +0.0058, predicted new +0.0024 / old +0.0025; adv>=2: n=514, observed -0.0002, predicted new +0.0007 / old +0.0008
+   G-counter: losses with adv >= 2 at x <= 70 in the test competitions n=514, predicted/observed nan, predicted L rises from adv<=0 to adv>=2: False => FAIL
+
+== Zero anchor C: training losses with adv >= 2 and x <= 70: n=1322; mean realised net danger 0.0019 (95% CI [0.0009,0.0031], half-width 0.0011); mean opponent xG 0.0022; share with an opponent shot 2.4%
+   rule (measured value if inside [0.15, 0.35] and half-width <= 0.05): NOT met -> C = 0.231 (mean xG of one-on-one open-play shots); C = 0.2310
+
+== P_dribble (take-on success, features from the frame BEFORE the duel; preceding events {'Carry': np.int64(1955), 'Ball Receipt*': np.int64(26)}, median 1.2 s earlier): train 1478, test 503; observed success 0.4990, predicted 0.5235 (ratio 1.049, slope 0.337); AUC 0.546 => FAIL
+   by number of opponents within 6 units of the preceding frame: 0: observed 0.612, predicted 0.550 (n=103); 1: observed 0.472, predicted 0.515 (n=199); 2: observed 0.481, predicted 0.515 (n=131); 3: observed 0.443, predicted 0.526 (n=70)
+
+GATES: {'L_opp': 'PASS', 'L_own': 'PASS', 'G-counter': 'FAIL', 'P_dribble': 'FAIL'}

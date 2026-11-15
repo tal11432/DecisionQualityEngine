@@ -1,6 +1,7 @@
-"""Decision Score v1 (PREREG_DQ_v13.txt incl. amendments A and B).
-An ABSOLUTE 0-100 scale over general decisions: every option of a moment (shot, pass to each visible teammate, carries, unforced turnover) gets its own score from its value Q (expected net xG of the possession in the next 10 s);
-the decision gets the score of the option taken, the score of the best option and the gap. 50 = changes nothing in expectation; 100 = Q >= Q_hi (0.70); 0 = Q <= -Q_lo (an opponent left one-on-one, Q_lo = mean one-on-one xG)."""
+"""Decision Score v1.1 (PREREG_DQ_v13.txt, amendment E).
+An ABSOLUTE 0-100 scale of the expected value of a decision. Every option of a moment (shot, pass to each visible teammate, the carry/take-on actually made, unforced turnover) gets its own score from its value Q = expected net xG of the possession in the next 10 s (xG for us minus xG for the opponent);
+the decision gets the score of the option taken, the score of the best option and the gap.
+Score = 100 * clip((Q + C) / (Q_hi + C), 0, 1): 100 at Q >= Q_hi = 0.70 (a move that very likely ends in a goal), 0 at Q <= -C (a loss that hands the opponent a counter-attack with a numerical advantage). Only Q enters: never the outcome, never other decisions (the percentile of amendment D is only the separate 'rarity' helper)."""
 import os, sys
 import numpy as np, pandas as pd
 DQ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -13,34 +14,39 @@ def v13():
     if not _X: _X["m"] = pd.read_pickle(os.path.join(DQ, "v13_models.pkl"))
     return _X["m"]
 
-def q_to_score(q, q_lo=None, q_hi=None):
-    """Piecewise-linear map of Q to 0-100 with 0 -> 50 (an action that changes nothing)."""
-    m = v13(); q_lo = m["Q_lo"] if q_lo is None else q_lo; q_hi = m["Q_hi"] if q_hi is None else q_hi
-    s = 50 + 50 * min(q, q_hi) / q_hi if q >= 0 else 50 - 50 * min(-q, q_lo) / q_lo
-    return int(round(s))
+def v15():
+    """Turnover danger L (v13 feature set, refit on the v15 data) and the zero anchor C (amendments E and F; the counter features and the take-on model failed their gates and are not used)."""
+    if "m15" not in _X: _X["m15"] = pd.read_pickle(os.path.join(DQ, "v15_models.pkl"))
+    return _X["m15"]
+
+def q_to_score(q, c=None, q_hi=None):
+    """PRIMARY Decision Score: absolute linear map of the expected value Q (net xG of the next 10 s); 0 at Q = -C, 100 at Q = Q_hi."""
+    c = v15()["C"] if c is None else c; q_hi = v13()["Q_hi"] if q_hi is None else q_hi
+    return int(round(100 * min(1.0, max(0.0, (q + c) / (q_hi + c)))))
 
 def set_reference(q_ref):
-    """Reference distribution for the percentile-rank score: Q of the options TAKEN in a fixed sample of training decisions."""
+    """Reference distribution for the 'rarity' percentile: Q of the options TAKEN in a fixed sample of training decisions."""
     _X["ref"] = np.sort(np.asarray(q_ref, float))
 
 def rank_score(q):
-    """PRIMARY Decision Score (amendment D): percentile rank of Q among the reference decisions, ends pinned to the user's anchors (Q >= Q_hi -> 100; Q <= -Q_lo -> 0)."""
-    m = v13()
-    if q >= m["Q_hi"]: return 100
-    if q <= -m["Q_lo"]: return 0
+    """RARITY (not the Decision Score): percentile of Q among the reference decisions (amendment D, retired as the primary score by amendment E). Needs v14_reference.pkl built with the current models."""
     if "ref" not in _X:
         ref = pd.read_pickle(os.path.join(DQ, "v14_reference.pkl")); _X["ref"] = np.sort(np.asarray(ref["q"], float))
     r = _X["ref"]; lo, hi = np.searchsorted(r, q, "left"), np.searchsorted(r, q, "right"); return int(round(100 * (lo + hi) / 2 / len(r)))
 
 def _around(p, O, T):
+    """Context of point p (attacking toward x = 120), the same definitions as research/dq/fetch_v15.py: opponents near the ball and the counter numerical balance (opponents beyond the ball toward our goal against our players between the ball and our goal)."""
     do = np.hypot(*(O - p).T) if len(O) else np.array([99.0]); dt = np.hypot(*(T - p).T) if len(T) else np.array([99.0])
+    ahead = O[O[:, 0] < p[0]] if len(O) else np.zeros((0, 2)); free = [o for o in ahead if not len(T) or np.hypot(*(T - o).T).min() > 6.0]
     return dict(n_opp2=int((do <= 2).sum()), n_opp3=int((do <= 3).sum()), n_opp6=int((do <= 6).sum()), nn_opp=float(min(do.min(), 30)), n_mate10=int((dt <= 10).sum()), nn_mate=float(min(dt.min(), 30)),
-                n_opp_ahead=int((O[:, 0] < p[0]).sum()) if len(O) else 0, n_cover=int((T[:, 0] < p[0]).sum()) if len(T) else 0)
+                n_opp_ahead=len(ahead), n_cover=int((T[:, 0] < p[0]).sum()) if len(T) else 0, n_free_run=len(free), run_x=float(ahead[:, 0].min()) if len(ahead) else 120.0,
+                nn_run=float(min(np.hypot(*(np.array(free) - p).T).min(), 30)) if free else 30.0)
 
 def loss_danger(p, O, T, kind="pass"):
-    """L = expected opponent xG minus expected own xG in the 10 s after the ball is lost at p (units: xG); situation dependent."""
-    m = v13()["L"]; c = _around(np.asarray(p, float), O, T); dist_own = float(np.hypot(p[0], p[1] - 40)); an = float(abs(np.arctan2(44 - p[1], p[0]) - np.arctan2(36 - p[1], p[0])))
-    f = dict(c, dist_own=dist_own, ang_own=an, lx=p[0], d2=dist_own ** 2, ad=an * dist_own, k_pass=float(kind == "pass"), k_dribble=0.0, k_dispossessed=float(kind == "dispossessed"))
+    """L = expected opponent xG minus expected own xG in the 10 s after the ball is lost at p (units: xG); depends on the position and on who is around. It cannot see a counter-attack with a numerical advantage (amendment F)."""
+    m = v15()["L"]; c = _around(np.asarray(p, float), O, T); dist_own = float(np.hypot(p[0], p[1] - 40)); an = float(abs(np.arctan2(44 - p[1], p[0]) - np.arctan2(36 - p[1], p[0])))
+    adv = c["n_opp_ahead"] - c["n_cover"]; adv_pos = float(min(max(adv, 0), 5))
+    f = dict(c, dist_own=dist_own, ang_own=an, lx=p[0], d2=dist_own ** 2, ad=an * dist_own, k_pass=float(kind == "pass"), k_dribble=float(kind == "dribble"), k_dispossessed=float(kind == "dispossessed"), adv=float(adv), adv_pos=adv_pos, adv_x=adv_pos * (1 - p[0] / 120.0))
     X = [f[k] for k in m["F"]]; return sgm(m["opp"], X) - sgm(m["own"], X)
 
 def _carry_option(s: Situation, d, st, T, pdist, m):
@@ -71,7 +77,7 @@ def all_options(s: Situation, header=0, carries=False):
         lo = loss_danger(o["target"], s.O, T, "pass"); o = dict(o, kind="pass", loss=lo, v=o["xp"] * o["xa"] - (1 - o["xp"]) * lo); opts.append(o)
     if carries: opts += carry_options(s)
     opts.append(dict(kind="turnover", v=-loss_danger(s.a, s.O, T, "pass"), status="certain onside", target=s.a, note="unforced turnover here"))
-    for o in opts: o["score_linear"] = q_to_score(o["v"]); o["score"] = rank_score(o["v"])
+    for o in opts: o["score"] = q_to_score(o["v"])
     return opts
 
 def pass_value(s: Situation, end):
@@ -88,9 +94,9 @@ def judge(s: Situation, chosen, header=0, include_doubt=False, scales=None):
     else: raise ValueError(kind)
     if scales:                                   # perturbation: multiply the values of each kind of option (uncertainty band)
         for o in opts + ([] if any(o is ch for o in opts) else [ch]): o["v"] = o["v"] * scales.get(o["kind"], 1.0)
-    ch["score_linear"] = q_to_score(ch["v"]); ch["score"] = rank_score(ch["v"])
-    for o in opts: o["score_linear"] = q_to_score(o["v"]); o["score"] = rank_score(o["v"])
+    ch["score"] = q_to_score(ch["v"])
+    for o in opts: o["score"] = q_to_score(o["v"])
     ok = [o for o in opts if o["status"] == "certain onside" or (include_doubt and o["status"].startswith("DOUBT"))]
     best = max(ok + ([ch] if ch not in ok else []), key=lambda o: o["v"])
     return dict(options=opts, chosen=ch, best=best, score_chosen=ch["score"], score_best=best["score"], gap_points=best["score"] - ch["score"], gap_xg=best["v"] - ch["v"],
-                score_worst=min(o["score"] for o in opts), q_chosen=ch["v"], q_best=best["v"], score_linear_chosen=ch["score_linear"], score_linear_best=best["score_linear"])
+                score_worst=min(o["score"] for o in opts), q_chosen=ch["v"], q_best=best["v"])

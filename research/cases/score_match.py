@@ -1,4 +1,4 @@
-"""Decision Score for every shot, ground pass and carry at x >= 80 of one match (StatsBomb open data; 360 frames needed for passes and carries). Usage: python research/cases/score_match.py MATCH_ID
+"""Decision Score (absolute scale of amendment E) for every shot, ground pass and carry at x >= 80 of one match (StatsBomb open data; 360 frames needed for passes and carries). Usage: python research/cases/score_match.py MATCH_ID
 No player names except the scorers of goals; verdicts use the noise floors of DQ-v12b (a gap below the floor is 'no clear difference', however many points it looks like)."""
 import sys, json, gzip, urllib.request, numpy as np, pandas as pd
 sys.path.insert(0, "research/dq"); from dscore import score as S; from dscore.core import Situation, SC
