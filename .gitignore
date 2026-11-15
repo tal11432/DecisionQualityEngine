@@ -15,3 +15,4 @@ research/**/*.pkl
 !research/dq/v6_models.pkl
 !research/dq/v7_models.pkl
 !research/dq/v8_models.pkl
+!research/dq/v13_models.pkl

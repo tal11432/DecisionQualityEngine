@@ -61,17 +61,23 @@ def all_options(s: Situation, header=0, carries=False):
     for o in opts: o["score"] = q_to_score(o["v"])
     return opts
 
-def judge(s: Situation, chosen, header=0, include_doubt=False):
+def pass_value(s: Situation, end):
+    """The ground pass actually made (target = where it was aimed or, for a failed pass, where the ball stopped): xP x chain value - (1 - xP) x L(target)."""
+    T = np.array(s.mates, float).reshape(-1, 2); o = core.pass_option_at(s, end); lo = loss_danger(o["target"], s.O, T, "pass"); o.update(kind="pass", loss=lo, v=o["xp"] * o["xa"] - (1 - o["xp"]) * lo); return o
+
+def judge(s: Situation, chosen, header=0, include_doubt=False, scales=None):
     """chosen = ("shot",) | ("pass", xy) | ("carry", xy). Returns the option table, the score of the option taken, the best option's score and the gap (points and xG).
     The headline uses CERTAIN options only (offside doubt excluded); include_doubt=True also counts options in doubt."""
-    opts = all_options(s, header); ok = [o for o in opts if o["status"] == "certain onside" or (include_doubt and o["status"].startswith("DOUBT"))]
-    kind = chosen[0]
+    opts = all_options(s, header); kind = chosen[0]
     if kind == "shot": ch = next(o for o in opts if o["kind"] == "shot")
-    elif kind == "carry": ch = carry_value(s, chosen[1]); ch["score"] = q_to_score(ch["v"])
-    else:
-        pool = [o for o in opts if o["kind"] == kind and o["target"] is not None]
-        if not pool: raise ValueError("no option of that kind")
-        t = np.asarray(chosen[1], float); ch = min(pool, key=lambda o: float(np.hypot(*(np.asarray(o["target"], float) - t))))
+    elif kind == "carry": ch = carry_value(s, chosen[1])
+    elif kind == "pass": ch = pass_value(s, chosen[1])
+    else: raise ValueError(kind)
+    if scales:                                   # perturbation: multiply the values of each kind of option (uncertainty band)
+        for o in opts + ([] if any(o is ch for o in opts) else [ch]): o["v"] = o["v"] * scales.get(o["kind"], 1.0)
+    ch["score"] = q_to_score(ch["v"])
+    for o in opts: o["score"] = q_to_score(o["v"])
+    ok = [o for o in opts if o["status"] == "certain onside" or (include_doubt and o["status"].startswith("DOUBT"))]
     best = max(ok + ([ch] if ch not in ok else []), key=lambda o: o["v"])
     return dict(options=opts, chosen=ch, best=best, score_chosen=ch["score"], score_best=best["score"], gap_points=best["score"] - ch["score"], gap_xg=best["v"] - ch["v"],
                 score_worst=min(o["score"] for o in opts), q_chosen=ch["v"], q_best=best["v"])

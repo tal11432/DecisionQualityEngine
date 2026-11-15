@@ -71,18 +71,22 @@ def offside_status(margin_m, p_x, n_visible_opponents):
     if n_visible_opponents < 11: return "DOUBT (offside by the visible players, but a defender is out of view)"
     return "certain offside"
 
+def offside_line(s: Situation):
+    """x of the offside line (second-last visible opponent, or the ball if further)."""
+    ox = np.sort(s.O[:, 0]); return max(ox[-2] if len(ox) > 1 else ox[-1], s.a[0])
+
+def pass_option_at(s: Situation, p, line=None):
+    """Ground pass from the ball carrier to point p (any distance): xP x chain value, offside margin and status. No range filter."""
+    M = models(); a, O, gk = s.a, s.O, s.gk; p = np.asarray(p, float); line = offside_line(s) if line is None else line; pdist = float(np.hypot(GX - a[0], 40 - a[1]))
+    margin_m = float((line - p[0]) * 105 / 120); status = offside_status(margin_m, p[0], len(O)); d = float(np.hypot(*((p - a) * SC)))
+    dp = np.hypot(*(O - p).T); dist_p = float(np.hypot(GX - p[0], 40 - p[1])); an_p = ang(*p)
+    ft = dict(dist=dist_p, angle=an_p, x=p[0], d2=dist_p ** 2, ad=an_p * dist_p, n_tri=sum(tri(o, p) for o in O), n3=int((dp <= 3).sum()), n6=int((dp <= 6).sum()), nn=float(dp.min()), gk_d=float(np.hypot(GX - gk[0], 40 - gk[1])), plen=float(np.hypot(*(p - a))), fwd=float(p[0] - a[0]), pdist=pdist)
+    xa = sgm(M["v6"]["xA_chain"], [ft[k] for k in M["v6"]["xA_chain"]["F"]]); xp = xp_hazard(a, p, O)
+    return dict(v=xp * xa, xp=xp, xa=xa, d=d, g=dist_p * 105 / 120, margin=margin_m, status=status, target=p)
+
 def pass_options(s: Situation):
     """Ground-pass options to every visible teammate 3-40 m away: value = xP x chain value, with offside status. Returns the list unsorted."""
-    M = models(); a, O, gk = s.a, s.O, s.gk; ox = np.sort(O[:, 0]); second_last = ox[-2] if len(ox) > 1 else ox[-1]; line = max(second_last, a[0]); pdist = float(np.hypot(GX - a[0], 40 - a[1])); out = []
-    for p in s.mates:
-        d = float(np.hypot(*((p - a) * SC)))
-        if not (3 <= d <= 40): continue
-        margin_m = float((line - p[0]) * 105 / 120); status = offside_status(margin_m, p[0], len(O))
-        dp = np.hypot(*(O - p).T); dist_p = float(np.hypot(GX - p[0], 40 - p[1])); an_p = ang(*p)
-        ft = dict(dist=dist_p, angle=an_p, x=p[0], d2=dist_p ** 2, ad=an_p * dist_p, n_tri=sum(tri(o, p) for o in O), n3=int((dp <= 3).sum()), n6=int((dp <= 6).sum()), nn=float(dp.min()), gk_d=float(np.hypot(GX - gk[0], 40 - gk[1])), plen=float(np.hypot(*(p - a))), fwd=float(p[0] - a[0]), pdist=pdist)
-        xa = sgm(M["v6"]["xA_chain"], [ft[k] for k in M["v6"]["xA_chain"]["F"]]); xp = xp_hazard(a, p, O)
-        out.append(dict(v=xp * xa, xp=xp, xa=xa, d=d, g=dist_p * 105 / 120, margin=margin_m, status=status, target=p))
-    return out
+    line = offside_line(s); return [pass_option_at(s, p, line) for p in s.mates if 3 <= float(np.hypot(*((p - s.a) * SC))) <= 40]
 
 def rank_options(options):
     """(live, sure, gone): live = certain onside or in doubt, best value first; sure = certain onside only; gone = certainly offside."""
