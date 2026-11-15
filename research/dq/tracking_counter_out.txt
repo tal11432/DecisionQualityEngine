@@ -1,0 +1,29 @@
+metrica1: 145006 frames, 223 losses with a next-ball-event of the opponent within 6 s, 223 with usable frames; adv>=2: 0, adv==1: 1, adv<=0: 222
+   shots 24, xG sum 2.75 (mean 0.115)
+metrica2: 141156 frames, 190 losses with a next-ball-event of the opponent within 6 s, 190 with usable frames; adv>=2: 2, adv==1: 1, adv<=0: 187
+   shots 24, xG sum 3.00 (mean 0.125)
+metrica3: 143761 frames, 248 losses with a next-ball-event of the opponent within 6 s, 248 with usable frames; adv>=2: 0, adv==1: 3, adv<=0: 245
+   shots 20, xG sum 2.43 (mean 0.121)
+idsse:J03WPY: 146211 frames, 142 losses with a next-ball-event of the opponent within 6 s, 142 with usable frames; adv>=2: 0, adv==1: 2, adv<=0: 140
+   shots 26, xG sum 3.73 (mean 0.143)
+
+== losses 803 in 8 match-period blocks; realised net danger (opponent xG - own xG within 10 s): overall mean +0.0011; share with an opponent shot 2.7%
+   adv>=2 (primary): n=2, mean net danger +0.0476 [+0.0476,+0.0476], opponent xG 0.0476, own xG 0.0000, share with an opponent shot 50.0%
+   adv==1: n=7, mean net danger +0.1380 [+0.0000,+0.4775], opponent xG 0.1380, own xG 0.0000, share with an opponent shot 28.6%
+   adv<=0 (reference): n=794, mean net danger -0.0002 [-0.0033,+0.0020], opponent xG 0.0024, own xG 0.0025, share with an opponent shot 2.4%
+
+G-T1 identifiability: n(adv>=2) = 2 (need >= 100; < 60 after all matches = not supported) => FAIL
+G-T2 discrimination: net danger adv>=2 minus adv<=0 = +0.0478 [+0.0457,+0.0506] => NOT EVALUATED: the primary class has 2 losses in 1 blocks, the bootstrap interval is degenerate and means nothing
+G-T3 anchor: C_meas = 0.0476 [0.0476,0.0476] (half-width 0.0000; needs n>=100, G-T2, half-width <= 0.05 and C_meas in [0.05, 0.35]) => FAIL: C stays 0.231 (and with n = 2 the value is not an estimate)
+   by zone of the loss (StatsBomb x of the ball): (-1, 40]: n=2, mean net +0.0476
+
+== PROXY (visible-position balance, no velocities, random 65% of the players, 50 draws; losses at StatsBomb x <= 70, n=478): flagged per draw 7.7; precision for the velocity class 0.000, recall 0.000; mean net danger of flagged losses +0.0004 vs not flagged +0.0056
+   velocity class among losses at x <= 70: n=2, mean net danger +0.0476; base rate of the velocity class 0.4%
+
+== SENSITIVITY (descriptive only, not used for any decision): the primary class (adv >= 2) and the secondary class (adv >= 1) under other thresholds
+   speed 2.5 m/s, margin 5.0 m: adv>=2 n=2, mean net +0.0476; adv>=1 n=9, mean net +0.1179; reference n=794, mean net -0.0002
+   speed 2.0 m/s, margin 5.0 m: adv>=2 n=2, mean net +0.0476; adv>=1 n=14, mean net +0.0758; reference n=789, mean net -0.0002
+   speed 3.0 m/s, margin 5.0 m: adv>=2 n=2, mean net +0.0476; adv>=1 n=6, mean net +0.1750; reference n=797, mean net -0.0002
+   speed 2.5 m/s, margin 3.0 m: adv>=2 n=1, mean net +0.0952; adv>=1 n=6, mean net +0.1769; reference n=797, mean net -0.0002
+   speed 2.5 m/s, margin 7.0 m: adv>=2 n=4, mean net +0.0238; adv>=1 n=14, mean net +0.0758; reference n=789, mean net -0.0002
+   net danger by adv bin (all losses): (-99, -6]: n=420, mean -0.0025; (-6, -3]: n=221, mean +0.0016; (-3, -1]: n=96, mean +0.0016; (-1, 0]: n=57, mean +0.0070; (0, 99]: n=9, mean +0.1179
