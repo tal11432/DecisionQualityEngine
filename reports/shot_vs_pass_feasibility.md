@@ -468,3 +468,26 @@ Pre-registration `research/dq/PREREG_DQ_v11.txt`; scripts `fetch_v11.py`, `eval_
 * **Not reliable as an absolute count:** the shares of passes labelled "clearly suboptimal" (60%) are inflated. The best of several noisy options is biased upward (the winner's curse), only visible teammates count, and the ex-ante value of failed passes is overstated because their target is the point where the ball was stopped. Read the verdicts as a ranking, not as a count of mistakes.
 * **Unreliable very near goal:** some candidates at a few metres from goal have values above 0.7 (0.7% of decisions exceed 0.5), an extrapolation of the chain model (observed values there are about 0.25); the largest regrets in the file are of this kind and should not be quoted.
 * The numbers describe expected xG from positions, not the quality of a player: no body orientation, intention or information. Not used for players.
+
+## 18. DQ-v12: calibrating the absolute floor of the verdict rule
+
+Pre-registration `research/dq/PREREG_DQ_v12.txt`; script `eval_v12.py`; output `eval_v12_out.txt`. The data of v11 was rebuilt (447 MB, in memory, deleted afterwards). **Why:** the ratio rule alone (pass value x0.7 / x1.3) called a pass "clearly better" for 0.06 vs 0.03; a difference of three hundredths of a goal is not meaningful. An absolute floor on top of the ratio was set by judgement to 0.02 xG; it is now estimated from data.
+
+**(A) Noise criterion (primary).** 220 test shots with a clear ratio verdict were perturbed 150 times each: every visible player moved by N(0, 1 m), the pass value scaled by LogNormal(0, 0.15) and the shot value by LogNormal(0, 0.10). Stability = share of perturbations that keep the verdict. Conservative margin c = 0.7 x pass value - shot value (pass verdicts) or shot value - 1.3 x pass value (shot verdicts):
+
+| margin c | n | mean stability |
+|---|---|---|
+| < 0.005 | 26 | 0.51 |
+| 0.005-0.01 | 28 | 0.64 |
+| 0.01-0.02 | 37 | 0.73 |
+| 0.02-0.03 | 21 | 0.81 |
+| 0.03-0.05 | 29 | 0.87 |
+| **>= 0.05** | 79 | **0.93** |
+
+The rule fixed in advance (the first margin from which stability stays at 0.90 or above) gives **FLOOR = 0.05 xG**, much stricter than 0.02. Stability also depends on the size of the values: 0.63 when the larger value is below 0.05, 0.76 for 0.05-0.1, 0.83 for 0.1-0.3, 0.89 above 0.3.
+
+**(B) Outcome check (supporting).** On 4,890 test passes: the realised chain value of the passes judged "pass clearly better" minus those judged "shot clearly better" grows with the floor: +0.010 [+0.005, +0.016] at 0; +0.026 at 0.005; +0.053 at 0.01; **+0.108 [+0.069, +0.147] at 0.02**; +0.128 at 0.03; +0.134 [+0.051, +0.200] at 0.05 (only 43 and 107 passes in the two groups). The verdicts are cleaner as the floor rises, as expected, but there are few decisions at 0.05; the outcome data neither contradict nor decide between 0.02 and 0.05.
+
+**What changed.** Match reviews now use two tiers: **"clearly"** requires the ratio rule and a margin of at least 0.05 (stable in at least 90% of perturbations); **"leans"** is a margin of 0.02-0.05 (stability 0.8-0.9); smaller is "no clear difference". All 12 verdicts in the two match reviews were unchanged by the recalibration: the clear ones are well above 0.05, and none fell in the "leans" band.
+
+**Caveats.** The perturbation sizes (1 m, 15% and 10%) are assumptions, not measurements; the floor is absolute, while noise grows with the value level (the ratio rule handles part of that); the 90% stability level is a choice. Shots, not passes, were perturbed.

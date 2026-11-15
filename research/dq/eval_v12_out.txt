@@ -1,0 +1,18 @@
+(B) OUTCOME CHECK on test passes: realised chain of 'pass clearly better' minus 'shot clearly better', by FLOOR
+   FLOOR 0    : pass-better n= 1367 realised 0.0241 | shot-better n= 1816 realised 0.0144 | difference +0.0097 [+0.0049,+0.0160] | unclear 1707
+   FLOOR 0.005: pass-better n=  538 realised 0.0428 | shot-better n= 1136 realised 0.0170 | difference +0.0257 [+0.0156,+0.0371] | unclear 3216
+   FLOOR 0.01 : pass-better n=  264 realised 0.0707 | shot-better n=  814 realised 0.0179 | difference +0.0528 [+0.0351,+0.0719] | unclear 3812
+   FLOOR 0.02 : pass-better n=  102 realised 0.1281 | shot-better n=  459 realised 0.0200 | difference +0.1081 [+0.0693,+0.1471] | unclear 4329
+   FLOOR 0.03 : pass-better n=   69 realised 0.1526 | shot-better n=  257 realised 0.0246 | difference +0.1280 [+0.0793,+0.1815] | unclear 4564
+   FLOOR 0.05 : pass-better n=   43 realised 0.1688 | shot-better n=  107 realised 0.0350 | difference +0.1338 [+0.0508,+0.2004] | unclear 4740
+
+(A) NOISE CRITERION: 220 shots with a clear verdict at FLOOR=0 (pass 121, shot 99); overall mean stability 0.788
+   margin c in [0, 0.005): n= 26, mean stability 0.511, share >= 0.9: 0%
+   margin c in [0.005, 0.01): n= 28, mean stability 0.639, share >= 0.9: 4%
+   margin c in [0.01, 0.02): n= 37, mean stability 0.725, share >= 0.9: 22%
+   margin c in [0.02, 0.03): n= 21, mean stability 0.810, share >= 0.9: 48%
+   margin c in [0.03, 0.05): n= 29, mean stability 0.867, share >= 0.9: 55%
+   margin c in [0.05, inf): n= 79, mean stability 0.925, share >= 0.9: 78%
+
+FLOOR* = 0.05
+stability by the larger of the two values: (0.0, 0.05]: 0.63 (n=30); (0.05, 0.1]: 0.76 (n=75); (0.1, 0.3]: 0.83 (n=78); (0.3, 2.0]: 0.89 (n=37)
