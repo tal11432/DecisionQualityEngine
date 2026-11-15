@@ -1,0 +1,19 @@
+data: 379569 decisions {'pass': np.int64(196490), 'carry': np.int64(175746), 'shot': np.int64(7333)}, test 109984; losses 56108 (test 16302); mean own20 0.0100 vs own10 0.0056; mean chain20 of completed passes 0.0094 vs chain10 0.0049
+
+== xA_chain_20 (completed passes, 20 s chain value of the target): test n=53566; realised 0.0090, predicted 0.0095 (ratio 1.059, slope 0.910) => PASS
+   by zone: attacking: n=12407, realised 0.0197, predicted 0.0225 (ratio 1.15); middle: n=29447, realised 0.0069, predicted 0.0067 (ratio 0.97); own third: n=11712, realised 0.0031, predicted 0.0030 (ratio 0.98)
+
+== V_pos_20 (kept carries, 20 s chain value of the destination): test n=47933; realised 0.0107, predicted 0.0110 (ratio 1.028, slope 0.940) => PASS
+   by zone: attacking: n=10581, realised 0.0243, predicted 0.0269 (ratio 1.11); middle: n=24764, realised 0.0086, predicted 0.0080 (ratio 0.94); own third: n=12588, realised 0.0037, predicted 0.0036 (ratio 0.97)
+
+== cont_20 (later shots of the possession within 20 s of a shot): test n=2439; realised 0.0113, predicted 0.0132 (ratio 1.161, slope 1.028) => FAIL
+   by zone: attacking: n=2424, realised 0.0114, predicted 0.0132 (ratio 1.16)
+   reference: the frozen 10 s continuation model on the same test shots predicts 0.0120 against the realised 10 s continuation 0.0105
+
+== L_20: danger of losing the ball over 20 s (opponent xG - own xG), losses anywhere; train 39806, test 16302
+   opp: observed mean 0.0043, predicted 0.0040 (ratio 0.929, slope 0.664); LL gain +0.00034 [-0.00001,+0.00065] => FAIL
+   own: observed mean 0.0047, predicted 0.0051 (ratio 1.099, slope 0.893); LL gain +0.00127 [+0.00081,+0.00179] => PASS
+   L_20 by zone of the loss (observed / predicted): attacking: n=8766, -0.0043 / -0.0044; middle: n=5969, +0.0025 / +0.0018; own third: n=1567, +0.0099 / +0.0053; same losses over 10 s observed: attacking: -0.0043; middle: +0.0012; own third: +0.0083
+   L_20 predicted percentiles 1/50/99/99.9: -0.0158, -0.0011, +0.0169, +0.0338
+
+GATES: {'xA_chain_20 (completed passes, 20 s chain value of the target)': 'PASS', 'V_pos_20 (kept carries, 20 s chain value of the destination)': 'PASS', 'cont_20 (later shots of the possession within 20 s of a shot)': 'FAIL', 'L20_opp': 'FAIL', 'L20_own': 'PASS'}
