@@ -1,0 +1,17 @@
+DQ-v9 PRE-REGISTRATION: improving the pass (chain) value. General football model, league-agnostic. Written 2026-11-15T04:44:47Z, before downloading or fitting anything for it.
+Reference model V0 = DQ-v6 xA_chain (fractional logistic of the 10-s possession chain value on location, defenders near the target, keeper, pass length, forward gain, passer distance). Population, splits, definitions, horizon H = 10 s: unchanged from PREREG_DQ_v6.txt
+ (360 competitions; TEST = Euro 2024, Bundesliga 2023/24, MLS 2023 for passes; shots also Copa America 2024).
+New information (all available BEFORE the pass; from the 360 frame at pass time and the possession so far):
+ context: play pattern of the possession (counter / set-piece phase / other), passes by the team earlier in the possession, seconds since the possession started;
+ box and support: teammates in the penalty box, opponents in the penalty box (incl. keeper), teammates within 10 units of the target, teammates ahead of the target within 25 units, opponents between the target and the goal (|dy| <= 12), opponents within 5 units of the passer.
+Models (ridge 1; fractional/binary logistic; step clipping 1.0):
+ V1 = V0 + the new features, one fractional logistic on the chain value.
+ V2 = two-part: P(chain contains a shot) [binary logistic on the V1 features] x E[chain xG | chain shot] [fractional logistic on the V1 features, fitted on passes whose chain has a shot].
+ V3 = V2 + a baseline from ALL matches: a location/context model of the chain value fitted on completed ground attacking-half passes of every non-test competition (events only, no 360; ~6x more passes), entered as a feature
+      (cross-fitted by competition on the training competitions so that no pass is scored by a baseline that saw its own competition; the test competitions use the baseline fitted on all training competitions).
+ Diagnostic only, not deployable: V1 + features of the BALL RECEIPT 360 frame (defenders at reception): shows how much is lost by only knowing the pass-time frame.
+Selection: leave-one-competition-out log loss on the TRAIN competitions among V1, V2, V3. Gate G-V9 on TEST (pooled): (a) log-likelihood gain over V0 with match-bootstrap 95% CI excluding 0; (b) predicted/observed mean in [0.9, 1.1];
+ (c) calibration slope in [0.8, 1.2] pooled and in [0.7, 1.3] for every test competition with >= 150 passes; (d) AUC for "chain has a shot" reported for V0 and the selected model.
+Re-run of shot vs pass (test foot shots, all candidates as before, xP unchanged, shot value = xG_geo + continuation): report the selected model against V0: share with a better pass, the three-way verdict with the pass value x0.7..x1.3
+ (pass clearly better / shot clearly better / ambiguous; the ambiguous share is the success measure: expected to shrink) and the robustness curve in s.
+Stated limits: 360 frames omit invisible players; the chain value is an expected xG, not a quality judgement; the receipt-frame diagnostic cannot be used at decision time.
