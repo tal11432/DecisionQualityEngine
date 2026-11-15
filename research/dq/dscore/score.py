@@ -19,6 +19,19 @@ def q_to_score(q, q_lo=None, q_hi=None):
     s = 50 + 50 * min(q, q_hi) / q_hi if q >= 0 else 50 - 50 * min(-q, q_lo) / q_lo
     return int(round(s))
 
+def set_reference(q_ref):
+    """Reference distribution for the percentile-rank score: Q of the options TAKEN in a fixed sample of training decisions."""
+    _X["ref"] = np.sort(np.asarray(q_ref, float))
+
+def rank_score(q):
+    """PRIMARY Decision Score (amendment D): percentile rank of Q among the reference decisions, ends pinned to the user's anchors (Q >= Q_hi -> 100; Q <= -Q_lo -> 0)."""
+    m = v13()
+    if q >= m["Q_hi"]: return 100
+    if q <= -m["Q_lo"]: return 0
+    if "ref" not in _X:
+        ref = pd.read_pickle(os.path.join(DQ, "v14_reference.pkl")); _X["ref"] = np.sort(np.asarray(ref["q"], float))
+    r = _X["ref"]; lo, hi = np.searchsorted(r, q, "left"), np.searchsorted(r, q, "right"); return int(round(100 * (lo + hi) / 2 / len(r)))
+
 def _around(p, O, T):
     do = np.hypot(*(O - p).T) if len(O) else np.array([99.0]); dt = np.hypot(*(T - p).T) if len(T) else np.array([99.0])
     return dict(n_opp2=int((do <= 2).sum()), n_opp3=int((do <= 3).sum()), n_opp6=int((do <= 6).sum()), nn_opp=float(min(do.min(), 30)), n_mate10=int((dt <= 10).sum()), nn_mate=float(min(dt.min(), 30)),
@@ -58,7 +71,7 @@ def all_options(s: Situation, header=0, carries=False):
         lo = loss_danger(o["target"], s.O, T, "pass"); o = dict(o, kind="pass", loss=lo, v=o["xp"] * o["xa"] - (1 - o["xp"]) * lo); opts.append(o)
     if carries: opts += carry_options(s)
     opts.append(dict(kind="turnover", v=-loss_danger(s.a, s.O, T, "pass"), status="certain onside", target=s.a, note="unforced turnover here"))
-    for o in opts: o["score"] = q_to_score(o["v"])
+    for o in opts: o["score_linear"] = q_to_score(o["v"]); o["score"] = rank_score(o["v"])
     return opts
 
 def pass_value(s: Situation, end):
@@ -75,9 +88,9 @@ def judge(s: Situation, chosen, header=0, include_doubt=False, scales=None):
     else: raise ValueError(kind)
     if scales:                                   # perturbation: multiply the values of each kind of option (uncertainty band)
         for o in opts + ([] if any(o is ch for o in opts) else [ch]): o["v"] = o["v"] * scales.get(o["kind"], 1.0)
-    ch["score"] = q_to_score(ch["v"])
-    for o in opts: o["score"] = q_to_score(o["v"])
+    ch["score_linear"] = q_to_score(ch["v"]); ch["score"] = rank_score(ch["v"])
+    for o in opts: o["score_linear"] = q_to_score(o["v"]); o["score"] = rank_score(o["v"])
     ok = [o for o in opts if o["status"] == "certain onside" or (include_doubt and o["status"].startswith("DOUBT"))]
     best = max(ok + ([ch] if ch not in ok else []), key=lambda o: o["v"])
     return dict(options=opts, chosen=ch, best=best, score_chosen=ch["score"], score_best=best["score"], gap_points=best["score"] - ch["score"], gap_xg=best["v"] - ch["v"],
-                score_worst=min(o["score"] for o in opts), q_chosen=ch["v"], q_best=best["v"])
+                score_worst=min(o["score"] for o in opts), q_chosen=ch["v"], q_best=best["v"], score_linear_chosen=ch["score_linear"], score_linear_best=best["score_linear"])

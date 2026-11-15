@@ -12,10 +12,25 @@ def chosen(r): return ("shot",) if r.kind == "shot" else (r.kind, [r.tx, r.ty])
 def score_row(r, scales=None):
     j = S.judge(sit(r), chosen(r), scales=scales); jd = S.judge(sit(r), chosen(r), include_doubt=True, scales=scales)
     return dict(score_chosen=j["score_chosen"], score_best=j["score_best"], gap_points=j["gap_points"], gap_xg=j["gap_xg"], q_chosen=j["q_chosen"], q_best=j["q_best"], score_worst=j["score_worst"], best_kind=j["best"]["kind"], gap_points_doubt=jd["gap_points"], q_best_doubt=jd["q_best"])
-T = Dd[Dd.test].reset_index(drop=True); print(f"test decisions {len(T)}: {dict(T.kind.value_counts())}; competitions {dict(T.comp.value_counts())}")
-R = pd.DataFrame([score_row(r) for r in T.itertuples()]); T = pd.concat([T.drop(columns=["opps", "mates", "gk"]), R], axis=1)
+def chosen_q(r):
+    s_ = sit(r)
+    if r.kind == "shot": return S.core.shot_value(s_)[2]
+    return (S.pass_value(s_, [r.tx, r.ty]) if r.kind == "pass" else S.carry_value(s_, [r.tx, r.ty]))["v"]
+REF = f"{D}/v14_reference.pkl"
+if not os.path.exists(REF):
+    tr = Dd[~Dd.test]; smp_ref = tr.sample(9000, random_state=0)      # a random sample (natural mix of shots, passes and carries), as pre-registered
+    pd.to_pickle(dict(q=np.array([chosen_q(r) for r in smp_ref.itertuples()]), kinds=list(smp_ref.kind), n=len(smp_ref)), REF); print("reference built:", len(smp_ref), "decisions")
+ref = pd.read_pickle(REF); S.set_reference(ref["q"]); print(f"reference: {len(ref['q'])} decisions of the training competitions; Q of the options taken, 10th/50th/90th/99th pct: " + ", ".join(f"{np.percentile(ref['q'], q):+.4f}" for q in (10, 50, 90, 99)))
+RAW = f"{D}/v14_scored_raw.pkl"
+if os.path.exists(RAW): T = pd.read_pickle(RAW); print("loaded cached scoring:", len(T))
+else:
+    T = Dd[Dd.test].reset_index(drop=True); R = pd.DataFrame([score_row(r) for r in T.itertuples()]); T = pd.concat([T.drop(columns=["opps", "mates", "gk"]), R], axis=1); T.to_pickle(RAW)
+print(f"test decisions {len(T)}: {dict(T.kind.value_counts())}; competitions {dict(T.comp.value_counts())}")
+for c in ("chosen", "best"): T[f"lin_{c}"] = T[f"score_{c}"]                          # the cached columns hold the first (linear) scale
+T["score_chosen"] = [S.rank_score(q) for q in T.q_chosen]; T["score_best"] = [S.rank_score(q) for q in T.q_best]; T["gap_points"] = T.score_best - T.score_chosen; T["score_worst"] = T.score_worst
 T["realised"] = T.own10 - T.opp10 + np.where(T.kind == "shot", T.sb_xg.fillna(0), 0.0)
-print("\n== DISTRIBUTION of the score of the option taken, by kind (test):")
+print("\n== DISTRIBUTION of the score of the option taken (percentile scale), by kind (test); G-resolution: pooled 10th-90th range")
+rg = np.percentile(T.score_chosen, 90) - np.percentile(T.score_chosen, 10); print(f"   pooled 10th/50th/90th {np.percentile(T.score_chosen,10):.0f}/{np.percentile(T.score_chosen,50):.0f}/{np.percentile(T.score_chosen,90):.0f}; range {rg:.0f} points  => G-resolution {'PASS' if rg >= 20 else 'FAIL'}; linear scale 10th-90th {np.percentile(T.lin_chosen,10):.0f}-{np.percentile(T.lin_chosen,90):.0f}")
 for k, g in T.groupby("kind"): print(f"   {k}: n={len(g)}, score_chosen mean {g.score_chosen.mean():.1f} (10th/50th/90th {np.percentile(g.score_chosen,10):.0f}/{np.percentile(g.score_chosen,50):.0f}/{np.percentile(g.score_chosen,90):.0f}); gap points mean {g.gap_points.mean():.1f}, median {g.gap_points.median():.0f}, share with gap 0 {(g.gap_points==0).mean()*100:.0f}%, gap > 10 pts {(g.gap_points>10).mean()*100:.0f}%; best option kind {dict(g.best_kind.value_counts(normalize=True).round(2))}")
 # ---------------- G-calibration
 def sp(x, y): return float(pd.Series(x).rank().corr(pd.Series(y).rank()))
@@ -28,15 +43,16 @@ um = T.match.unique(); idx = {u: np.flatnonzero(T.match.to_numpy() == u) for u i
 for _ in range(300):
     x = T.iloc[np.concatenate([idx[u] for u in rng.choice(um, len(um))])]; d2 = x.assign(dec=pd.qcut(x.score_chosen.rank(method="first"), 10, labels=False)).groupby("dec").agg(s=("score_chosen", "mean"), r=("realised", "mean")); sps.append(sp(d2.s, d2.r))
 rho = sp(dm.score, dm.r); ratio = T.q_chosen.mean() / T.realised.mean()
-print(f"   Spearman across deciles {rho:.2f} [{np.percentile(sps,2.5):.2f},{np.percentile(sps,97.5):.2f}]; pooled mean Q / mean realised = {ratio:.2f}  => G-calibration {'PASS' if rho >= 0.9 and 0.85 <= ratio <= 1.15 else 'FAIL'}")
+nf = T[~((T.kind == "pass") & (T.completed == 0))]; ratio_nf = nf.q_chosen.mean() / nf.realised.mean(); print(f"   without failed passes: n={len(nf)}, mean Q {nf.q_chosen.mean():+.4f}, mean realised {nf.realised.mean():+.4f}, ratio {ratio_nf:.2f}")
+print(f"   Spearman across deciles {rho:.2f} [{np.percentile(sps,2.5):.2f},{np.percentile(sps,97.5):.2f}]; pooled mean Q / mean realised = {ratio:.2f}  => G-calibration (all) {'PASS' if rho >= 0.9 and 0.85 <= ratio <= 1.15 else 'FAIL'}; without failed passes {'PASS' if rho >= 0.9 and 0.85 <= ratio_nf <= 1.15 else 'FAIL'}")
 # ---------------- G-gap
 print("\n== G-gap: inside terciles of Q_best, realised value of the top vs bottom tercile of the gap (expected: top gap realises LESS)")
 T["qb"] = pd.qcut(T.q_best.rank(method="first"), 3, labels=["low promise", "mid", "high promise"]); okc = 0; right = 0
 for lab, g in T.groupby("qb", observed=True):
-    g = g.assign(gt=pd.qcut(g.gap_xg.rank(method="first"), 3, labels=False)); hi, lo = g[g.gt == 2], g[g.gt == 0]; diff = hi.realised.mean() - lo.realised.mean(); bs = []
+    g = g.assign(gtile=pd.qcut(g.gap_xg.rank(method="first"), 3, labels=False)); hi, lo = g[g.gtile == 2], g[g.gtile == 0]; diff = hi.realised.mean() - lo.realised.mean(); bs = []
     um2 = g.match.unique(); id2 = {u: np.flatnonzero(g.match.to_numpy() == u) for u in um2}
     for _ in range(300):
-        x = g.iloc[np.concatenate([id2[u] for u in rng.choice(um2, len(um2))])]; bs.append(x[x.gt == 2].realised.mean() - x[x.gt == 0].realised.mean())
+        x = g.iloc[np.concatenate([id2[u] for u in rng.choice(um2, len(um2))])]; bs.append(x[x.gtile == 2].realised.mean() - x[x.gtile == 0].realised.mean())
     lo_, hi_ = np.percentile(bs, [2.5, 97.5]); right += diff < 0; okc += hi_ < 0
     print(f"   {lab}: n={len(g)}; realised top gap {hi.realised.mean():+.4f} (mean gap {hi.gap_xg.mean():.3f} xG) vs bottom gap {lo.realised.mean():+.4f} (mean gap {lo.gap_xg.mean():.3f}); difference {diff:+.4f} [{lo_:+.4f},{hi_:+.4f}]")
 print(f"   direction right in {right}/3 strata, CI excluding 0 in {okc}/3  => G-gap {'PASS' if right == 3 and okc >= 2 else 'FAIL'}")
@@ -46,22 +62,23 @@ cl = T[(T.kind == "shot") & (T.q_chosen >= 0.30)]; print(f"\n== G-best-sanity: s
 g0 = T[T.gap_points == 0]; print(f"== G-curse: decisions where the option taken is the modelled best (n={len(g0)}): mean Q {g0.q_chosen.mean():+.4f} vs realised {g0.realised.mean():+.4f} (ratio {g0.q_chosen.mean()/g0.realised.mean():.2f}) => {'ok' if 0.8 <= g0.q_chosen.mean()/g0.realised.mean() <= 1.25 else 'FLAG: optimistic best option'}")
 # ---------------- G-anchor (model level)
 print("\n== G-anchor: the scale and a modelled gift")
-print("   scale: Q=1.0 ->", S.q_to_score(1.0), "| Q=0 ->", S.q_to_score(0), "| Q=-Q_lo ->", S.q_to_score(-M13['Q_lo']), "| typical turnover Q=-0.012 ->", S.q_to_score(-0.012))
+print(f"   share of the options taken that score 0 (Q below every reference decision): {(T.score_chosen==0).mean()*100:.1f}%; score <= 5: {(T.score_chosen<=5).mean()*100:.1f}%; score 100: {(T.score_chosen==100).mean()*100:.2f}%")
+print("   percentile scale: Q=1.0 ->", S.rank_score(1.0), "| Q=0.35 ->", S.rank_score(0.35), "| Q=0.1 ->", S.rank_score(0.1), "| Q=0.03 ->", S.rank_score(0.03), "| Q=0 ->", S.rank_score(0.0), "| typical turnover Q=-0.012 ->", S.rank_score(-0.012), "| Q=-Q_lo ->", S.rank_score(-M13['Q_lo']))
 gift = Situation([14.0, 40.0], np.array([[13.0, 40.0], [30.0, 30.0], [3.0, 40.0]]), [[3.0, 42.0]], [3.0, 40.0]); lg = S.loss_danger(gift.a, gift.O, np.array(gift.mates, float).reshape(-1, 2), "pass")
-print(f"   modelled gift (ball 14 units from our goal, an opponent next to it, only our keeper behind): L = {lg:+.4f} xG -> score {S.q_to_score(-lg)} (anchor requires <= 10)  => {'PASS' if S.q_to_score(-lg) <= 10 else 'FAIL (the model cannot see the one-on-one gift)'}")
+print(f"   modelled gift (ball 14 units from our goal, an opponent next to it, only our keeper behind): L = {lg:+.4f} xG -> score {S.rank_score(-lg)} (anchor requires <= 10)  => {'PASS' if S.rank_score(-lg) <= 10 else 'FAIL (the model cannot see the one-on-one gift)'}")
 # ---------------- stability and visibility on a sample
 smp = T.sample(min(250, len(T)), random_state=0).index; src = Dd[Dd.test].reset_index(drop=True); widths, kept, vis, gw = [], [], [], []
 for i in smp:
-    r = next(src.iloc[[i]].itertuples()); base = score_row(r); sc = []; gp = []
+    r = next(src.iloc[[i]].itertuples()); base = score_row(r); base["score_chosen"] = S.rank_score(base["q_chosen"]); base["gap_points"] = S.rank_score(base["q_best"]) - base["score_chosen"]; sc = []; gp = []
     for _ in range(60):
         r2 = r._replace(ax=r.ax + rng.normal(0, 0.8) * 120 / 105, ay=r.ay + rng.normal(0, 0.8) * 80 / 68, opps=[np.array(o) + rng.normal(0, 0.8, 2) * [120 / 105, 80 / 68] for o in r.opps], mates=[np.array(m) + rng.normal(0, 0.8, 2) * [120 / 105, 80 / 68] for m in r.mates])
         if r.kind != "shot": r2 = r2._replace(tx=r.tx + rng.normal(0, 0.8) * 120 / 105, ty=r.ty + rng.normal(0, 0.8) * 80 / 68)
-        o = score_row(r2, scales=dict(shot=float(np.exp(rng.normal(0, 0.10))), pass_=1.0) if False else {"shot": float(np.exp(rng.normal(0, 0.10))), "pass": float(np.exp(rng.normal(0, 0.09))), "carry": float(np.exp(rng.normal(0, 0.178)))}); sc.append(o["score_chosen"]); gp.append(o["gap_points"])
-    widths.append(np.percentile(sc, 90) - np.percentile(sc, 10)); gw.append(np.percentile(gp, 90) - np.percentile(gp, 10)); kept.append(np.mean(np.abs(np.array(sc) - base["score_chosen"]) <= 5))
+        o = score_row(r2, scales=dict(shot=float(np.exp(rng.normal(0, 0.10))), pass_=1.0) if False else {"shot": float(np.exp(rng.normal(0, 0.10))), "pass": float(np.exp(rng.normal(0, 0.09))), "carry": float(np.exp(rng.normal(0, 0.178)))}); sc.append(S.rank_score(o["q_chosen"])); gp.append(S.rank_score(o["q_best"]) - S.rank_score(o["q_chosen"]))
+    widths.append(np.percentile(sc, 90) - np.percentile(sc, 10)); gw.append(np.percentile(gp, 90) - np.percentile(gp, 10)); kept.append(np.mean((np.digitize(sc, [33.3, 66.7]) == np.digitize(base["score_chosen"], [33.3, 66.7]))))
     if len(r.mates) >= 2:
-        d = set(rng.choice(len(r.mates), len(r.mates) // 2, replace=False).tolist()); sd = sit(r, drop=d); ch = chosen(r); jj = S.judge(sd, ch); vis.append(abs(jj["gap_points"] - base["gap_points"]))
-print(f"\n== G-stability (n={len(widths)} decisions, 60 perturbations each; 0.8 m position noise, value scales 9%/10%/18%): median band width (10th-90th pct) of the chosen score {np.median(widths):.1f} points, of the gap {np.median(gw):.1f}; share of decisions whose score stays within +-5 points in >= 80% of draws {np.mean(np.array(kept)>=0.8)*100:.0f}%")
+        d = set(rng.choice(len(r.mates), len(r.mates) // 2, replace=False).tolist()); sd = sit(r, drop=d); ch = chosen(r); jj = S.judge(sd, ch); vis.append(abs((S.rank_score(jj["q_best"]) - S.rank_score(jj["q_chosen"])) - base["gap_points"]))
+print(f"\n== G-stability (n={len(widths)} decisions, 60 perturbations each; 0.8 m position noise, value scales 9%/10%/18%): median band width (10th-90th pct) of the chosen score {np.median(widths):.1f} points, of the gap {np.median(gw):.1f}; share of decisions that keep their score tercile in >= 80% of draws {np.mean(np.array(kept)>=0.8)*100:.0f}%  => G-stability {'PASS' if np.median(widths) <= 25 and np.mean(np.array(kept)>=0.8) >= 0.70 else 'FAIL'}")
 print(f"== G-visibility: hiding half of the visible teammates changes the gap by a median of {np.median(vis):.1f} points (n={len(vis)})")
 T.drop(columns=["dec"]).to_pickle(f"{D}/v14_scored.pkl")
-out = T[["comp", "match", "period", "minute", "second", "team", "index", "kind", "ax", "ay", "score_chosen", "score_best", "gap_points", "gap_xg", "q_chosen", "q_best", "best_kind", "gap_points_doubt", "score_worst"]].copy()
+out = T[["comp", "match", "period", "minute", "second", "team", "index", "kind", "ax", "ay", "score_chosen", "score_best", "gap_points", "gap_xg", "q_chosen", "q_best", "lin_chosen", "lin_best", "best_kind"]].copy()
 out["clock"] = out.minute.astype(int).astype(str).str.zfill(2) + ":" + out.second.astype(int).astype(str).str.zfill(2); out.drop(columns=["minute", "second"]).round(4).to_csv(f"{D}/decision_scores_test.csv", index=False); print("\nwrote decision_scores_test.csv with", len(out), "rows (no player names)")

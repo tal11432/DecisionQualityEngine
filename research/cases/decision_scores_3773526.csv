@@ -1,0 +1,294 @@
+clock,team,kind,score,best_kind,best_score,gap_points,gap_xg,q,q_best,gap_with_doubt_xg,options_certain,verdict,goal,realised
+01:16,Barcelona,carry,45,pass,82,37,0.0305,0.0133,0.0438,0.0305,2,no clear difference from the best option,0,0.2667
+01:20,Barcelona,pass (completed),72,pass,74,2,0.0019,0.0303,0.0322,0.0019,7,no clear difference from the best option,0,0.3254
+01:21,Barcelona,carry,90,carry,90,0,0.0,0.071,0.071,0.001,5,no clear difference from the best option,0,0.3254
+01:23,Barcelona,pass (completed),96,pass,96,0,0.0,0.135,0.135,0.0,5,no clear difference from the best option,0,0.3254
+01:24,Barcelona,carry,92,shot,98,6,0.1383,0.0891,0.2275,0.1383,6,clearly below the best option,0,0.3254
+01:24,Barcelona,pass (completed),97,shot,98,1,0.0855,0.1766,0.262,0.0855,6,clearly below the best option,0,0.3254
+01:25,Barcelona,carry,96,shot,98,2,0.0663,0.1595,0.2259,0.0663,6,clearly below the best option,0,0.3254
+01:25,Barcelona,shot,99,shot,99,0,0.0,0.3903,0.3903,0.0,7,no clear difference from the best option,0,
+01:35,Barcelona,pass (completed),34,pass,42,8,0.0022,0.01,0.0122,0.0022,5,no clear difference from the best option,0,0.0
+01:35,Barcelona,carry,16,shot,49,33,0.0093,0.0055,0.0148,0.0093,7,no clear difference from the best option,0,0.0
+02:17,Barcelona,pass (completed),9,pass,14,5,0.0012,0.004,0.0052,0.0012,5,no clear difference from the best option,0,0.0
+02:17,Barcelona,carry,19,pass,20,1,0.0002,0.0063,0.0066,0.0002,4,no clear difference from the best option,0,0.0
+02:17,Barcelona,pass (completed),6,shot,30,24,0.006,0.0029,0.0089,0.006,4,no clear difference from the best option,0,0.0
+02:18,Barcelona,pass (completed),64,pass,64,0,0.0,0.0227,0.0227,0.0,6,no clear difference from the best option,0,0.0
+02:21,Barcelona,carry,59,carry,59,0,0.0,0.0194,0.0194,0.0,5,no clear difference from the best option,0,0.0
+02:24,Barcelona,pass (completed),29,pass,67,38,0.0165,0.0087,0.0252,0.0165,5,no clear difference from the best option,0,0.0
+02:25,Barcelona,carry,45,pass,68,23,0.0131,0.0131,0.0263,0.0131,7,no clear difference from the best option,0,0.0
+02:25,Barcelona,pass (completed),63,pass,75,12,0.0121,0.022,0.0341,0.0121,7,no clear difference from the best option,0,0.0
+02:26,Barcelona,pass (completed),37,shot,85,48,0.0407,0.0109,0.0516,0.0407,7,clearly below the best option,0,0.0
+02:27,Barcelona,pass (completed),62,pass,66,4,0.0027,0.0216,0.0244,0.0027,7,no clear difference from the best option,0,0.0
+03:17,Barcelona,carry,86,carry,86,0,0.0,0.0539,0.0539,0.0,5,no clear difference from the best option,0,0.0405
+03:19,Barcelona,shot,81,shot,81,0,0.0,0.0423,0.0423,0.0,5,no clear difference from the best option,0,
+03:48,Deportivo Alavés,carry,41,carry,41,0,0.0,0.012,0.012,0.0,3,no clear difference from the best option,0,0.0
+03:57,Deportivo Alavés,carry,48,pass,79,31,0.0241,0.0142,0.0383,0.0241,5,no clear difference from the best option,0,0.0
+03:58,Deportivo Alavés,pass (completed),46,pass,69,23,0.0136,0.0137,0.0273,0.0136,6,no clear difference from the best option,0,0.0
+04:49,Barcelona,pass (failed),47,pass,47,0,0.0,0.0141,0.0141,0.0014,5,no clear difference from the best option,0,0.0
+05:03,Barcelona,carry,25,shot,44,19,0.0052,0.0077,0.0129,0.0052,5,no clear difference from the best option,0,0.0
+05:04,Barcelona,pass (completed),11,pass,32,21,0.005,0.0045,0.0094,0.005,6,no clear difference from the best option,0,0.0
+05:06,Barcelona,carry,19,pass,52,33,0.0093,0.0065,0.0157,0.0093,6,no clear difference from the best option,0,0.0
+05:07,Barcelona,pass (completed),5,pass,51,46,0.0128,0.0027,0.0155,0.0128,7,no clear difference from the best option,0,0.0
+05:39,Barcelona,pass (completed),11,shot,64,53,0.0181,0.0043,0.0224,0.0237,5,no clear difference from the best option,0,0.0
+05:41,Barcelona,pass (failed),34,pass,59,25,0.0095,0.0099,0.0194,0.0105,7,no clear difference from the best option,0,0.0
+05:59,Barcelona,carry,25,pass,41,16,0.0043,0.0077,0.012,0.0086,6,no clear difference from the best option,0,0.0
+06:00,Barcelona,pass (completed),50,pass,50,0,0.0,0.0151,0.0151,0.0,6,no clear difference from the best option,0,0.0
+06:02,Barcelona,carry,33,pass,82,49,0.0339,0.0098,0.0437,0.0339,6,clearly below the best option,0,0.0
+06:03,Barcelona,pass (completed),17,pass,63,46,0.0157,0.006,0.0217,0.0157,4,no clear difference from the best option,0,0.0
+06:05,Barcelona,pass (completed),5,pass,41,36,0.0093,0.0028,0.0121,0.016,5,no clear difference from the best option,0,0.0
+06:08,Barcelona,carry,31,pass,50,19,0.0057,0.0091,0.0148,0.0057,6,no clear difference from the best option,0,0.0
+06:09,Barcelona,pass (completed),33,pass,54,21,0.0068,0.0097,0.0166,0.0068,5,no clear difference from the best option,0,0.0
+06:26,Barcelona,carry,63,shot,99,36,0.2565,0.0218,0.2782,0.2565,2,clearly below the best option,0,0.0063
+06:32,Barcelona,shot,96,pass,98,2,0.0809,0.1403,0.2212,0.0809,5,clearly below the best option,0,
+07:09,Deportivo Alavés,shot,95,pass,96,1,0.0082,0.1231,0.1313,0.0082,2,no clear difference from the best option,0,
+08:22,Barcelona,pass (completed),16,pass,63,47,0.0165,0.0056,0.0221,0.0182,6,no clear difference from the best option,0,0.0
+08:27,Barcelona,carry,51,pass,60,9,0.0046,0.0154,0.0201,0.0046,6,no clear difference from the best option,0,0.0
+08:56,Barcelona,pass (completed),19,pass,51,32,0.009,0.0064,0.0155,0.009,6,no clear difference from the best option,0,0.0
+08:56,Barcelona,carry,9,pass,65,56,0.0197,0.0039,0.0236,0.0197,6,no clear difference from the best option,0,0.0
+08:58,Barcelona,pass (completed),3,pass,42,39,0.0104,0.0019,0.0123,0.0104,5,no clear difference from the best option,0,0.0
+09:08,Barcelona,pass (completed),37,pass,46,9,0.0026,0.0109,0.0135,0.0026,8,no clear difference from the best option,0,0.0
+09:09,Barcelona,pass (completed),29,pass,61,32,0.0118,0.0087,0.0204,0.0118,9,no clear difference from the best option,0,0.0
+09:20,Barcelona,carry,13,pass,20,7,0.0019,0.0048,0.0066,0.0019,7,no clear difference from the best option,0,0.0
+09:27,Barcelona,pass (completed),39,pass,57,18,0.0072,0.0113,0.0185,0.0072,6,no clear difference from the best option,0,0.0
+09:31,Barcelona,pass (completed),58,shot,69,11,0.008,0.019,0.0271,0.0259,6,no clear difference from the best option,0,0.0
+09:32,Barcelona,carry,68,shot,79,11,0.0128,0.0259,0.0387,0.0361,5,no clear difference from the best option,0,0.0
+09:33,Barcelona,pass (failed),80,shot,86,6,0.0122,0.041,0.0532,0.0263,4,no clear difference from the best option,0,0.0
+13:27,Deportivo Alavés,carry,20,shot,57,37,0.0118,0.0065,0.0184,0.0118,3,no clear difference from the best option,0,0.0
+13:30,Deportivo Alavés,pass (completed),58,pass,58,0,0.0,0.019,0.019,0.0034,1,no clear difference from the best option,0,0.0
+13:31,Deportivo Alavés,carry,81,pass,90,9,0.0313,0.0421,0.0733,0.0313,4,no clear difference from the best option,0,0.0
+13:32,Deportivo Alavés,pass (failed),76,pass,95,19,0.0863,0.035,0.1213,0.0863,3,clearly below the best option,0,0.0
+17:01,Barcelona,pass (completed),0,pass,28,28,0.008,0.0005,0.0085,0.008,7,no clear difference from the best option,0,0.0
+17:48,Deportivo Alavés,carry,14,shot,75,61,0.0288,0.0052,0.0341,0.0407,3,no clear difference from the best option,0,0.0
+23:57,Barcelona,carry,80,shot,85,5,0.0091,0.0411,0.0502,0.0091,3,no clear difference from the best option,0,0.0
+26:44,Deportivo Alavés,carry,77,carry,77,0,0.0,0.0358,0.0358,0.0,3,no clear difference from the best option,0,0.0635
+26:53,Deportivo Alavés,shot,91,pass,95,4,0.0513,0.0759,0.1273,0.4815,4,clearly below the best option,0,
+27:44,Barcelona,pass (completed),11,pass,20,9,0.0022,0.0044,0.0065,0.0034,4,no clear difference from the best option,0,0.0
+27:48,Barcelona,pass (completed),55,pass,55,0,0.0,0.0176,0.0176,0.0,6,no clear difference from the best option,0,0.0
+27:49,Barcelona,carry,10,shot,81,71,0.038,0.0043,0.0423,0.038,7,clearly below the best option,0,0.0
+27:52,Barcelona,pass (completed),8,pass,41,33,0.0083,0.0035,0.0118,0.0084,6,no clear difference from the best option,0,0.0
+27:53,Barcelona,carry,14,pass,63,49,0.0169,0.0051,0.022,0.0169,5,no clear difference from the best option,0,0.0
+27:55,Barcelona,pass (completed),26,pass,39,13,0.0033,0.0081,0.0114,0.0033,5,no clear difference from the best option,0,0.0
+27:56,Barcelona,carry,56,carry,56,0,0.0,0.018,0.018,0.0,6,no clear difference from the best option,0,0.0
+27:58,Barcelona,pass (completed),37,pass,45,8,0.0023,0.0108,0.0131,0.0023,6,no clear difference from the best option,0,0.0
+27:58,Barcelona,carry,31,shot,70,39,0.0185,0.0092,0.0277,0.0185,7,no clear difference from the best option,0,0.0
+28:00,Barcelona,pass (completed),49,shot,62,13,0.0068,0.0148,0.0216,0.0068,6,no clear difference from the best option,0,0.0
+28:01,Barcelona,pass (completed),51,pass,71,20,0.0135,0.0156,0.0292,0.0135,7,no clear difference from the best option,0,0.0
+28:02,Barcelona,pass (completed),60,pass,71,11,0.0088,0.0203,0.029,0.0088,5,no clear difference from the best option,0,0.0
+28:04,Barcelona,carry,62,pass,72,10,0.0087,0.0212,0.0299,0.0087,7,no clear difference from the best option,0,0.0
+28:05,Barcelona,pass (completed),54,shot,68,14,0.0097,0.0169,0.0266,0.0156,5,no clear difference from the best option,0,0.0
+28:06,Barcelona,carry,11,pass,60,49,0.0155,0.0043,0.0198,0.0197,5,no clear difference from the best option,0,0.0
+28:22,Barcelona,pass (completed),26,pass,56,30,0.0101,0.0079,0.018,0.0101,7,no clear difference from the best option,0,0.0
+28:24,Barcelona,carry,7,pass,50,43,0.0118,0.0034,0.0152,0.0118,7,no clear difference from the best option,0,0.0
+28:25,Barcelona,pass (completed),4,pass,37,33,0.0084,0.0023,0.0107,0.0084,7,no clear difference from the best option,0,0.0
+28:47,Barcelona,carry,69,carry,69,0,0.0,0.0272,0.0272,0.0,4,no clear difference from the best option,0,0.0948
+28:52,Barcelona,carry,96,shot,99,3,0.1681,0.1384,0.3065,0.6923,4,clearly below the best option,0,0.0948
+28:54,Barcelona,pass (completed),97,pass,97,0,0.0067,0.1921,0.1988,0.5298,4,no clear difference from the best option,0,0.0948
+28:54,Barcelona,shot,93,pass,99,6,0.3394,0.0962,0.4357,0.5408,3,clearly below the best option,1,
+31:41,Barcelona,pass (completed),35,shot,75,40,0.023,0.0101,0.0331,0.023,5,no clear difference from the best option,0,0.0
+31:43,Barcelona,pass (completed),50,shot,67,17,0.0105,0.0152,0.0257,0.0105,4,no clear difference from the best option,0,0.0
+31:44,Barcelona,pass (completed),28,shot,58,30,0.0107,0.0084,0.0191,0.0107,4,no clear difference from the best option,0,0.0
+31:44,Barcelona,carry,41,pass,58,17,0.007,0.0118,0.0188,0.0141,3,no clear difference from the best option,0,0.0
+31:46,Barcelona,pass (completed),55,pass,57,2,0.0011,0.0171,0.0182,0.0011,4,no clear difference from the best option,0,0.0
+31:47,Barcelona,pass (completed),65,shot,70,5,0.0049,0.0235,0.0285,0.0049,5,no clear difference from the best option,0,0.0
+31:48,Barcelona,pass (completed),60,shot,82,22,0.0245,0.0199,0.0444,0.0245,5,no clear difference from the best option,0,0.0
+31:48,Barcelona,carry,56,shot,88,32,0.0423,0.0177,0.06,0.0423,4,clearly below the best option,0,0.0
+31:50,Barcelona,pass (completed),58,shot,63,5,0.0032,0.0187,0.0219,0.0109,4,no clear difference from the best option,0,0.0
+31:51,Barcelona,carry,62,shot,81,19,0.0214,0.0216,0.043,0.0214,6,no clear difference from the best option,0,0.0
+31:53,Barcelona,pass (completed),70,shot,72,2,0.0027,0.0277,0.0304,0.0027,6,no clear difference from the best option,0,0.0
+31:53,Barcelona,pass (completed),65,pass,84,19,0.0256,0.0234,0.049,0.0256,6,no clear difference from the best option,0,0.0
+31:55,Barcelona,pass (completed),46,shot,85,39,0.038,0.0135,0.0516,0.038,5,clearly below the best option,0,0.0
+31:56,Barcelona,pass (completed),55,pass,70,15,0.0111,0.0174,0.0285,0.0111,7,no clear difference from the best option,0,0.0
+32:44,Barcelona,carry,43,carry,43,0,0.0,0.0127,0.0127,0.0,6,no clear difference from the best option,0,0.0
+32:46,Barcelona,pass (completed),47,shot,58,11,0.0049,0.0138,0.0188,0.0049,5,no clear difference from the best option,0,0.0
+32:47,Barcelona,carry,38,shot,79,41,0.0279,0.0112,0.039,0.0279,4,no clear difference from the best option,0,0.0
+32:47,Barcelona,pass (failed),25,shot,64,39,0.0149,0.0077,0.0226,0.0149,5,no clear difference from the best option,0,0.0
+34:50,Deportivo Alavés,pass (completed),41,pass,47,6,0.0021,0.012,0.0141,0.0021,4,no clear difference from the best option,0,0.0
+35:34,Barcelona,pass (failed),10,shot,13,3,0.0009,0.0041,0.0049,0.0009,7,no clear difference from the best option,0,0.0
+37:31,Deportivo Alavés,carry,9,shot,42,33,0.0086,0.0038,0.0124,0.0086,5,no clear difference from the best option,0,0.0
+37:57,Deportivo Alavés,carry,64,carry,64,0,0.0,0.0224,0.0224,0.0008,7,no clear difference from the best option,0,0.0
+38:11,Deportivo Alavés,shot,86,pass,95,9,0.066,0.0536,0.1196,0.1082,6,clearly below the best option,0,
+39:41,Barcelona,carry,34,shot,39,5,0.0014,0.0099,0.0113,0.0014,5,no clear difference from the best option,0,0.0
+39:42,Barcelona,pass (completed),25,pass,40,15,0.0038,0.0077,0.0115,0.0038,6,no clear difference from the best option,0,0.0
+39:45,Barcelona,pass (completed),43,shot,64,21,0.0097,0.0127,0.0224,0.0097,8,no clear difference from the best option,0,0.0
+39:46,Barcelona,pass (completed),42,shot,67,25,0.0129,0.0124,0.0252,0.0129,5,no clear difference from the best option,0,0.0
+39:47,Barcelona,carry,56,shot,85,29,0.0337,0.0177,0.0514,0.0337,7,clearly below the best option,0,0.0
+39:48,Barcelona,pass (completed),55,shot,77,22,0.0189,0.0176,0.0364,0.0189,8,no clear difference from the best option,0,0.0
+39:48,Barcelona,carry,54,shot,78,24,0.0207,0.0167,0.0374,0.0207,6,no clear difference from the best option,0,0.0
+39:49,Barcelona,pass (completed),59,pass,79,20,0.0201,0.0193,0.0395,0.0201,6,no clear difference from the best option,0,0.0
+39:50,Barcelona,carry,51,pass,69,18,0.0116,0.0154,0.027,0.0116,7,no clear difference from the best option,0,0.0
+39:53,Barcelona,pass (completed),18,pass,70,52,0.0221,0.0061,0.0283,0.0525,5,no clear difference from the best option,0,0.0
+39:54,Barcelona,carry,66,shot,73,7,0.0068,0.0246,0.0313,0.014,5,no clear difference from the best option,0,0.0
+39:58,Barcelona,pass (completed),50,pass,74,24,0.0177,0.015,0.0327,0.0177,6,no clear difference from the best option,0,0.0
+39:58,Barcelona,carry,42,pass,69,27,0.0151,0.0123,0.0274,0.0151,6,no clear difference from the best option,0,0.0
+40:00,Barcelona,pass (completed),8,pass,63,55,0.0183,0.0037,0.022,0.0183,3,no clear difference from the best option,0,0.0
+40:14,Barcelona,carry,52,shot,70,18,0.0118,0.016,0.0279,0.0118,5,no clear difference from the best option,0,0.0
+41:12,Barcelona,carry,75,pass,77,2,0.0034,0.0334,0.0368,0.0034,3,no clear difference from the best option,0,0.0
+42:28,Barcelona,pass (completed),28,pass,65,37,0.0151,0.0084,0.0235,0.0151,6,no clear difference from the best option,0,0.0185
+42:29,Barcelona,carry,65,carry,65,0,0.0,0.0235,0.0235,0.0246,6,no clear difference from the best option,0,0.0185
+42:33,Barcelona,shot,51,pass,72,21,0.0138,0.0156,0.0294,0.034,3,no clear difference from the best option,0,
+43:19,Deportivo Alavés,pass (completed),1,pass,30,29,0.0078,0.0011,0.0088,0.0078,6,no clear difference from the best option,0,0.0
+44:48,Deportivo Alavés,carry,86,carry,86,0,0.0,0.0525,0.0525,0.0,4,no clear difference from the best option,0,0.0
+44:48,Deportivo Alavés,pass (failed),94,pass,94,0,0.0,0.1021,0.1021,0.0,4,no clear difference from the best option,0,0.0
+45:02,Barcelona,pass (completed),49,pass,52,3,0.0014,0.0145,0.0159,0.0014,5,no clear difference from the best option,0,0.0
+45:03,Barcelona,carry,68,shot,91,23,0.05,0.0263,0.0763,0.05,6,clearly below the best option,0,0.0
+45:07,Barcelona,carry,31,pass,80,49,0.032,0.0092,0.0412,0.0659,5,no clear difference from the best option,0,0.0
+45:09,Barcelona,pass (completed),33,pass,65,32,0.014,0.0096,0.0236,0.014,6,no clear difference from the best option,0,0.0
+45:10,Barcelona,carry,27,pass,61,34,0.0124,0.0083,0.0207,0.0124,7,no clear difference from the best option,0,0.0
+45:11,Barcelona,pass (completed),20,pass,62,42,0.0151,0.0066,0.0216,0.0151,7,no clear difference from the best option,0,0.0
+45:15,Barcelona,carry,31,pass,57,26,0.0089,0.0093,0.0182,0.0089,7,no clear difference from the best option,0,0.0
+45:19,Barcelona,pass (completed),35,pass,47,12,0.0037,0.0101,0.0138,0.0187,5,no clear difference from the best option,0,0.0
+45:20,Barcelona,carry,63,shot,83,20,0.0248,0.0218,0.0466,0.0248,7,no clear difference from the best option,0,0.0
+45:24,Barcelona,pass (completed),44,pass,80,36,0.0283,0.0129,0.0412,0.0283,6,no clear difference from the best option,0,0.0
+45:26,Barcelona,pass (completed),45,pass,58,13,0.0055,0.0131,0.0186,0.0237,5,no clear difference from the best option,0,0.0
+45:29,Barcelona,pass (failed),44,pass,61,17,0.0074,0.0131,0.0204,0.0074,5,no clear difference from the best option,0,0.0
+45:48,Barcelona,carry,65,shot,73,8,0.0072,0.0235,0.0307,0.0072,7,no clear difference from the best option,0,0.0327
+45:50,Barcelona,shot,76,shot,76,0,0.0,0.0348,0.0348,0.0246,5,no clear difference from the best option,1,
+47:15,Deportivo Alavés,shot,95,shot,95,0,0.0,0.1205,0.1205,0.0,5,no clear difference from the best option,0,
+48:21,Barcelona,pass (completed),34,pass,34,0,0.0,0.01,0.01,0.0028,3,no clear difference from the best option,0,0.0
+48:22,Barcelona,pass (completed),25,pass,60,35,0.0124,0.0077,0.0201,0.0124,4,no clear difference from the best option,0,0.0
+48:33,Barcelona,carry,43,pass,64,21,0.0101,0.0125,0.0227,0.0101,4,no clear difference from the best option,0,0.0
+48:34,Barcelona,pass (completed),33,pass,61,28,0.011,0.0098,0.0208,0.011,5,no clear difference from the best option,0,0.0
+48:35,Barcelona,carry,39,pass,48,9,0.0032,0.0112,0.0144,0.0077,5,no clear difference from the best option,0,0.0
+48:36,Barcelona,pass (completed),49,pass,52,3,0.0012,0.0145,0.0157,0.0048,5,no clear difference from the best option,0,0.0
+48:37,Barcelona,pass (completed),67,shot,79,12,0.0131,0.0253,0.0384,0.0145,4,no clear difference from the best option,0,0.0
+55:01,Deportivo Alavés,carry,20,pass,70,50,0.0214,0.0066,0.028,0.0214,3,no clear difference from the best option,0,0.0469
+55:03,Deportivo Alavés,pass (completed),41,pass,41,0,0.0,0.0118,0.0118,0.0,4,no clear difference from the best option,0,0.0469
+55:05,Deportivo Alavés,carry,74,carry,74,0,0.0,0.0327,0.0327,0.0,3,no clear difference from the best option,0,0.0469
+55:06,Deportivo Alavés,shot,83,pass,84,1,0.0034,0.0457,0.0491,0.0034,6,no clear difference from the best option,0,
+56:12,Barcelona,pass (completed),7,pass,53,46,0.0129,0.0031,0.0161,0.0129,7,no clear difference from the best option,0,0.0
+56:43,Deportivo Alavés,shot,97,shot,97,0,0.0,0.2054,0.2054,0.0,2,no clear difference from the best option,1,
+57:37,Barcelona,pass (completed),27,pass,27,0,0.0,0.0082,0.0082,0.0,5,no clear difference from the best option,0,0.0
+57:43,Barcelona,carry,29,shot,76,47,0.0265,0.0088,0.0353,0.0265,3,no clear difference from the best option,0,0.0
+57:44,Barcelona,pass (completed),37,pass,42,5,0.0016,0.0107,0.0123,0.0069,4,no clear difference from the best option,0,0.0
+57:45,Barcelona,carry,30,pass,51,21,0.0064,0.009,0.0154,0.0076,5,no clear difference from the best option,0,0.0
+57:46,Barcelona,pass (completed),17,pass,43,26,0.0069,0.0058,0.0126,0.008,6,no clear difference from the best option,0,0.0
+57:59,Barcelona,pass (completed),49,shot,68,19,0.0116,0.0146,0.0262,0.0116,5,no clear difference from the best option,0,0.0
+57:59,Barcelona,carry,45,pass,47,2,0.0007,0.0134,0.0141,0.0007,5,no clear difference from the best option,0,0.0
+58:01,Barcelona,pass (completed),15,pass,59,44,0.0141,0.0053,0.0194,0.0141,5,no clear difference from the best option,0,0.0
+58:02,Barcelona,carry,20,pass,68,48,0.0195,0.0066,0.0261,0.0195,7,no clear difference from the best option,0,0.0
+58:03,Barcelona,pass (completed),20,pass,66,46,0.0177,0.0066,0.0243,0.0177,7,no clear difference from the best option,0,0.0
+58:04,Barcelona,pass (completed),8,pass,78,70,0.0335,0.0036,0.0371,0.0418,5,clearly below the best option,0,0.0
+58:09,Barcelona,pass (completed),8,pass,56,48,0.0143,0.0035,0.0178,0.0143,8,no clear difference from the best option,0,0.0
+58:14,Barcelona,carry,23,shot,56,33,0.0107,0.0073,0.018,0.0107,7,no clear difference from the best option,0,0.0
+58:20,Barcelona,pass (completed),60,pass,75,15,0.014,0.0198,0.0338,0.014,7,no clear difference from the best option,0,0.0
+58:21,Barcelona,carry,61,pass,82,21,0.0243,0.021,0.0452,0.0667,4,no clear difference from the best option,0,0.0
+58:24,Barcelona,pass (completed),82,pass,84,2,0.0029,0.0446,0.0475,0.0029,3,no clear difference from the best option,0,0.0
+58:24,Barcelona,pass (completed),75,shot,90,15,0.0348,0.0336,0.0684,0.0348,4,clearly below the best option,0,0.0
+58:32,Barcelona,pass (completed),33,pass,58,25,0.0092,0.0098,0.019,0.0122,6,no clear difference from the best option,0,0.0
+58:32,Barcelona,carry,21,pass,50,29,0.0083,0.0069,0.0152,0.0083,6,no clear difference from the best option,0,0.0
+58:33,Barcelona,pass (completed),18,pass,45,27,0.0072,0.006,0.0132,0.0072,7,no clear difference from the best option,0,0.0
+58:35,Barcelona,pass (completed),9,shot,66,57,0.0204,0.0038,0.0242,0.0204,8,no clear difference from the best option,0,0.0
+58:44,Barcelona,pass (completed),38,shot,63,25,0.0109,0.0111,0.022,0.0109,6,no clear difference from the best option,0,0.0
+58:45,Barcelona,carry,63,carry,63,0,0.0,0.0218,0.0218,0.0,4,no clear difference from the best option,0,0.0
+58:47,Barcelona,pass (completed),63,pass,65,2,0.0019,0.0218,0.0237,0.0357,4,no clear difference from the best option,0,0.0
+58:48,Barcelona,pass (completed),35,shot,80,45,0.0312,0.0102,0.0414,0.0312,4,clearly below the best option,0,0.0
+58:52,Barcelona,pass (completed),68,shot,78,10,0.0115,0.0265,0.0379,0.0119,7,no clear difference from the best option,0,0.0
+58:53,Barcelona,pass (completed),36,pass,76,40,0.0247,0.0104,0.0352,0.0247,8,no clear difference from the best option,0,0.0
+58:55,Barcelona,pass (completed),33,pass,35,2,0.0005,0.0097,0.0102,0.0017,6,no clear difference from the best option,0,0.0
+58:56,Barcelona,carry,9,shot,39,30,0.0074,0.004,0.0114,0.0176,6,no clear difference from the best option,0,0.0
+59:01,Barcelona,carry,71,pass,74,3,0.0034,0.0294,0.0327,0.0034,7,no clear difference from the best option,0,0.0
+59:02,Barcelona,carry,73,pass,80,7,0.0093,0.031,0.0403,0.0093,6,no clear difference from the best option,0,0.0
+59:02,Barcelona,carry,52,pass,78,26,0.0223,0.0159,0.0382,0.0223,6,no clear difference from the best option,0,0.0
+59:04,Barcelona,pass (completed),81,pass,82,1,0.001,0.0424,0.0433,0.001,6,no clear difference from the best option,0,0.0
+59:04,Barcelona,carry,80,pass,83,3,0.0051,0.0412,0.0463,0.0051,7,no clear difference from the best option,0,0.0
+61:29,Barcelona,pass (completed),41,pass,41,0,0.0,0.0119,0.0119,0.0002,4,no clear difference from the best option,0,0.0
+61:55,Barcelona,carry,97,carry,97,0,0.0,0.1876,0.1876,0.0,5,no clear difference from the best option,0,0.4475
+61:57,Barcelona,shot,99,shot,99,0,0.0,0.3192,0.3192,0.0,2,no clear difference from the best option,0,
+62:36,Barcelona,carry,52,pass,89,37,0.051,0.016,0.067,0.0543,4,clearly below the best option,0,0.0
+62:42,Barcelona,pass (completed),50,pass,61,11,0.006,0.0151,0.021,0.006,6,no clear difference from the best option,0,0.0
+62:43,Barcelona,carry,60,pass,77,17,0.0156,0.0201,0.0357,0.0272,4,no clear difference from the best option,0,0.0
+62:44,Barcelona,pass (completed),59,pass,75,16,0.0145,0.0194,0.0339,0.0145,6,no clear difference from the best option,0,0.0
+62:45,Barcelona,carry,78,pass,90,12,0.0357,0.0371,0.0728,0.0357,5,clearly below the best option,0,0.0
+62:51,Barcelona,carry,36,pass,72,36,0.0195,0.0105,0.03,0.0196,5,no clear difference from the best option,0,0.0
+62:51,Barcelona,pass (completed),11,pass,65,54,0.019,0.0044,0.0234,0.0315,5,no clear difference from the best option,0,0.0
+63:01,Barcelona,carry,27,pass,42,15,0.0039,0.0083,0.0122,0.0039,8,no clear difference from the best option,0,0.0
+63:03,Barcelona,pass (completed),25,shot,39,14,0.0034,0.0079,0.0112,0.0069,4,no clear difference from the best option,0,0.0
+63:05,Barcelona,pass (completed),18,pass,39,21,0.0051,0.0062,0.0113,0.0074,4,no clear difference from the best option,0,0.0
+63:08,Barcelona,pass (completed),50,pass,74,24,0.017,0.0149,0.0319,0.017,5,no clear difference from the best option,0,0.0
+63:09,Barcelona,pass (completed),49,pass,72,23,0.0149,0.0147,0.0297,0.0149,5,no clear difference from the best option,0,0.0
+63:12,Barcelona,pass (completed),33,shot,58,25,0.0092,0.0097,0.0189,0.0106,4,no clear difference from the best option,0,0.0868
+63:12,Barcelona,carry,46,pass,64,18,0.0089,0.0135,0.0224,0.0089,5,no clear difference from the best option,0,0.0868
+63:15,Barcelona,pass (completed),46,pass,70,24,0.0148,0.0136,0.0284,0.0148,6,no clear difference from the best option,0,0.0868
+63:16,Barcelona,carry,70,shot,90,20,0.0437,0.0277,0.0714,0.0437,6,clearly below the best option,0,0.0868
+63:17,Barcelona,pass (completed),80,pass,80,0,0.0,0.0404,0.0404,0.0,5,no clear difference from the best option,0,0.0868
+63:17,Barcelona,pass (completed),76,shot,94,18,0.0717,0.0345,0.1062,0.0717,3,clearly below the best option,0,0.0868
+63:17,Barcelona,pass (completed),82,shot,88,6,0.0185,0.0433,0.0618,0.0185,3,no clear difference from the best option,0,0.0868
+63:18,Barcelona,pass (completed),85,shot,93,8,0.0465,0.0501,0.0966,0.0465,4,clearly below the best option,0,0.0868
+63:19,Barcelona,carry,81,shot,92,11,0.0444,0.0429,0.0872,0.0444,4,clearly below the best option,0,0.0868
+63:20,Barcelona,shot,94,shot,94,0,0.0,0.1118,0.1118,0.0,4,no clear difference from the best option,0,
+65:09,Barcelona,carry,27,shot,50,23,0.0066,0.0083,0.0149,0.0562,4,no clear difference from the best option,0,0.0
+65:36,Barcelona,carry,81,shot,88,7,0.017,0.042,0.0591,0.017,3,no clear difference from the best option,0,0.1822
+65:37,Barcelona,pass (completed),74,shot,84,10,0.018,0.0316,0.0496,0.018,3,no clear difference from the best option,0,0.1822
+65:39,Barcelona,shot,98,shot,98,0,0.0,0.2709,0.2709,0.0,3,no clear difference from the best option,0,
+67:46,Barcelona,carry,76,carry,76,0,0.0,0.0347,0.0347,0.0,4,no clear difference from the best option,0,0.0367
+67:50,Barcelona,pass (completed),74,pass,83,9,0.0138,0.0324,0.0462,0.0138,3,no clear difference from the best option,0,0.0367
+67:50,Barcelona,carry,89,pass,93,4,0.034,0.063,0.097,0.034,3,clearly below the best option,0,0.0367
+67:51,Barcelona,shot,87,pass,93,6,0.0427,0.0555,0.0982,0.0427,2,clearly below the best option,0,
+67:55,Barcelona,carry,18,shot,86,68,0.0473,0.0062,0.0535,0.0859,5,clearly below the best option,0,0.0
+68:01,Barcelona,pass (completed),26,pass,36,10,0.0024,0.0081,0.0105,0.0024,6,no clear difference from the best option,0,0.0
+68:02,Barcelona,pass (completed),15,pass,44,29,0.0076,0.0052,0.0128,0.0076,6,no clear difference from the best option,0,0.0
+68:03,Barcelona,carry,16,pass,32,16,0.0037,0.0057,0.0094,0.0037,5,no clear difference from the best option,0,0.0
+68:03,Barcelona,pass (completed),10,pass,25,15,0.0036,0.0042,0.0078,0.0036,4,no clear difference from the best option,0,0.0
+68:04,Barcelona,carry,24,pass,34,10,0.0024,0.0076,0.01,0.0024,4,no clear difference from the best option,0,0.0
+68:06,Barcelona,pass (completed),13,pass,42,29,0.0077,0.0047,0.0124,0.0152,5,no clear difference from the best option,0,0.0
+68:07,Barcelona,carry,35,pass,56,21,0.0076,0.0101,0.0177,0.012,5,no clear difference from the best option,0,0.0
+68:18,Barcelona,pass (completed),52,pass,58,6,0.0031,0.0161,0.0191,0.0031,2,no clear difference from the best option,0,0.0
+68:19,Barcelona,pass (completed),41,pass,70,29,0.0165,0.0119,0.0284,0.0165,3,no clear difference from the best option,0,0.0
+68:21,Barcelona,pass (completed),8,pass,45,37,0.0096,0.0036,0.0132,0.0096,5,no clear difference from the best option,0,0.0
+68:31,Barcelona,pass (completed),17,pass,54,37,0.0108,0.006,0.0167,0.0108,6,no clear difference from the best option,0,0.0
+68:33,Barcelona,pass (completed),20,shot,63,43,0.0154,0.0066,0.0221,0.0154,7,no clear difference from the best option,0,0.0
+68:43,Barcelona,carry,55,shot,72,17,0.0124,0.0174,0.0298,0.0124,5,no clear difference from the best option,0,0.0
+68:47,Barcelona,pass (completed),34,shot,55,21,0.0071,0.01,0.0171,0.0074,3,no clear difference from the best option,0,0.0
+68:47,Barcelona,carry,47,pass,62,15,0.0072,0.014,0.0212,0.0072,6,no clear difference from the best option,0,0.0
+68:50,Barcelona,pass (completed),36,pass,74,38,0.0217,0.0105,0.0323,0.0217,5,no clear difference from the best option,0,0.0
+68:51,Barcelona,pass (completed),52,shot,66,14,0.0085,0.016,0.0245,0.0085,5,no clear difference from the best option,0,0.0
+68:52,Barcelona,pass (completed),31,shot,63,32,0.0128,0.0091,0.0219,0.0205,4,no clear difference from the best option,0,0.0
+68:52,Barcelona,carry,38,pass,50,12,0.0041,0.0111,0.0152,0.0109,4,no clear difference from the best option,0,0.0
+68:53,Barcelona,pass (failed),55,pass,55,0,0.0,0.0171,0.0171,0.0037,4,no clear difference from the best option,0,0.0
+69:03,Barcelona,carry,75,shot,91,16,0.0406,0.0342,0.0748,0.0406,4,clearly below the best option,0,0.0
+69:05,Barcelona,pass (completed),59,shot,74,15,0.0126,0.0195,0.0321,0.0126,4,no clear difference from the best option,0,0.0
+69:06,Barcelona,carry,87,carry,87,0,0.0,0.0578,0.0578,0.0,3,no clear difference from the best option,0,0.0
+69:12,Barcelona,pass (completed),79,pass,97,18,0.1301,0.0393,0.1695,0.1301,4,clearly below the best option,0,0.0
+69:43,Deportivo Alavés,carry,83,carry,83,0,0.0,0.0471,0.0471,0.0,4,no clear difference from the best option,0,0.0
+69:45,Deportivo Alavés,pass (failed),97,pass,97,0,0.0,0.1964,0.1964,0.0,1,no clear difference from the best option,0,0.0
+72:05,Deportivo Alavés,carry,74,pass,94,20,0.0687,0.0322,0.1009,0.0687,3,clearly below the best option,0,0.0
+72:27,Barcelona,carry,36,carry,36,0,0.0,0.0105,0.0105,0.0,5,no clear difference from the best option,0,0.0
+73:24,Barcelona,carry,97,carry,97,0,0.0,0.2026,0.2026,0.0,2,no clear difference from the best option,0,0.3361
+73:27,Barcelona,shot,99,shot,99,0,0.0,0.4021,0.4021,0.0,1,no clear difference from the best option,1,
+74:47,Barcelona,shot,86,shot,86,0,0.0,0.0528,0.0528,0.0123,3,no clear difference from the best option,1,
+77:22,Deportivo Alavés,carry,48,carry,48,0,0.0,0.0142,0.0142,0.0,4,no clear difference from the best option,0,0.0
+77:30,Deportivo Alavés,pass (failed),49,pass,67,18,0.0109,0.0147,0.0256,0.0109,6,no clear difference from the best option,0,0.0
+79:04,Barcelona,carry,49,shot,69,20,0.0123,0.0147,0.027,0.0123,6,no clear difference from the best option,0,0.7756
+79:05,Barcelona,pass (completed),63,shot,73,10,0.0091,0.0221,0.0312,0.0091,7,no clear difference from the best option,0,0.7756
+79:06,Barcelona,carry,76,shot,84,8,0.0136,0.035,0.0486,0.0136,5,no clear difference from the best option,0,0.7756
+79:11,Barcelona,shot,100,shot,100,0,0.0,0.6694,0.6694,0.0,4,no clear difference from the best option,1,
+83:18,Barcelona,carry,71,shot,81,10,0.0132,0.0289,0.0421,0.0132,3,no clear difference from the best option,0,0.0
+83:21,Barcelona,carry,63,shot,80,17,0.0194,0.022,0.0415,0.0194,4,no clear difference from the best option,0,0.0
+83:27,Barcelona,pass (completed),15,shot,65,50,0.0178,0.0054,0.0231,0.0178,5,no clear difference from the best option,0,0.0
+84:17,Barcelona,pass (completed),2,pass,7,5,0.0016,0.0017,0.0033,0.0016,5,no clear difference from the best option,0,0.0
+86:13,Barcelona,carry,41,shot,73,32,0.0195,0.0119,0.0314,0.0195,5,no clear difference from the best option,0,0.0
+86:19,Barcelona,pass (completed),52,pass,52,0,0.0,0.0158,0.0159,0.0,5,no clear difference from the best option,0,0.0
+86:22,Barcelona,pass (completed),13,pass,36,23,0.0058,0.0047,0.0105,0.0058,5,no clear difference from the best option,0,0.0
+86:23,Barcelona,carry,13,pass,29,16,0.0039,0.0049,0.0088,0.0039,6,no clear difference from the best option,0,0.0
+86:32,Barcelona,carry,23,shot,50,27,0.0077,0.0072,0.015,0.0077,6,no clear difference from the best option,0,0.0574
+86:35,Barcelona,pass (completed),40,pass,40,0,0.0,0.0116,0.0116,0.0,5,no clear difference from the best option,0,0.0574
+86:35,Barcelona,carry,34,pass,58,24,0.0089,0.0101,0.019,0.0089,5,no clear difference from the best option,0,0.0574
+86:37,Barcelona,pass (completed),51,pass,55,4,0.002,0.0154,0.0174,0.002,5,no clear difference from the best option,0,0.0574
+86:37,Barcelona,pass (completed),60,pass,67,7,0.0057,0.0198,0.0255,0.0057,6,no clear difference from the best option,0,0.0574
+86:38,Barcelona,pass (completed),52,shot,79,27,0.0235,0.0157,0.0392,0.0235,6,no clear difference from the best option,0,0.0574
+86:38,Barcelona,pass (completed),67,pass,69,2,0.0019,0.0249,0.0268,0.0019,6,no clear difference from the best option,0,0.0574
+86:41,Barcelona,carry,87,shot,95,8,0.065,0.0572,0.1222,0.065,6,clearly below the best option,0,0.0574
+86:41,Barcelona,shot,92,shot,92,0,0.0,0.0867,0.0867,0.0,5,no clear difference from the best option,0,
+87:11,Barcelona,carry,17,shot,76,59,0.0292,0.0058,0.035,0.0292,2,no clear difference from the best option,0,0.0
+87:15,Barcelona,pass (completed),5,pass,25,20,0.0052,0.0027,0.0078,0.0052,4,no clear difference from the best option,0,0.0
+87:17,Barcelona,pass (completed),3,pass,42,39,0.0105,0.0019,0.0125,0.0105,5,no clear difference from the best option,0,0.0
+87:19,Barcelona,pass (completed),7,pass,41,34,0.0085,0.0033,0.0118,0.0085,5,no clear difference from the best option,0,0.0
+87:20,Barcelona,pass (completed),6,pass,29,23,0.0059,0.003,0.0088,0.0059,6,no clear difference from the best option,0,0.0
+87:24,Barcelona,pass (failed),33,pass,50,17,0.0052,0.0098,0.015,0.0052,6,no clear difference from the best option,0,0.0
+88:34,Barcelona,pass (completed),30,pass,70,40,0.0192,0.0089,0.0281,0.0192,5,no clear difference from the best option,0,0.0
+88:35,Barcelona,carry,75,shot,90,15,0.0356,0.0339,0.0695,0.0453,4,clearly below the best option,0,0.0
+89:51,Deportivo Alavés,carry,65,carry,65,0,0.0,0.0236,0.0236,0.0,2,no clear difference from the best option,0,0.0
+90:39,Barcelona,carry,29,carry,29,0,0.0,0.0086,0.0086,0.0,4,no clear difference from the best option,0,0.0
+90:44,Barcelona,pass (completed),73,pass,73,0,0.0,0.031,0.031,0.0,4,no clear difference from the best option,0,0.0
+90:45,Barcelona,carry,58,shot,85,27,0.0327,0.0188,0.0516,0.0327,4,clearly below the best option,0,0.0
+90:47,Barcelona,pass (completed),31,pass,76,45,0.0256,0.0091,0.0348,0.0256,6,no clear difference from the best option,0,0.0
