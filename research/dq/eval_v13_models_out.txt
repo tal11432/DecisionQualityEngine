@@ -1,20 +1,20 @@
-data: carries 29279 (fail rate 10.3%), dribbles 2801 (success 51.1%), losses 18292 by kind {'pass': np.int64(12953), 'miscontrol': np.int64(2119), 'dispossessed': np.int64(1837), 'dribble': np.int64(1383)}
+data: carries 29279 (fail rate 10.3%), dribbles 2801 (success 51.1%), losses 56108 by kind {'pass': np.int64(41464), 'miscontrol': np.int64(6084), 'dispossessed': np.int64(5210), 'dribble': np.int64(3350)}
 
-== L: danger of losing the ball (opponent xG - own xG in the next 10 s), losses at x >= 50
-   opp: train 12975 test 5317; observed mean 0.0001, predicted 0.0001 (ratio 0.424, slope 0.991); LL gain +0.00023 [+0.00003,+0.00053]  => FAIL
-   own: train 12975 test 5317; observed mean 0.0058, predicted 0.0066 (ratio 1.142, slope 1.149); LL gain +0.00165 [+0.00103,+0.00242]  => PASS
-   by x of the loss point: (50, 70]: L observed +0.0000 predicted +0.0025 (n=29); (70, 85]: L observed +0.0015 predicted -0.0007 (n=299); (85, 100]: L observed -0.0026 predicted -0.0039 (n=1142); (100, 121]: L observed -0.0072 predicted -0.0079 (n=3847)
-   L predicted: 10th/50th/90th percentile -0.0125, -0.0061, -0.0010; share of losses with L > 0.05: 0.0%
-   situation dependence (teammates behind the ball): (-0.001, 4.0]: L predicted -0.0065, observed -0.0054 (n=2303); (4.0, 6.0]: L predicted -0.0067, observed -0.0061 (n=1685); (6.0, 10.0]: L predicted -0.0064, observed -0.0056 (n=1329)
-  r = np.array([x[0] for x in rows]); npos = np.array([x[1] for x in rows]); return float(np.sqrt(max(0.0, np.var(np.log(r), ddof=1) - np.mean(1 / npos)))), len(rows)
-  x = um.subtract(arr, arrmean, out=...)
-   between-competition spread tau (test competitions only): opp 0.000 (3 comps), own 0.114 (3 comps)
+== L: danger of losing the ball (opponent xG - own xG in the next 10 s), losses anywhere on the pitch
+   opp: train 39806 test 16302; observed mean 0.0016, predicted 0.0016 (ratio 1.007, slope 0.795); LL gain +0.00174 [+0.00110,+0.00238]  => PASS
+   own: train 39806 test 16302; observed mean 0.0026, predicted 0.0029 (ratio 1.083, slope 1.043); LL gain +0.00180 [+0.00129,+0.00235]  => PASS
+   by x of the loss point: (-1, 30]: L observed +0.0103 predicted +0.0121 (n=820); (30, 50]: L observed +0.0041 predicted +0.0051 (n=1953); (50, 70]: L observed +0.0013 predicted +0.0009 (n=3022); (70, 85]: L observed +0.0003 predicted -0.0009 (n=2589); (85, 100]: L observed -0.0027 predicted -0.0028 (n=2907); (100, 121]: L observed -0.0061 predicted -0.0065 (n=5011)
+   L predicted: 1st/10th/50th/90th/99th percentile -0.0156, -0.0077, -0.0011, +0.0036, +0.0214; (old line follows) 10th/50th/90th -0.0077, -0.0011, +0.0036; share of losses with L > 0.05: 0.2%
+   situation dependence inside our own 40 units (teammates behind the ball): (-0.001, 2.0]: L predicted +0.0121, observed +0.0106 (n=607); (2.0, 6.0]: L predicted +0.0089, observed +0.0061 (n=593); (6.0, 10.0]: L predicted +0.0068, observed +0.0081 (n=367)
+   between-competition spread tau (test competitions only): opp 0.420 (3 comps), own 0.000 (3 comps)
 
 == P_keep (carries): train 20859 test 8420; observed keep rate 0.9037, predicted 0.8976 (ratio 0.993, slope 1.063); AUC for losing the ball 0.785  => PASS
-== P_dribble: train 2063 test 738; observed success 0.499, predicted 0.489 (ratio 0.980, slope 1.925); AUC 0.955  => FAIL
+== P_dribble: DROPPED from v1 (amendment B: failed its gate with an AUC of 0.955 that signals outcome leakage in the event-time frame)
 == V_pos frozen xA_chain: test n=7977 (kept carries 7609, completed dribbles 368); realised own chain 0.0225, predicted 0.0264 (ratio 1.174, slope 0.654)  => FAIL
 == V_pos refit on carries/dribbles: test n=7977 (kept carries 7609, completed dribbles 368); realised own chain 0.0225, predicted 0.0258 (ratio 1.147, slope 1.008)  => PASS
    V_pos by destination distance to goal (m): (0, 12]: realised 0.1732 frozen 0.1708 refit 0.1951 (n=180); (12, 20]: realised 0.0604 frozen 0.0623 refit 0.0666 (n=1235); (20, 30]: realised 0.0195 frozen 0.0259 refit 0.0230 (n=2553); (30, 80]: realised 0.0060 frozen 0.0092 refit 0.0074 (n=4009)
    between-competition spread tau of V_pos (refit, test competitions): 0.178 (3 comps)
 
-GATES: {'L_opp': 'FAIL', 'L_own': 'PASS', 'P_keep': 'PASS', 'P_dribble': 'FAIL', 'V_pos frozen xA_chain': 'FAIL', 'V_pos refit on carries/dribbles': 'PASS'}
+Q_lo (score 0) = mean xG of 275 one-on-one open-play shots in the training competitions = 0.231; Q_hi = 0.70
+
+GATES: {'L_opp': 'PASS', 'L_own': 'PASS', 'P_keep': 'PASS', 'V_pos frozen xA_chain': 'FAIL', 'V_pos refit on carries/dribbles': 'PASS'}
