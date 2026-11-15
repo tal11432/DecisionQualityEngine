@@ -386,3 +386,23 @@ Dataset: 1,787 test shots and 7,427 test passes (any type, completed or not) mad
 * xG: unchanged; further tweaks of the same inputs are not worthwhile.
 * Pass value: the level over-prediction (12-17%) now shows up in two independent datasets, which supports the use of a +-30% band rather than a point value.
 * Next steps that need new information rather than more tuning: tracking data with velocities, goalkeeper movement, and, if obtainable lawfully, player attributes.
+
+## 15. DQ-v9: trying to improve the pass (chain) value, a negative result
+
+Pre-registration `research/dq/PREREG_DQ_v9.txt`; scripts `fetch_v9.py`, `eval_v9.py`; output `eval_v9_out.txt`. 989 MB transferred (2,254 men's matches; 360 frames where available), processed in memory, tables deleted. Same test sets as v6-v8.
+
+**What was tried** (all pre-registered, all general, none specific to a league):
+* **V1:** 10 new features known before the pass: type of possession (counter / set-piece phase / other), passes and seconds so far in the possession, attackers and defenders in the box, teammates near and ahead of the target, defenders between the target and the goal, and pressure on the passer.
+* **V2:** a two-part model: probability that the chain contains a shot, times the expected xG of that shot.
+* **V3:** V2 plus a baseline learned from 563,679 passes of all matches (events only; about 27 times the 360 sample), cross-fitted by competition.
+* **Diagnostic:** the same model given the defenders' positions at the moment of **reception**, which cannot be known at decision time.
+
+**Result: no improvement. Gate G-V9 failed.**
+* Leave-one-competition-out log loss: V0 0.07042, V1 0.07035, V2 0.07041, V3 0.07041. The differences are in the fourth decimal.
+* On the test sets: V1 vs V0 gain -0.0001 [-0.0003, +0.0001]; the ability to rank passes that lead to a shot (AUC) stays at 0.81 (0.807 for V0, 0.806 for V1); the over-prediction of the level stays (ratio 1.17); the MLS slope stays outside the allowed band (1.58).
+* **The ceiling is not the pass-time information.** Even the receipt-frame diagnostic improves the log likelihood by only +0.0002 (AUC 0.815). The positions of the players near the target, at pass time or at reception, carry almost all the signal that a static frame can carry; whether a shot follows within 10 s depends mostly on what happens next.
+* **Shot vs pass is unchanged:** better pass 63.8% (63.9% before), three-way verdict 46.4% / 26.5% / 27.2% (47.1% / 26.7% / 26.3% before), same by distance. The verdict does not depend on which of these models is used.
+
+**What this means.**
+* The pass value is near the limit of what this kind of data (single frames of 360 or a freeze frame) can give. The remaining uncertainty is the +-30% band, which we should keep reporting as is.
+* Improvements would need **different information**, not more modelling of the same frames: player movement (velocities and runs, available only from tracking), the identity or quality of the passer and receiver, or a different target (for example, the value after a longer horizon). We have not tested these. Tracking from Metrica (3 matches, 68 shots) is too small to learn a chain value.
