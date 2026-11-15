@@ -1,0 +1,12 @@
+noise: position sd 2.0 m, pass scale sd 0.09, shot scale sd 0.1
+
+(A) NOISE CRITERION: 208 shots with a clear verdict at FLOOR=0 (pass 114, shot 94); overall mean stability 0.680
+   margin c in [0, 0.005): n= 29, mean stability 0.461, share >= 0.9: 7%
+   margin c in [0.005, 0.01): n= 31, mean stability 0.490, share >= 0.9: 6%
+   margin c in [0.01, 0.02): n= 25, mean stability 0.629, share >= 0.9: 16%
+   margin c in [0.02, 0.03): n= 15, mean stability 0.668, share >= 0.9: 13%
+   margin c in [0.03, 0.05): n= 21, mean stability 0.801, share >= 0.9: 43%
+   margin c in [0.05, inf): n= 87, mean stability 0.808, share >= 0.9: 43%
+
+FLOOR* = 0.05 (not reached: no bin with mean stability >= 0.90 that persists)
+stability by the larger of the two values: (0.0, 0.05]: 0.55 (n=35); (0.05, 0.1]: 0.63 (n=61); (0.1, 0.3]: 0.73 (n=71); (0.3, 2.0]: 0.78 (n=41)

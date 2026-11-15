@@ -491,3 +491,19 @@ The rule fixed in advance (the first margin from which stability stays at 0.90 o
 **What changed.** Match reviews now use two tiers: **"clearly"** requires the ratio rule and a margin of at least 0.05 (stable in at least 90% of perturbations); **"leans"** is a margin of 0.02-0.05 (stability 0.8-0.9); smaller is "no clear difference". All 12 verdicts in the two match reviews were unchanged by the recalibration: the clear ones are well above 0.05, and none fell in the "leans" band.
 
 **Caveats.** The perturbation sizes (1 m, 15% and 10%) are assumptions, not measurements; the floor is absolute, while noise grows with the value level (the ratio rule handles part of that); the 90% stability level is a choice. Shots, not passes, were perturbed.
+
+### 18b. The same calibration with the noise sizes taken from data (DQ-v12b)
+
+Pre-registration `research/dq/PREREG_DQ_v12b.txt`; scripts `movement_noise.py` and `eval_v12b.py`; outputs `movement_noise_out.txt`, `eval_v12b_primary_out.txt`, `eval_v12b_long_out.txt`. 447 MB (in memory, deleted). The assumed noise sizes were replaced by measured ones:
+* **Position noise:** how far a player moves while a pass is in flight (Metrica tracking, 12,000 random frames): players within 25 m of the ball move on average 1.0 m in 0.4 s (per-axis sd 0.80 m, a short pass) and 2.5 m in 1 s (sd 1.98 m, a long pass).
+* **Pass value noise:** sd 0.09 (between-competition spread of the chain value); **shot value noise:** sd 0.10 (between-competition spread of the xG calibration).
+
+| Scenario | Stability at margin 0.02-0.03 / 0.03-0.05 / >= 0.05 | Floor by the pre-registered rule |
+|---|---|---|
+| **Short pass (0.4 s, sd 0.8 m)** | 0.84 / **0.90** / 0.91 | **0.03** |
+| Long pass (1 s, sd 2.0 m) | 0.67 / 0.80 / 0.81 | not reached (0.05 used) |
+
+* **A floor of 0.03 for short passes** (the first assumed floor was 0.05; the judgement call 0.02): verdicts survive 90% of the perturbations. For passes longer than about 15 m the freeze frame is too stale: even a margin above 0.05 survives only 81%, so verdicts for long passes are given with the 0.05 floor and a warning.
+* Larger values are more stable: 0.65 when the larger value is below 0.05, 0.72 for 0.05-0.1, 0.84 for 0.1-0.3, 0.89 above 0.3.
+* **The match reviews use 0.03 (short) / 0.05 (over 15 m), "leans" at half of that; all 12 verdicts are unchanged.**
+* **Caveat:** the displacement of a player is how stale the frame is for a hypothetical pass, not the measurement error of the frame, which cannot be measured with these data and is not included.

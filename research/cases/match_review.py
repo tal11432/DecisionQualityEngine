@@ -1,9 +1,9 @@
 """Goal-by-goal review of one match with the frozen DQ models (xG_geo + continuation for the shot; xP x chain value for the best visible teammate). Usage: python research/cases/match_review.py MATCH_ID"""
 import sys, json, gzip, urllib.request, numpy as np, pandas as pd
 sys.path.insert(0, "research/dq"); from tfcommon import steps, FEATS as HFT
-FLOOR = 0.05; LEAN = 0.02   # absolute floors (xG) calibrated in DQ-v12: 'clearly' needs the ratio rule (pass value x0.7 / x1.3) AND a conservative margin >= 0.05 (verdict stable in >= 90% of perturbations); 'leans' needs a margin of 0.02-0.05 (stability 0.8-0.9)
-def vv(bv, sv):
-    cp, cs = 0.7 * bv - sv, sv - 1.3 * bv
+FLOOR_SHORT, FLOOR_LONG = 0.03, 0.05   # absolute floors (xG) calibrated in DQ-v12b with noise taken from data: 'clearly' needs the ratio rule (pass value x0.7 / x1.3) AND a conservative margin >= the floor; the verdict then survives >= 90% of perturbations for a short pass (flight ~0.4 s); passes over 15 m (flight ~1 s) are noisier and use 0.05. 'leans' = half the floor
+def vv(bv, sv, d=0.0):
+    FLOOR = FLOOR_LONG if d > 15 else FLOOR_SHORT; LEAN = FLOOR / 2; cp, cs = 0.7 * bv - sv, sv - 1.3 * bv
     return "pass clearly better" if cp >= FLOOR else ("shot clearly better" if cs >= FLOOR else ("leans pass" if cp >= LEAN else ("leans shot" if cs >= LEAN else "no clear difference")))
 GX = 120.0; SC = np.array([105 / 120, 68 / 80]); mid = sys.argv[1]
 B = "https://raw.githubusercontent.com/statsbomb/open-data/master/data/"
@@ -57,15 +57,15 @@ for e in goals:
     print(f"   Model: shot value {shot_val:.2f} (xG {xg:.2f} + continuation {cont:.2f})")
     if hd: print("   This was a header: a pass was not a realistic alternative, so the comparison is shown but should not be read as advice.")
     elif kpp.get("cross"): print("   This was a first-time finish from a cross: passing was rarely a realistic alternative, so read the comparison with caution.")
-    def verdict(bv): return vv(bv, shot_val)
+    def verdict(o): return vv(o['v'], shot_val, o['d'])
     for c in live[:3]: print(f"     option: {c['d']:.0f} m away, {c['g']:.0f} m from goal; reaches him {c['xp']*100:.0f}%, chain value {c['xa']:.2f} => pass value {c['v']:.2f}; offside margin {c['margin']:+.1f} m => {c['status']}")
     rec = dict(minute=mn, team=tm, scorer=scorer, how=("header" if hd else ("first-time from a cross" if kpp.get("cross") else "foot")), shot=shot_val, dist=dist * 105 / 120, best=live[0] if live else None, sure=sure[0] if sure else None)
     if not live: print("   No receiver in view that is onside or in doubt. VERDICT: the shot was the only visible option.\n"); summary.append(rec); continue
     b, c0 = live[0], (sure[0] if sure else None)
     if b["status"] != "certain onside":
         print(f"   The best-valued option is in DOUBT; the next option that is certainly onside: " + (f"{c0['d']:.0f} m away, {c0['g']:.0f} m from goal, value {c0['v']:.2f}, onside by {c0['margin']:.1f} m" if c0 else "none in view"))
-        print(f"   VERDICT: counting the doubtful option: {verdict(b['v'])} (pass {b['v']:.2f} vs shot {shot_val:.2f}); counting only certain options: " + (f"{verdict(c0['v'])} (pass {c0['v']:.2f} vs shot {shot_val:.2f})" if c0 else "the shot was the only certain option") + "\n")
-    else: print(f"   VERDICT: {verdict(b['v'])}. Best pass value {b['v']:.2f} (certainly onside by {b['margin']:.1f} m) vs shot value {shot_val:.2f} (ratio {b['v']/shot_val:.2f}).\n")
+        print(f"   VERDICT: counting the doubtful option: {verdict(b)} (pass {b['v']:.2f} vs shot {shot_val:.2f}); counting only certain options: " + (f"{verdict(c0)} (pass {c0['v']:.2f} vs shot {shot_val:.2f})" if c0 else "the shot was the only certain option") + "\n")
+    else: print(f"   VERDICT: {verdict(b)}. Best pass value {b['v']:.2f} (certainly onside by {b['margin']:.1f} m) vs shot value {shot_val:.2f} (ratio {b['v']/shot_val:.2f}).\n")
     summary.append(rec)
 print("\nSUMMARY TABLE")
 print("| minute | team / scorer | kind | shot value | best option (value, status) | next certainly-onside option | verdict (certain options only) | verdict if the doubtful option counts |")
@@ -76,5 +76,5 @@ for r in summary:
     if b is None: print(f"| {r['minute']} | {r['team']} / {r['scorer']} | {r['how']} | {r['shot']:.2f} | none in view | none | shot only option | shot only option |"); continue
     st = "certain onside" if b["status"] == "certain onside" else "DOUBT"
     nxt = "(same)" if b["status"] == "certain onside" else (f"{c0['v']:.2f} ({c0['d']:.0f} m away)" if c0 else "none")
-    vc = vv(c0["v"], r["shot"]) if c0 else "shot only certain option"; va = vv(b["v"], r["shot"])
+    vc = vv(c0["v"], r["shot"], c0["d"]) if c0 else "shot only certain option"; va = vv(b["v"], r["shot"], b["d"])
     print(f"| {r['minute']} | {r['team']} / {r['scorer']} | {r['how']} | {r['shot']:.2f} | {b['v']:.2f} ({st}, {b['margin']:+.1f} m) | {nxt} | {vc} | {va} |")
