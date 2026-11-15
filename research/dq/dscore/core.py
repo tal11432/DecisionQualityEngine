@@ -60,10 +60,12 @@ class Situation:
         self.a = np.asarray(self.a, float); self.O = np.asarray(self.O, float).reshape(-1, 2); self.mates = [np.asarray(p, float) for p in self.mates]
         self.gk = DEFAULT_GK.copy() if self.gk is None or not np.all(np.isfinite(np.asarray(self.gk, float))) else np.asarray(self.gk, float)
 
+SHOT_CLIP = dict(nn_opp=9.1, gk_d=15.6, gk_lat=4.9)   # 99.5th percentile of the TRAIN shot freeze frames (amendment K): the shot model is not evaluated outside the range it was fitted on
+
 def shot_features(s: Situation, header=0):
     a, O, gk = s.a, s.O, s.gk; dd = np.hypot(*(O - a).T); v = np.array([GX, 40.0]) - a; dist = float(np.hypot(*v)); an = ang(*a)
-    return dict(dist=dist, angle=an, header=int(header), n_tri=sum(tri(o, a) for o in O), gk_d=float(np.hypot(GX - gk[0], 40 - gk[1])),
-                gk_lat=float(abs(v[0] * (gk[1] - a[1]) - v[1] * (gk[0] - a[0])) / (dist + 1e-9)), n_opp2=int((dd <= 2).sum()), nn_opp=float(dd.min()), da=dist * an, ldist=float(np.log(dist)))
+    return dict(dist=dist, angle=an, header=int(header), n_tri=sum(tri(o, a) for o in O), gk_d=min(float(np.hypot(GX - gk[0], 40 - gk[1])), SHOT_CLIP["gk_d"]),
+                gk_lat=min(float(abs(v[0] * (gk[1] - a[1]) - v[1] * (gk[0] - a[0])) / (dist + 1e-9)), SHOT_CLIP["gk_lat"]), n_opp2=int((dd <= 2).sum()), nn_opp=min(float(dd.min()), SHOT_CLIP["nn_opp"]), da=dist * an, ldist=float(np.log(dist)))
 
 def shot_value(s: Situation, header=0):
     """(xG, continuation, total value, features): xG_geo + the expected later shots of the possession within 10 s."""

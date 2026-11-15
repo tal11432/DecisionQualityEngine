@@ -122,7 +122,7 @@ def judge(s: Situation, chosen, header=0, include_doubt=False, scales=None):
     ch["score"] = q_to_score(ch["v"])
     for o in opts: o["score"] = q_to_score(o["v"])
     ok = [o for o in opts if o["status"] == "certain onside" or (include_doubt and o["status"].startswith("DOUBT"))]
-    best = max(ok + ([ch] if ch not in ok else []), key=lambda o: o["v"])
+    best = max(ok + ([] if any(o is ch for o in ok) else [ch]), key=lambda o: o["v"])      # identity, not ==: the option dicts hold numpy arrays
     return dict(options=opts, chosen=ch, best=best, score_chosen=ch["score"], score_best=best["score"], gap_points=best["score"] - ch["score"], gap_xg=best["v"] - ch["v"],
                 score_worst=min(o["score"] for o in opts), q_chosen=ch["v"], q_best=best["v"], counter_assumed_chosen=bool(ch.get("counter_assumed", False)), counter_assumed_best=bool(best.get("counter_assumed", False)),
                 counter_assumed_any=any(o.get("counter_assumed", False) for o in opts))
