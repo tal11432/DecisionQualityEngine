@@ -15,10 +15,15 @@ LONG_PASS_M = 15.0
 
 _M = {}
 def models():
-    """Frozen models, loaded once: xG_geo (v5), xA_chain and shot continuation (v6), xP hazard (tf_model)."""
+    """Models, loaded once: xG_geo (v5), shot continuation (v6), xP hazard (tf_model), and the whole-pitch models of amendment J (v16: xA_chain_all, P_keep_all, V_pos_all, per-zone xP recalibration) when v16_models.pkl exists."""
     if not _M:
         _M["v5"] = pd.read_pickle(os.path.join(DQ, "v5_models.pkl")); _M["v6"] = pd.read_pickle(os.path.join(DQ, "v6_models.pkl")); _M["hz"] = pd.read_pickle(os.path.join(DQ, "tf_model.pkl"))
+        f16 = os.path.join(DQ, "v16_models.pkl"); _M["v16"] = pd.read_pickle(f16) if os.path.exists(f16) else None
     return _M
+
+DEFAULT_GK = np.array([118.0, 40.0])             # the opposing keeper when he is not in the 360 frame (only the shot features use him)
+SHOT_MIN_X = 60.0                                # below this the shot option does not exist (amendment J)
+def zone(x): return "own third" if x < 40 else ("middle" if x < 80 else "attacking")
 
 def sgm(m, X):
     """Logistic model stored as {mu, sd, b}: probability for one feature vector."""
@@ -52,7 +57,8 @@ class Situation:
     mates: list
     gk: np.ndarray
     def __post_init__(self):
-        self.a = np.asarray(self.a, float); self.O = np.asarray(self.O, float).reshape(-1, 2); self.mates = [np.asarray(p, float) for p in self.mates]; self.gk = np.asarray(self.gk, float)
+        self.a = np.asarray(self.a, float); self.O = np.asarray(self.O, float).reshape(-1, 2); self.mates = [np.asarray(p, float) for p in self.mates]
+        self.gk = DEFAULT_GK.copy() if self.gk is None or not np.all(np.isfinite(np.asarray(self.gk, float))) else np.asarray(self.gk, float)
 
 def shot_features(s: Situation, header=0):
     a, O, gk = s.a, s.O, s.gk; dd = np.hypot(*(O - a).T); v = np.array([GX, 40.0]) - a; dist = float(np.hypot(*v)); an = ang(*a)
@@ -75,14 +81,27 @@ def offside_line(s: Situation):
     """x of the offside line (second-last visible opponent, or the ball if further)."""
     ox = np.sort(s.O[:, 0]); return max(ox[-2] if len(ox) > 1 else ox[-1], s.a[0])
 
+def target_features(a, O, gk, p):
+    """Features of the point p reached from the ball carrier a (a pass target or a carry destination): the v6 feature set plus ldist, used by the whole-pitch models of amendment J (no keeper distance in the whole-pitch version, but gk_d is still returned for the frozen v6 model)."""
+    a, p = np.asarray(a, float), np.asarray(p, float); dp = np.hypot(*(O - p).T) if len(O) else np.array([99.0]); dist_p = float(np.hypot(GX - p[0], 40 - p[1])); an_p = ang(*p); pdist = float(np.hypot(GX - a[0], 40 - a[1]))
+    return dict(dist=dist_p, angle=an_p, x=float(p[0]), d2=dist_p ** 2, ad=an_p * dist_p, ldist=float(np.log(max(dist_p, 1.0))), n_tri=sum(tri(o, p) for o in O), n3=int((dp <= 3).sum()), n6=int((dp <= 6).sum()), nn=float(dp.min()),
+                gk_d=float(np.hypot(GX - gk[0], 40 - gk[1])), plen=float(np.hypot(*(p - a))), fwd=float(p[0] - a[0]), pdist=pdist)
+
+def xp_recalibrated(xp, a_x):
+    """xP with the per-zone logistic recalibration of amendment J when the fitted model recorded one for the passer's zone (else unchanged)."""
+    m = models()["v16"]
+    if m is None: return xp
+    cal = m.get("xp_cal", {}).get(zone(a_x))
+    if cal is None: return xp
+    l = np.log(np.clip(xp, 1e-6, 1 - 1e-6) / (1 - np.clip(xp, 1e-6, 1 - 1e-6))); return float(1 / (1 + np.exp(-(cal[0] + cal[1] * l))))
+
 def pass_option_at(s: Situation, p, line=None):
-    """Ground pass from the ball carrier to point p (any distance): xP x chain value, offside margin and status. No range filter."""
-    M = models(); a, O, gk = s.a, s.O, s.gk; p = np.asarray(p, float); line = offside_line(s) if line is None else line; pdist = float(np.hypot(GX - a[0], 40 - a[1]))
+    """Ground pass from the ball carrier to point p (any distance): xP x chain value, offside margin and status. No range filter. Whole-pitch chain value (amendment J) when v16_models.pkl exists, else the frozen v6 model."""
+    M = models(); a, O, gk = s.a, s.O, s.gk; p = np.asarray(p, float); line = offside_line(s) if line is None else line
     margin_m = float((line - p[0]) * 105 / 120); status = offside_status(margin_m, p[0], len(O)); d = float(np.hypot(*((p - a) * SC)))
-    dp = np.hypot(*(O - p).T); dist_p = float(np.hypot(GX - p[0], 40 - p[1])); an_p = ang(*p)
-    ft = dict(dist=dist_p, angle=an_p, x=p[0], d2=dist_p ** 2, ad=an_p * dist_p, n_tri=sum(tri(o, p) for o in O), n3=int((dp <= 3).sum()), n6=int((dp <= 6).sum()), nn=float(dp.min()), gk_d=float(np.hypot(GX - gk[0], 40 - gk[1])), plen=float(np.hypot(*(p - a))), fwd=float(p[0] - a[0]), pdist=pdist)
-    xa = sgm(M["v6"]["xA_chain"], [ft[k] for k in M["v6"]["xA_chain"]["F"]]); xp = xp_hazard(a, p, O)
-    return dict(v=xp * xa, xp=xp, xa=xa, d=d, g=dist_p * 105 / 120, margin=margin_m, status=status, target=p)
+    ft = target_features(a, O, gk, p); mx = M["v16"]["xA_chain_all"] if M["v16"] is not None else M["v6"]["xA_chain"]
+    xa = sgm(mx, [ft[k] for k in mx["F"]]); xp = xp_recalibrated(xp_hazard(a, p, O), a[0])
+    return dict(v=xp * xa, xp=xp, xa=xa, d=d, g=ft["dist"] * 105 / 120, margin=margin_m, status=status, target=p)
 
 def pass_options(s: Situation):
     """Ground-pass options to every visible teammate 3-40 m away: value = xP x chain value, with offside status. Returns the list unsorted."""

@@ -66,11 +66,15 @@ def loss_danger(p, O, T, kind="pass"):
     if _ASSUME["on"] and adv >= 2 and p[0] <= 70: L = max(L, float(v15()["C"]))
     return L
 
+def carry_features(s: Situation, d, st, T, pdist):
+    """Features of a carry from s.a to d (start context st = _around(s.a, ...)); the whole-pitch models of amendment J use dist ... pdist, s_* (no keeper distance); gk_d is kept for the frozen v13 models."""
+    a, O, gk = s.a, s.O, s.gk; ar = _around(d, O, T); f = core.target_features(a, O, gk, d)
+    f.update(n3=ar["n_opp3"], n6=ar["n_opp6"], nn=ar["nn_opp"], L=f["plen"], pdist=pdist, s_n_opp3=st["n_opp3"], s_nn_opp=st["nn_opp"], s_n_opp6=st["n_opp6"]); return f
+
 def _carry_option(s: Situation, d, st, T, pdist, m):
-    a, O, gk = s.a, s.O, s.gk; ar = _around(d, O, T); dist = float(np.hypot(GX - d[0], 40 - d[1])); an = ang(*d); Lu = float(np.hypot(*(d - a)))
-    f = dict(dist=dist, angle=an, x=d[0], d2=dist ** 2, ad=an * dist, n_tri=sum(tri(o, d) for o in O), n3=ar["n_opp3"], n6=ar["n_opp6"], nn=ar["nn_opp"], gk_d=float(np.hypot(GX - gk[0], 40 - gk[1])), plen=Lu, L=Lu, fwd=float(d[0] - a[0]), pdist=pdist,
-             s_n_opp3=st["n_opp3"], s_nn_opp=st["nn_opp"], s_n_opp6=st["n_opp6"])
-    pk = sgm(m["P_keep"], [f[k2] for k2 in m["P_keep"]["F"]]); vp = sgm(m["V_pos_refit"], [f[k2] for k2 in m["V_pos_refit"]["F"]]); lo = loss_danger(d, O, T, "dispossessed")
+    a, O, gk = s.a, s.O, s.gk; f = carry_features(s, d, st, T, pdist); M16 = core.models()["v16"]
+    mk, mv = (M16["P_keep_all"], M16["V_pos_all"]) if M16 is not None else (m["P_keep"], m["V_pos_refit"])
+    pk = sgm(mk, [f[k2] for k2 in mk["F"]]); vp = sgm(mv, [f[k2] for k2 in mv["F"]]); lo = loss_danger(d, O, T, "dispossessed")
     return dict(kind="carry", v=pk * vp - (1 - pk) * lo, p_keep=pk, value_after=vp, loss=lo, target=d, status="certain onside", counter_assumed=bool(_ASSUME["on"] and counter_flag(d, O, T)))
 
 def carry_options(s: Situation, lengths_m=(3, 6, 10), n_dirs=8):
@@ -89,7 +93,9 @@ def carry_value(s: Situation, dest):
 
 def all_options(s: Situation, header=0, carries=False):
     """Every option of the moment with its value Q: shot, passes (with offside status), the unforced turnover; hypothetical carries only when carries=True (NOT supported in v1, amendment C)."""
-    T = np.array(s.mates, float).reshape(-1, 2); xg, cont, sv, _ = core.shot_value(s, header); opts = [dict(kind="shot", v=sv, xg=xg, cont=cont, status="certain onside", target=None)]
+    T = np.array(s.mates, float).reshape(-1, 2); opts = []
+    if s.a[0] >= core.SHOT_MIN_X:                                                    # amendment J: below x = 60 the shot option does not exist
+        xg, cont, sv, _ = core.shot_value(s, header); opts.append(dict(kind="shot", v=sv, xg=xg, cont=cont, status="certain onside", target=None))
     for o in core.pass_options(s):
         lo = loss_danger(o["target"], s.O, T, "pass"); o = dict(o, kind="pass", loss=lo, v=o["xp"] * o["xa"] - (1 - o["xp"]) * lo, counter_assumed=bool(_ASSUME["on"] and counter_flag(o["target"], s.O, T))); opts.append(o)
     if carries: opts += carry_options(s)
@@ -105,7 +111,9 @@ def judge(s: Situation, chosen, header=0, include_doubt=False, scales=None):
     """chosen = ("shot",) | ("pass", xy) | ("carry", xy). Returns the option table, the score of the option taken, the best option's score and the gap (points and xG).
     The headline uses CERTAIN options only (offside doubt excluded); include_doubt=True also counts options in doubt."""
     opts = all_options(s, header); kind = chosen[0]
-    if kind == "shot": ch = next(o for o in opts if o["kind"] == "shot")
+    if kind == "shot":
+        ch = next((o for o in opts if o["kind"] == "shot"), None)
+        if ch is None: raise ValueError("shot option does not exist below x = 60")
     elif kind == "carry": ch = carry_value(s, chosen[1])
     elif kind == "pass": ch = pass_value(s, chosen[1])
     else: raise ValueError(kind)
