@@ -1,0 +1,1 @@
+test decisions 109984: {'pass': np.int64(56787), 'carry': np.int64(50758), 'shot': np.int64(2439)}; by zone {'middle': np.int64(57743), 'attacking': np.int64(26722), 'own third': np.int64(25519)}; competitions {'UEFA Euro 2024': np.int64(63665), '1. Bundesliga 2023/2024': np.int64(42202), 'Major League Soccer 2023': np.int64(3556), 'Copa America 2024': np.int64(561)}

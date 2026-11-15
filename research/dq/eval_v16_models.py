@@ -20,6 +20,13 @@ def slope(y, p):
         q = 1 / (1 + np.exp(-Z @ b)); s = np.linalg.solve((Z * (q * (1 - q))[:, None]).T @ Z + 1e-9 * np.eye(2), Z.T @ (y - q)); b += s
         if np.abs(s).max() < 1e-10: break
     return b[1]
+lgc = lambda p: np.clip(lg(p), -8.0, 8.0)                                  # logit clipped at +-8 for the xP calibration (xP is within 1e-9 of 1 for many own-third passes; the unclipped fit diverged)
+def slope_c(y, p, ridge=1e-3):
+    Z = np.column_stack([np.ones(len(p)), lgc(p)]); b = np.array([0.0, 1.0]); R = ridge * np.eye(2)
+    for _ in range(200):
+        q = 1 / (1 + np.exp(-np.clip(Z @ b, -30, 30))); s = np.clip(np.linalg.solve((Z * (q * (1 - q))[:, None]).T @ Z + R, Z.T @ (y - q) - R @ (b - np.array([0.0, 1.0]))), -2, 2); b += s
+        if np.abs(s).max() < 1e-9: break
+    return b
 def auc(y, p): r = pd.Series(p).rank().to_numpy(); n1 = (y > 0.5).sum(); return (r[y > 0.5].sum() - n1 * (n1 + 1) / 2) / (n1 * (len(y) - n1))
 def mboot(v, mt, B=300):
     um = np.unique(mt); g = {u: np.flatnonzero(mt == u) for u in um}; b = [v[np.concatenate([g[u] for u in rng.choice(um, len(um))])].mean() for _ in range(B)]; return np.percentile(b, [2.5, 97.5])
@@ -63,14 +70,11 @@ xp_of = lambda df: np.array([core.xp_hazard(np.array([r.ax, r.ay], float), np.ar
 trn = trn.assign(xp=xp_of(trn)); tst = tst.assign(xp=xp_of(tst)); cal = {}
 print(f"\n== xP (frozen hazard model) vs completion, per zone of the passer (target = where the ball ended; failed passes make this approximate); TRAIN sample {len(trn)} (20,000 per zone), test {len(tst)}")
 for z in ZN:
-    g_ = tst[tst.z == z]; y = g_.completed.to_numpy(float); p = g_.xp.to_numpy(float); ok0 = 0.95 <= p.mean() / y.mean() <= 1.05 and 0.8 <= slope(y, p) <= 1.2
-    print(f"   {z}: n={len(g_)}, observed completion {y.mean():.4f}, xP {p.mean():.4f} (ratio {p.mean()/y.mean():.3f}, slope {slope(y, p):.3f}, AUC {auc(y, p):.3f}) => {'PASS' if ok0 else 'FAIL'}", end="")
+    g_ = tst[tst.z == z]; y = g_.completed.to_numpy(float); p = g_.xp.to_numpy(float); ok0 = 0.95 <= p.mean() / y.mean() <= 1.05 and 0.8 <= slope_c(y, p)[1] <= 1.2
+    print(f"   {z}: n={len(g_)}, observed completion {y.mean():.4f}, xP {p.mean():.4f} (ratio {p.mean()/y.mean():.3f}, slope {slope_c(y, p)[1]:.3f}, AUC {auc(y, p):.3f}) => {'PASS' if ok0 else 'FAIL'}", end="")
     if ok0: print(); gates[f"xP {z}"] = True; continue
-    t_ = trn[trn.z == z]; Z = np.column_stack([np.ones(len(t_)), lg(t_.xp.to_numpy(float))]); b = np.array([0.0, 1.0]); yy = t_.completed.to_numpy(float)
-    for _ in range(100):
-        q = 1 / (1 + np.exp(-Z @ b)); s_ = np.linalg.solve((Z * (q * (1 - q))[:, None]).T @ Z + 1e-9 * np.eye(2), Z.T @ (yy - q)); b += s_
-        if np.abs(s_).max() < 1e-10: break
-    cal[z] = (float(b[0]), float(b[1])); p2 = 1 / (1 + np.exp(-(b[0] + b[1] * lg(p)))); ok1 = 0.95 <= p2.mean() / y.mean() <= 1.05 and 0.8 <= slope(y, p2) <= 1.2; gates[f"xP {z}"] = bool(ok1)
-    print(f"; recalibrated on TRAIN (a={b[0]:+.3f}, b={b[1]:.3f}): xP {p2.mean():.4f} (ratio {p2.mean()/y.mean():.3f}, slope {slope(y, p2):.3f}) => {'PASS' if ok1 else 'NOT CALIBRATED'}")
+    t_ = trn[trn.z == z]; b = slope_c(t_.completed.to_numpy(float), t_.xp.to_numpy(float)); cal[z] = (float(b[0]), float(b[1]))
+    p2 = 1 / (1 + np.exp(-(b[0] + b[1] * lgc(p)))); ok1 = 0.95 <= p2.mean() / y.mean() <= 1.05 and 0.8 <= slope_c(y, p2)[1] <= 1.2; gates[f"xP {z}"] = bool(ok1)
+    print(f"; recalibrated on TRAIN (a={b[0]:+.3f}, b={b[1]:.3f}, logit clipped at +-8): xP {p2.mean():.4f} (ratio {p2.mean()/y.mean():.3f}, slope {slope_c(y, p2)[1]:.3f}, AUC {auc(y, p2):.3f}) => {'PASS' if ok1 else 'NOT CALIBRATED'}")
 print("\nGATES:", {k: ("PASS" if v else "FAIL") for k, v in gates.items()})
 pd.to_pickle(dict(xA_chain_all=dict(F=F_XA, **f1.coef), P_keep_all=dict(F=F_PK, **fk.coef), V_pos_all=dict(F=F_XA, **fv.coef), xp_cal=cal, gates=gates), f"{D}/v16_models.pkl")

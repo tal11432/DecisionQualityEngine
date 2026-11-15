@@ -1,0 +1,18 @@
+data: 379569 decisions {'pass': np.int64(196490), 'carry': np.int64(175746), 'shot': np.int64(7333)}; test 109984; keeper in the frame in 20% (own third 0%)
+
+== xA_chain_all (completed passes, target anywhere): train 131047, test 53566; realised chain 0.0046, predicted 0.0050 (ratio 1.101, slope 0.948); LL gain +0.00475 [+0.00405,+0.00552] => PASS
+   by zone of the target: attacking: n=12407, realised 0.0147, predicted 0.0166 (ratio 1.12, slope 0.96); middle: n=29447, realised 0.0020, predicted 0.0021 (ratio 1.04, slope 0.74); own third: n=11712, realised 0.0002, predicted 0.0002 (ratio 0.86, slope 2.52)
+   reference, frozen v6 model on test passes ending at x >= 60 (its support): realised 0.0082, v6 0.0064, new model 0.0093
+
+== P_keep_all (carries anywhere): train 124988, test 50758; observed keep rate 0.9443, predicted 0.9412 (ratio 0.997, slope 1.067); AUC for losing the ball 0.838 => PASS
+   by zone of the start: attacking: n=11816, keep observed 0.8955 predicted 0.8907; middle: n=25884, keep observed 0.9567 predicted 0.9525; own third: n=13058, keep observed 0.9640 predicted 0.9645
+
+== V_pos_all (kept carries, value of the destination): train 117459, test 47933; realised chain 0.0063, predicted 0.0067 (ratio 1.048, slope 0.968) => PASS
+   by zone of the start: attacking: n=10581, realised 0.0197 predicted 0.0216 (ratio 1.10); middle: n=24764, realised 0.0036 predicted 0.0034 (ratio 0.94); own third: n=12588, realised 0.0005 predicted 0.0005 (ratio 0.98)
+
+== xP (frozen hazard model) vs completion, per zone of the passer (target = where the ball ended; failed passes make this approximate); TRAIN sample 60000 (20,000 per zone), test 56787
+   own third: n=12461, observed completion 0.9577, xP 0.9897 (ratio 1.033, slope 1.000, AUC 0.755) => PASS
+   middle: n=31844, observed completion 0.9580, xP 0.9689 (ratio 1.011, slope 0.584, AUC 0.749) => FAIL; recalibrated on TRAIN (a=+0.907, b=0.544, logit clipped at +-8): xP 0.9553 (ratio 0.997, slope 1.072, AUC 0.749) => PASS
+   attacking: n=12482, observed completion 0.8913, xP 0.9268 (ratio 1.040, slope 0.492, AUC 0.704) => FAIL; recalibrated on TRAIN (a=+0.657, b=0.442, logit clipped at +-8): xP 0.8804 (ratio 0.988, slope 1.113, AUC 0.704) => PASS
+
+GATES: {'xA_chain_all': 'PASS', 'P_keep_all': 'PASS', 'V_pos_all': 'PASS', 'xP own third': 'PASS', 'xP middle': 'PASS', 'xP attacking': 'PASS'}

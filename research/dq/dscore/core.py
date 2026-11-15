@@ -93,7 +93,7 @@ def xp_recalibrated(xp, a_x):
     if m is None: return xp
     cal = m.get("xp_cal", {}).get(zone(a_x))
     if cal is None: return xp
-    l = np.log(np.clip(xp, 1e-6, 1 - 1e-6) / (1 - np.clip(xp, 1e-6, 1 - 1e-6))); return float(1 / (1 + np.exp(-(cal[0] + cal[1] * l))))
+    l = float(np.clip(np.log(np.clip(xp, 1e-9, 1 - 1e-9) / (1 - np.clip(xp, 1e-9, 1 - 1e-9))), -8.0, 8.0)); return float(1 / (1 + np.exp(-(cal[0] + cal[1] * l))))
 
 def pass_option_at(s: Situation, p, line=None):
     """Ground pass from the ball carrier to point p (any distance): xP x chain value, offside margin and status. No range filter. Whole-pitch chain value (amendment J) when v16_models.pkl exists, else the frozen v6 model."""
