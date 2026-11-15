@@ -1,0 +1,36 @@
+test decisions 17867: {'pass': np.int64(7920), 'carry': np.int64(7523), 'shot': np.int64(2424)}; competitions {'UEFA Euro 2024': np.int64(10065), '1. Bundesliga 2023/2024': np.int64(6689), 'Major League Soccer 2023': np.int64(557), 'Copa America 2024': np.int64(556)}
+
+== DISTRIBUTION of the score of the option taken, by kind (test):
+   carry: n=7523, score_chosen mean 51.9 (10th/50th/90th 50/51/54); gap points mean 1.9, median 1, share with gap 0 33%, gap > 10 pts 2%; best option kind {'pass': np.float64(0.63), 'shot': np.float64(0.23), 'carry': np.float64(0.15)}
+   pass: n=7920, score_chosen mean 51.4 (10th/50th/90th 50/51/53); gap points mean 1.1, median 1, share with gap 0 34%, gap > 10 pts 1%; best option kind {'pass': np.float64(0.88), 'shot': np.float64(0.12)}
+   shot: n=2424, score_chosen mean 57.6 (10th/50th/90th 51/54/69); gap points mean 2.6, median 1, share with gap 0 48%, gap > 10 pts 6%; best option kind {'pass': np.float64(0.59), 'shot': np.float64(0.41)}
+
+== G-calibration: predicted Q of the option taken vs realised net xG of the next 10 s (own - opponent; + the shot's own xG for shots)
+   ALL: n=17867, mean Q +0.0345, mean realised +0.0293, ratio 1.18
+   carry: n=7523, mean Q +0.0263, mean realised +0.0210, ratio 1.25
+   pass: n=7920, mean Q +0.0201, mean realised +0.0147, ratio 1.37
+   shot: n=2424, mean Q +0.1073, mean realised +0.1031, ratio 1.04
+   passes completed: n=6981, mean Q +0.0173, mean realised +0.0162, ratio 1.07
+   passes failed (target = where the ball stopped): n=939, mean Q +0.0410, mean realised +0.0034, ratio 12.22
+   deciles of score_chosen: D1: score 50, Q +0.004, realised +0.005; D2: score 50, Q +0.004, realised +0.002; D3: score 51, Q +0.012, realised +0.011; D4: score 51, Q +0.013, realised +0.010; D5: score 51, Q +0.013, realised +0.010; D6: score 51, Q +0.013, realised +0.009; D7: score 52, Q +0.026, realised +0.021; D8: score 52, Q +0.034, realised +0.027; D9: score 54, Q +0.054, realised +0.046; D10: score 62, Q +0.172, realised +0.152
+   Spearman across deciles 0.90 [0.90,0.99]; pooled mean Q / mean realised = 1.18  => G-calibration FAIL
+
+== G-gap: inside terciles of Q_best, realised value of the top vs bottom tercile of the gap (expected: top gap realises LESS)
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/pandas/core/indexes/base.py", line 3641, in get_loc
+    return self._engine.get_loc(casted_key)
+  File "pandas/_libs/index.pyx", line 168, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 176, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 583, in pandas._libs.index.StringObjectEngine._check_type
+KeyError: False
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/DecisionQualityEngine/research/dq/eval_v14.py", line 36, in <module>
+    g = g.assign(gt=pd.qcut(g.gap_xg.rank(method="first"), 3, labels=False)); hi, lo = g[g.gt == 2], g[g.gt == 0]; diff = hi.realised.mean() - lo.realised.mean(); bs = []
+  File "/usr/local/lib/python3.13/site-packages/pandas/core/frame.py", line 4378, in __getitem__
+    indexer = self.columns.get_loc(key)
+  File "/usr/local/lib/python3.13/site-packages/pandas/core/indexes/base.py", line 3648, in get_loc
+    raise KeyError(key) from err
+KeyError: False
