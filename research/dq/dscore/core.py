@@ -92,7 +92,7 @@ def target_features(a, O, gk, p):
 def xp_recalibrated(xp, a_x):
     """xP with the per-zone logistic recalibration of amendment J when the fitted model recorded one for the passer's zone (else unchanged)."""
     m = models()["v16"]
-    if m is None: return xp
+    if m is None or os.environ.get("DQ_XP_CAL") != "1": return xp          # amendment L: the recalibration is a sensitivity variant, off in the primary score
     cal = m.get("xp_cal", {}).get(zone(a_x))
     if cal is None: return xp
     l = float(np.clip(np.log(np.clip(xp, 1e-9, 1 - 1e-9) / (1 - np.clip(xp, 1e-9, 1 - 1e-9))), -8.0, 8.0)); return float(1 / (1 + np.exp(-(cal[0] + cal[1] * l))))

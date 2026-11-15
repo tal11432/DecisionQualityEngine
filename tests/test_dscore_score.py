@@ -102,3 +102,37 @@ def test_assumption_is_off_by_switch_and_flagged_on_options():
     on = S.loss_danger(p, O, T, "pass"); assert on > off                                   # A1 on by default, the switch restores the model
     j = S.judge_both(_sit([112.0, 40.0]), ("shot",))
     assert j["q_chosen"] == j["q_chosen_model"] and j["score_chosen"] == j["score_chosen_model"] and j["counter_assumed_chosen"] is False   # a shot is untouched by the assumption
+
+
+# ---------------------------------------------------------------- whole pitch (amendment J)
+def test_no_shot_option_below_x60_and_a_chosen_shot_there_is_refused():
+    s = Situation([40.0, 40.0], np.array([[60.0, 40.0], [70.0, 30.0]]), [np.array([55.0, 45.0])], None)
+    assert all(o["kind"] != "shot" for o in S.all_options(s))
+    try: S.judge(s, ("shot",)); assert False
+    except ValueError: pass
+    assert any(o["kind"] == "shot" for o in S.all_options(Situation([70.0, 40.0], np.array([[100.0, 40.0]]), [], None)))
+
+
+def test_missing_keeper_uses_the_default_and_decisions_are_scored_anywhere():
+    s = Situation([30.0, 40.0], np.array([[50.0, 40.0], [45.0, 30.0], [20.0, 42.0]]), [np.array([40.0, 50.0]), np.array([22.0, 30.0])], None)
+    assert list(s.gk) == [118.0, 40.0]
+    j = S.judge(s, ("pass", [40.0, 50.0])); assert 0 <= j["score_chosen"] <= 100 and j["gap_points"] >= 0
+    c = S.judge(s, ("carry", [35.0, 40.0])); assert 0 <= c["score_chosen"] <= 100
+
+
+def test_shot_model_is_not_extrapolated_when_no_opponent_is_near():
+    # a frame in which the nearest visible opponent is 60 units away: the clipped features must not give a wild xG from 38 units
+    s = Situation([91.0, 65.0], np.array([[30.0, 40.0], [25.0, 20.0]]), [], None)
+    xg = S.core.shot_value(s)[0]
+    assert xg < 0.15
+
+
+def test_chosen_pass_to_a_teammate_position_does_not_break_the_best_option():
+    s = _sit([100.0, 40.0], mates=[[108.0, 38.0]])
+    j = S.judge(s, ("pass", [108.0, 38.0])); assert j["best"]["v"] >= j["chosen"]["v"] - 1e-12      # the identity check, not dict equality with numpy arrays
+
+
+def test_frozen_xp_is_the_primary_and_the_recalibration_is_a_switch(monkeypatch):
+    s = _sit([100.0, 40.0], mates=[[108.0, 38.0]]); base = S.pass_value(s, [108.0, 38.0])["xp"]
+    monkeypatch.setenv("DQ_XP_CAL", "1"); cal = S.pass_value(s, [108.0, 38.0])["xp"]
+    monkeypatch.delenv("DQ_XP_CAL"); assert S.pass_value(s, [108.0, 38.0])["xp"] == base and 0.0 < cal < 1.0

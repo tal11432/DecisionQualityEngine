@@ -22,7 +22,7 @@ def perturb(args):
     o = score_row(r2, scales={"shot": float(np.exp(g.normal(0, 0.10))), "pass": float(np.exp(g.normal(0, 0.09))), "carry": float(np.exp(g.normal(0, 0.178)))}); return o["score_chosen"], o["gap_points"]
 if __name__ == "__main__":
     t_start = pd.Timestamp.now(); print(f"test decisions {len(Dd)}: {dict(Dd.kind.value_counts())}; by zone {dict(Dd.zone.value_counts())}; competitions {dict(Dd.comp.value_counts())}", flush=True)
-    RAW = f"{D}/v16_scored_raw.pkl"
+    VAR = os.environ.get("DQ_XP_CAL") == "1"; print("VARIANT:", "SENSITIVITY with the per-zone xP recalibration (DQ_XP_CAL=1)" if VAR else "PRIMARY with the frozen xP (amendment L)"); RAW = f"{D}/v16_scored_raw{'_xpcal' if VAR else ''}.pkl"
     if os.path.exists(RAW): R = pd.read_pickle(RAW).to_dict("records"); print("loaded cached scoring", len(R))
     else:
         with Pool(4) as pool: R = pool.map(work, range(len(Dd)), chunksize=200)
@@ -94,7 +94,8 @@ if __name__ == "__main__":
     sure = Situation([112.0, 40.0], np.array([[118.0, 52.0], [100.0, 25.0], [95.0, 55.0]]), [[108.0, 36.0], [105.0, 44.0]], [118.0, 52.0])
     print("   shot at an almost open goal from 8 units with the keeper out of position:", both(sure, ("shot",)))
     print("   safe 4 m pass to a teammate who has the goal open (teammate at (116, 40)):", both(Situation([112.0, 38.0], np.array([[118.0, 52.0], [100.0, 25.0], [95.0, 55.0]]), [[116.0, 40.0]], [118.0, 52.0]), ("pass", [116.0, 40.0])))
-    T.drop(columns=["pct_chosen"]).to_pickle(f"{D}/v16_scored.pkl")
+    T.drop(columns=["pct_chosen"]).to_pickle(f"{D}/v16_scored{'_xpcal' if VAR else ''}.pkl")
+    if VAR: sys.exit(0)
     smp = pd.concat([g.sample(min(len(g), int(30000 * len(g) / len(T)) + 1), random_state=0) for _, g in T.groupby(["zone", "kind"])])
     out = smp[["comp", "match", "period", "minute", "second", "team", "index", "kind", "zone", "ax", "ay", "score_chosen", "score_best", "gap_points", "gap_xg", "q_chosen", "q_best", "score_chosen_model", "gap_points_model", "q_chosen_model", "counter_assumed", "best_kind"]].copy()
     out["clock"] = out.minute.astype(int).astype(str).str.zfill(2) + ":" + out.second.astype(int).astype(str).str.zfill(2); out.drop(columns=["minute", "second"]).round(4).to_csv(f"{D}/decision_scores_test.csv", index=False); print(f"\nwrote decision_scores_test.csv with a stratified random sample of {len(out)} of {len(T)} test decisions (seed 0; no player names)")
