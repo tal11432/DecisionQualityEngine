@@ -39,8 +39,8 @@ for k, (comp, m) in enumerate(jobs):
         if loc is None or e["id"] not in ff: continue
         fr = ff[e["id"]]["freeze_frame"]; O = np.array([q["location"][:2] for q in fr if not q["teammate"]], float).reshape(-1, 2); T = np.array([q["location"][:2] for q in fr if q["teammate"] and not q.get("actor")], float).reshape(-1, 2)
         kp_ = [q["location"][:2] for q in fr if not q["teammate"] and q.get("keeper")]; a = np.array(loc[:2], float); t0 = secs(e); tm = e["team"]["id"]
-        if not kp_ or not len(O): continue
-        gk = np.array(kp_[0], float); own10 = sum(x for tt, ti, x, pp in shots if ti == tm and t0 < tt <= t0 + H); opp10 = sum(x for tt, ti, x, pp in shots if ti != tm and t0 < tt <= t0 + H)
+        if not len(O): continue                      # the opposing keeper is NOT required (in our own half he is out of the camera view; the turnover model does not use him)
+        gk = np.array(kp_[0], float) if kp_ else None; own10 = sum(x for tt, ti, x, pp in shots if ti == tm and t0 < tt <= t0 + H); opp10 = sum(x for tt, ti, x, pp in shots if ti != tm and t0 < tt <= t0 + H)
         chain10 = sum(x for tt, ti, x, pp in shots if ti == tm and pp == e["possession"] and t0 < tt <= t0 + H)
         base = dict(comp=comp, match=mid, time=t0, period=e["period"], minute=e["minute"], second=e["second"], team=e["team"]["name"], index=e["index"], ax=a[0], ay=a[1], own10=own10, opp10=opp10, chain10=chain10)
         # ---- losses of the ball
