@@ -59,7 +59,7 @@ def counter_flag(p, O, T):
 def loss_danger(p, O, T, kind="pass"):
     """L = expected opponent xG minus expected own xG in the 10 s after the ball is lost at p (units: xG); depends on the position and on who is around. The model cannot see a counter-attack with a numerical advantage (amendment F);
     under the marked assumption A1 (default on) a loss with a visible balance >= 2 at x <= 70 costs at least C."""
-    m = v15()["L"]; c = _around(np.asarray(p, float), O, T); dist_own = float(np.hypot(p[0], p[1] - 40)); an = float(abs(np.arctan2(44 - p[1], p[0]) - np.arctan2(36 - p[1], p[0])))
+    m = core.models()["v17"]["L_20"] if core.horizon() == 20 else v15()["L"]; c = _around(np.asarray(p, float), O, T); dist_own = float(np.hypot(p[0], p[1] - 40)); an = float(abs(np.arctan2(44 - p[1], p[0]) - np.arctan2(36 - p[1], p[0])))
     adv = c["n_opp_ahead"] - c["n_cover"]; adv_pos = float(min(max(adv, 0), 5))
     f = dict(c, dist_own=dist_own, ang_own=an, lx=p[0], d2=dist_own ** 2, ad=an * dist_own, k_pass=float(kind == "pass"), k_dribble=float(kind == "dribble"), k_dispossessed=float(kind == "dispossessed"), adv=float(adv), adv_pos=adv_pos, adv_x=adv_pos * (1 - p[0] / 120.0))
     X = [f[k] for k in m["F"]]; L = sgm(m["opp"], X) - sgm(m["own"], X)
@@ -74,6 +74,7 @@ def carry_features(s: Situation, d, st, T, pdist):
 def _carry_option(s: Situation, d, st, T, pdist, m):
     a, O, gk = s.a, s.O, s.gk; f = carry_features(s, d, st, T, pdist); M16 = core.models()["v16"]
     mk, mv = (M16["P_keep_all"], M16["V_pos_all"]) if M16 is not None else (m["P_keep"], m["V_pos_refit"])
+    if core.horizon() == 20: mv = core.models()["v17"]["V_pos_20"]                              # amendment M
     pk = sgm(mk, [f[k2] for k2 in mk["F"]]); vp = sgm(mv, [f[k2] for k2 in mv["F"]]); lo = loss_danger(d, O, T, "dispossessed")
     return dict(kind="carry", v=pk * vp - (1 - pk) * lo, p_keep=pk, value_after=vp, loss=lo, target=d, status="certain onside", counter_assumed=bool(_ASSUME["on"] and counter_flag(d, O, T)))
 

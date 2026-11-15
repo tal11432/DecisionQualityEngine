@@ -5,7 +5,8 @@ from multiprocessing import Pool
 D = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, D); rng = np.random.default_rng(0)
 from dscore import score as S, core
 from dscore.core import Situation
-Dd = pd.read_pickle(f"{D}/v16_dec.pkl"); Dd = Dd[Dd.test].reset_index(drop=True); ZN = ["own third", "middle", "attacking"]; Dd["zone"] = [core.zone(x) for x in Dd.ax]
+HZ = 20 if os.environ.get("DQ_HORIZON") == "20" else 10                      # amendment M: the realised value is taken over the same horizon as the modelled value
+Dd = pd.read_pickle(f"{D}/v17_dec.pkl"); Dd = Dd[Dd.test].reset_index(drop=True); ZN = ["own third", "middle", "attacking"]; Dd["zone"] = [core.zone(x) for x in Dd.ax]
 def sit(r): return Situation([r.ax, r.ay], r.opps.astype(float), list(r.mates.astype(float)), r.gk)
 def chosen(r): return ("shot",) if r.kind == "shot" else (r.kind, [r.tx, r.ty])
 def score_row(r, scales=None):
@@ -22,13 +23,13 @@ def perturb(args):
     o = score_row(r2, scales={"shot": float(np.exp(g.normal(0, 0.10))), "pass": float(np.exp(g.normal(0, 0.09))), "carry": float(np.exp(g.normal(0, 0.178)))}); return o["score_chosen"], o["gap_points"]
 if __name__ == "__main__":
     t_start = pd.Timestamp.now(); print(f"test decisions {len(Dd)}: {dict(Dd.kind.value_counts())}; by zone {dict(Dd.zone.value_counts())}; competitions {dict(Dd.comp.value_counts())}", flush=True)
-    VAR = os.environ.get("DQ_XP_CAL") == "1"; print("VARIANT:", "SENSITIVITY with the per-zone xP recalibration (DQ_XP_CAL=1)" if VAR else "PRIMARY with the frozen xP (amendment L)"); RAW = f"{D}/v16_scored_raw{'_xpcal' if VAR else ''}.pkl"
+    VAR = os.environ.get("DQ_XP_CAL") == "1"; print(f"VARIANT: horizon {HZ} s;", "SENSITIVITY with the per-zone xP recalibration (DQ_XP_CAL=1)" if VAR else "frozen xP (amendment L)"); RAW = f"{D}/v17_scored_raw_h{HZ}{'_xpcal' if VAR else ''}.pkl"
     if os.path.exists(RAW): R = pd.read_pickle(RAW).to_dict("records"); print("loaded cached scoring", len(R))
     else:
         with Pool(4) as pool: R = pool.map(work, range(len(Dd)), chunksize=200)
         pd.DataFrame(R).to_pickle(RAW)
     T = pd.concat([Dd.drop(columns=["opps", "mates", "gk"]), pd.DataFrame(R)], axis=1); mins = (pd.Timestamp.now() - t_start).total_seconds() / 60; print(f"scored {len(T)} decisions in {mins:.1f} min", flush=True)
-    T["realised"] = T.own10 - T.opp10 + np.where(T.kind == "shot", T.sb_xg.fillna(0), 0.0); T["pct_chosen"] = np.nan
+    T["realised"] = T[f"own{HZ}"] - T[f"opp{HZ}"] + np.where(T.kind == "shot", T.sb_xg.fillna(0), 0.0); T["pct_chosen"] = np.nan
     def sp(x, y): return float(pd.Series(x).rank().corr(pd.Series(y).rank()))
     def pr(lab, g): return f"{lab}: n={len(g)}, mean Q {g.q_chosen_model.mean():+.4f}, realised {g.realised.mean():+.4f}"
     # ---------------- distribution and RANGE REPORT
@@ -70,11 +71,13 @@ if __name__ == "__main__":
     print("== noise floor: gap >= 0.03 xG by zone (model-only): " + "; ".join(f"{z}: {(T[T.zone==z].gap_xg_model>=0.03).mean()*100:.1f}%" for z in ZN) + f"; by kind: " + "; ".join(f"{k}: {(g.gap_xg_model>=0.03).mean()*100:.1f}%" for k, g in T.groupby("kind")))
     # ---------------- G-no-regression (attacking third) against the committed values of commit 5de0656
     try:
+        if HZ != 10: raise RuntimeError("not applicable to the 20 s horizon (the committed reference values are 10 s values)")
         old = pd.read_csv(io.StringIO(subprocess.check_output(["git", "show", "5de0656:research/dq/decision_scores_test.csv"], cwd=D, text=True)))
         m = T.merge(old[["match", "index", "kind", "q_chosen"]].rename(columns={"q_chosen": "q_old"}), on=["match", "index", "kind"], how="inner"); m = m[m.ax >= 80]
         print(f"\n== G-no-regression (x >= 80): {len(m)} decisions matched with commit 5de0656; Spearman new vs old Q of the option taken {sp(m.q_chosen_model, m.q_old):.3f}; mean |difference| {np.abs(m.q_chosen_model - m.q_old).mean():.4f} xG; mean Q old {m.q_old.mean():+.4f} new {m.q_chosen_model.mean():+.4f}; by kind: " + "; ".join(f"{k}: Spearman {sp(g.q_chosen_model, g.q_old):.3f}, mean |diff| {np.abs(g.q_chosen_model-g.q_old).mean():.4f}" for k, g in m.groupby("kind")))
         print(f"   => {'PASS' if sp(m.q_chosen_model, m.q_old) >= 0.95 and np.abs(m.q_chosen_model - m.q_old).mean() <= 0.01 and cal_ok[('attacking', 'without failed passes')] else 'FAIL'} (needs Spearman >= 0.95, mean |difference| <= 0.01 and the calibration gate in the attacking zone)")
     except Exception as ex: print("\n== G-no-regression: could not read the committed file:", ex)
+    print(f"\n== BOUNDARY at x = 80 (horizon {HZ} s): decisions at x 70-80 against 80-90 (model-only Q of the option taken; score with A1): " + "; ".join(f"{lab}: n={len(g)}, mean Q {g.q_chosen_model.mean():+.4f}, score median {g.score_chosen.median():.0f}, 90th/99th {np.percentile(g.score_chosen, 90):.0f}/{np.percentile(g.score_chosen, 99):.0f}, gap >= 0.03 xG {(g.gap_xg_model>=0.03).mean()*100:.1f}%" for lab, g in (("70-80", T[(T.ax >= 70) & (T.ax < 80)]), ("80-90", T[(T.ax >= 80) & (T.ax < 90)]))))
     # ---------------- G-stability per zone (sample of 250 per zone, 60 perturbations)
     print("\n== G-stability per zone (250 decisions, 60 perturbations each: 0.8 m positions; value scales 9% pass, 10% shot, 18% carry)")
     for z in ZN:
@@ -94,8 +97,8 @@ if __name__ == "__main__":
     sure = Situation([112.0, 40.0], np.array([[118.0, 52.0], [100.0, 25.0], [95.0, 55.0]]), [[108.0, 36.0], [105.0, 44.0]], [118.0, 52.0])
     print("   shot at an almost open goal from 8 units with the keeper out of position:", both(sure, ("shot",)))
     print("   safe 4 m pass to a teammate who has the goal open (teammate at (116, 40)):", both(Situation([112.0, 38.0], np.array([[118.0, 52.0], [100.0, 25.0], [95.0, 55.0]]), [[116.0, 40.0]], [118.0, 52.0]), ("pass", [116.0, 40.0])))
-    T.drop(columns=["pct_chosen"]).to_pickle(f"{D}/v16_scored{'_xpcal' if VAR else ''}.pkl")
-    if VAR: sys.exit(0)
+    T.drop(columns=["pct_chosen"]).to_pickle(f"{D}/v17_scored_h{HZ}{'_xpcal' if VAR else ''}.pkl")
+    if VAR or os.environ.get("DQ_HORIZON") in ("10", "20"): sys.exit(0)
     smp = pd.concat([g.sample(min(len(g), int(30000 * len(g) / len(T)) + 1), random_state=0) for _, g in T.groupby(["zone", "kind"])])
     out = smp[["comp", "match", "period", "minute", "second", "team", "index", "kind", "zone", "ax", "ay", "score_chosen", "score_best", "gap_points", "gap_xg", "q_chosen", "q_best", "score_chosen_model", "gap_points_model", "q_chosen_model", "counter_assumed", "best_kind"]].copy()
     out["clock"] = out.minute.astype(int).astype(str).str.zfill(2) + ":" + out.second.astype(int).astype(str).str.zfill(2); out.drop(columns=["minute", "second"]).round(4).to_csv(f"{D}/decision_scores_test.csv", index=False); print(f"\nwrote decision_scores_test.csv with a stratified random sample of {len(out)} of {len(T)} test decisions (seed 0; no player names)")

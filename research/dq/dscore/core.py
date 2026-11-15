@@ -19,7 +19,12 @@ def models():
     if not _M:
         _M["v5"] = pd.read_pickle(os.path.join(DQ, "v5_models.pkl")); _M["v6"] = pd.read_pickle(os.path.join(DQ, "v6_models.pkl")); _M["hz"] = pd.read_pickle(os.path.join(DQ, "tf_model.pkl"))
         f16 = os.path.join(DQ, "v16_models.pkl"); _M["v16"] = pd.read_pickle(f16) if os.path.exists(f16) else None
+        f17 = os.path.join(DQ, "v17_models.pkl"); _M["v17"] = pd.read_pickle(f17) if os.path.exists(f17) else None      # the 20 s horizon variant (amendment M)
     return _M
+
+def horizon():
+    """Horizon of the value Q in seconds: 10 (primary) or 20 (the experiment of amendment M, switch DQ_HORIZON=20)."""
+    return 20 if os.environ.get("DQ_HORIZON") == "20" else 10
 
 DEFAULT_GK = np.array([118.0, 40.0])             # the opposing keeper when he is not in the 360 frame (only the shot features use him)
 SHOT_MIN_X = 60.0                                # below this the shot option does not exist (amendment J)
@@ -69,7 +74,7 @@ def shot_features(s: Situation, header=0):
 
 def shot_value(s: Situation, header=0):
     """(xG, continuation, total value, features): xG_geo + the expected later shots of the possession within 10 s."""
-    M = models(); f = shot_features(s, header); xg = sgm(M["v5"]["xG_geo"], [f[k] for k in M["v5"]["xG_geo"]["F"]]); cont = sgm(M["v6"]["cont"], [f[k] for k in M["v6"]["cont"]["F"]])
+    M = models(); f = shot_features(s, header); xg = sgm(M["v5"]["xG_geo"], [f[k] for k in M["v5"]["xG_geo"]["F"]]); mc = M["v17"]["cont_20"] if horizon() == 20 else M["v6"]["cont"]; cont = sgm(mc, [f[k] for k in mc["F"]])
     return xg, cont, xg + cont, f
 
 def offside_status(margin_m, p_x, n_visible_opponents):
@@ -101,7 +106,7 @@ def pass_option_at(s: Situation, p, line=None):
     """Ground pass from the ball carrier to point p (any distance): xP x chain value, offside margin and status. No range filter. Whole-pitch chain value (amendment J) when v16_models.pkl exists, else the frozen v6 model."""
     M = models(); a, O, gk = s.a, s.O, s.gk; p = np.asarray(p, float); line = offside_line(s) if line is None else line
     margin_m = float((line - p[0]) * 105 / 120); status = offside_status(margin_m, p[0], len(O)); d = float(np.hypot(*((p - a) * SC)))
-    ft = target_features(a, O, gk, p); mx = M["v16"]["xA_chain_all"] if M["v16"] is not None else M["v6"]["xA_chain"]
+    ft = target_features(a, O, gk, p); mx = M["v17"]["xA_chain_20"] if horizon() == 20 else (M["v16"]["xA_chain_all"] if M["v16"] is not None else M["v6"]["xA_chain"])
     xa = sgm(mx, [ft[k] for k in mx["F"]]); xp = xp_recalibrated(xp_hazard(a, p, O), a[0])
     return dict(v=xp * xa, xp=xp, xa=xa, d=d, g=ft["dist"] * 105 / 120, margin=margin_m, status=status, target=p)
 
