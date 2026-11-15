@@ -26,7 +26,7 @@ if os.path.exists(RAW): T = pd.read_pickle(RAW); print("loaded cached scoring:",
 else:
     T = Dd[Dd.test].reset_index(drop=True); R = pd.DataFrame([score_row(r) for r in T.itertuples()]); T = pd.concat([T.drop(columns=["opps", "mates", "gk"]), R], axis=1); T.to_pickle(RAW)
 print(f"test decisions {len(T)}: {dict(T.kind.value_counts())}; competitions {dict(T.comp.value_counts())}")
-for c in ("chosen", "best"): T[f"lin_{c}"] = T[f"score_{c}"]                          # the cached columns hold the first (linear) scale
+T["lin_chosen"] = [S.q_to_score(q) for q in T.q_chosen]; T["lin_best"] = [S.q_to_score(q) for q in T.q_best]      # the linear value scale of amendment A, from Q
 T["score_chosen"] = [S.rank_score(q) for q in T.q_chosen]; T["score_best"] = [S.rank_score(q) for q in T.q_best]; T["gap_points"] = T.score_best - T.score_chosen; T["score_worst"] = T.score_worst
 T["realised"] = T.own10 - T.opp10 + np.where(T.kind == "shot", T.sb_xg.fillna(0), 0.0)
 print("\n== DISTRIBUTION of the score of the option taken (percentile scale), by kind (test); G-resolution: pooled 10th-90th range")

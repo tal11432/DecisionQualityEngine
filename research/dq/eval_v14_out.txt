@@ -38,3 +38,5 @@ test decisions 17867: {'pass': np.int64(7920), 'carry': np.int64(7523), 'shot': 
 == G-visibility: hiding half of the visible teammates changes the gap by a median of 0.0 points (n=249)
 
 wrote decision_scores_test.csv with 17867 rows (no player names)
+
+CORRECTION (written after the run): the 'linear scale 10th-90th 8-81' printed in the distribution line and the lin_chosen / lin_best CSV columns came from a stale cached column (percentile scores of an earlier reference). Recomputed from Q with the linear scale of amendment A: pooled 10th/50th/90th of the option taken = 50/51/54 ... see decision_scores_test.csv (columns rebuilt); eval_v14.py now computes them from Q.

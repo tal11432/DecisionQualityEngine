@@ -12,7 +12,7 @@ Model-based and not validated by experts. Pre-registration: `research/dq/PREREG_
 ## What validated and what did not (17,867 test decisions: 2,424 shots, 7,920 passes, 7,523 carries)
 | Gate | Result |
 |---|---|
-| Resolution: the 10th-90th range of the score >= 20 points | **Pass**: 10 to 91 (81 points). The first, linear scale failed (8-81 points of Q-values compressed into 50-54 for ordinary passes), which led to the percentile scale |
+| Resolution: the 10th-90th range of the score >= 20 points | **Pass**: 10 to 91 (81 points). The first, linear scale failed: pooled 10th-90th range 50 to 55 (passes 50-53, carries 50-54, shots 51-69), which led to the percentile scale |
 | Calibration of Q against the realised net xG of the next 10 s | Deciles of the score rise monotonically (Spearman 0.99 [0.98, 1.00]). Pooled predicted/observed **1.18: fail** (limit 1.15); **without failed passes 1.11: pass**. By kind: shots 1.04, completed passes 1.07, carries 1.25, failed passes 12 (the only target known is where the ball stopped, which makes the pass look safe) |
 | Gap known-groups: inside terciles of the promise of the situation, big gaps realise less | **Pass in 3/3 strata**, intervals exclude 0: realised difference -0.004, -0.010 and -0.072 xG |
 | Best-option sanity: clear chances (Q >= 0.30, n = 191) | **Pass**: the shot is the best option in 97%; this failed while hypothetical carries were alternatives (their values reached 0.95) |
