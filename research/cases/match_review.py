@@ -1,23 +1,10 @@
 """Goal-by-goal review of one match with the frozen DQ models (xG_geo + continuation for the shot; xP x chain value for the best visible teammate). Usage: python research/cases/match_review.py MATCH_ID"""
 import sys, json, gzip, urllib.request, numpy as np, pandas as pd
-sys.path.insert(0, "research/dq"); from tfcommon import steps, FEATS as HFT
-FLOOR_SHORT, FLOOR_LONG = 0.03, 0.05   # absolute floors (xG) calibrated in DQ-v12b with noise taken from data: 'clearly' needs the ratio rule (pass value x0.7 / x1.3) AND a conservative margin >= the floor; the verdict then survives >= 90% of perturbations for a short pass (flight ~0.4 s); passes over 15 m (flight ~1 s) are noisier and use 0.05. 'leans' = half the floor
-def vv(bv, sv, d=0.0):
-    FLOOR = FLOOR_LONG if d > 15 else FLOOR_SHORT; LEAN = FLOOR / 2; cp, cs = 0.7 * bv - sv, sv - 1.3 * bv
-    return "pass clearly better" if cp >= FLOOR else ("shot clearly better" if cs >= FLOOR else ("leans pass" if cp >= LEAN else ("leans shot" if cs >= LEAN else "no clear difference")))
-GX = 120.0; SC = np.array([105 / 120, 68 / 80]); mid = sys.argv[1]
+sys.path.insert(0, "research/dq"); from dscore.core import Situation, shot_value, pass_options, rank_options, verdict as vv, GX, SC     # helpers shared with the Decision Score (research/dq/dscore/core.py)
+mid = sys.argv[1]
 B = "https://raw.githubusercontent.com/statsbomb/open-data/master/data/"
 def get(p):
     r = urllib.request.urlopen(urllib.request.Request(B + p, headers={"Accept-Encoding": "gzip"}), timeout=60); b = r.read(); return json.loads(gzip.decompress(b) if r.headers.get("Content-Encoding") == "gzip" else b)
-M5 = pd.read_pickle("research/dq/v5_models.pkl"); M6 = pd.read_pickle("research/dq/v6_models.pkl"); HM = pd.read_pickle("research/dq/tf_model.pkl")
-sgn = lambda m, X: float(1 / (1 + np.exp(-(np.concatenate([[1.0], (np.asarray(X, float) - m["mu"]) / m["sd"]]) @ m["b"]))))
-ang = lambda x, y: float(abs(np.arctan2(44 - y, GX - x) - np.arctan2(36 - y, GX - x)))
-def tri(p, s):
-    def f(ax, ay, bx, by, cx, cy): return (ax - cx) * (by - cy) - (bx - cx) * (ay - cy)
-    d1, d2, d3 = f(p[0], p[1], s[0], s[1], GX, 36), f(p[0], p[1], GX, 36, GX, 44), f(p[0], p[1], GX, 44, s[0], s[1])
-    return not (((d1 < 0) or (d2 < 0) or (d3 < 0)) and ((d1 > 0) or (d2 > 0) or (d3 > 0)))
-def hz(a, end, O):
-    R = steps(a, end, O, False, None); l = np.column_stack([np.ones(len(R)), (R[:, :len(HFT)] - HM["mu"]) / HM["sd"]]) @ HM["b"]; return float(np.exp(np.log1p(-1 / (1 + np.exp(-l))).sum()))
 def secs(e): h, m, s = e["timestamp"].split(":"); return e["period"] * 10000 + int(h) * 3600 + int(m) * 60 + float(s)
 ev = get(f"events/{mid}.json"); byid = {e["id"]: e for e in ev}
 sp = [(secs(e), e["team"]["id"], e["possession"], e["shot"]["statsbomb_xg"]) for e in ev if e["type"]["name"] == "Shot" and e["shot"]["type"]["name"] == "Open Play"]
@@ -37,22 +24,8 @@ for e in goals:
     fr = s.get("freeze_frame", []); a = np.array(e["location"][:2], float); O = np.array([q["location"][:2] for q in fr if not q["teammate"]], float).reshape(-1, 2); Tm = [np.array(q["location"][:2], float) for q in fr if q["teammate"]]
     gks = [q["location"][:2] for q in fr if not q["teammate"] and q.get("position", {}).get("name") == "Goalkeeper"]
     if not gks: print("   no goalkeeper in the frame: cannot evaluate.\n"); continue
-    gk = np.array(gks[0], float); dd = np.hypot(*(O - a).T); v = np.array([GX, 40.0]) - a; dist = float(np.hypot(*v)); an = ang(*a); gl = float(abs(v[0] * (gk[1] - a[1]) - v[1] * (gk[0] - a[0])) / (dist + 1e-9))
-    hd = int(body == "Head"); f2 = dict(dist=dist, angle=an, header=hd, n_tri=sum(tri(o, a) for o in O), gk_d=float(np.hypot(GX - gk[0], 40 - gk[1])), gk_lat=gl, n_opp2=int((dd <= 2).sum()), nn_opp=float(dd.min()), da=dist * an, ldist=float(np.log(dist)))
-    xg = sgn(M5["xG_geo"], [f2[k] for k in M5["xG_geo"]["F"]]); cont = sgn(M6["cont"], [f2[k] for k in M6["cont"]["F"]]); shot_val = xg + cont
-    t0 = secs(e); ox = np.sort(O[:, 0]); second_last = ox[-2] if len(ox) > 1 else ox[-1]; lineo = max(second_last, a[0]); cands = []
-    for p in Tm:
-        d = float(np.hypot(*((p - a) * SC)))
-        if not (3 <= d <= 40): continue
-        margin_m = float((lineo - p[0]) * 105 / 120)          # > 0: onside by this many metres; < 0: offside by this many metres (position proxy)
-        if p[0] <= 60 or margin_m >= 1.0: status = "certain onside"
-        elif margin_m > -1.0: status = "DOUBT (within 1 m of the line)"
-        elif len(O) < 11: status = "DOUBT (offside by the visible players, but a defender is out of view)"
-        else: status = "certain offside"
-        dp = np.hypot(*(O - p).T); dist_p = float(np.hypot(GX - p[0], 40 - p[1])); an_p = ang(*p)
-        ft = dict(dist=dist_p, angle=an_p, x=p[0], d2=dist_p ** 2, ad=an_p * dist_p, n_tri=sum(tri(o, p) for o in O), n3=int((dp <= 3).sum()), n6=int((dp <= 6).sum()), nn=float(dp.min()), gk_d=float(np.hypot(GX - gk[0], 40 - gk[1])), plen=float(np.hypot(*(p - a))), fwd=float(p[0] - a[0]), pdist=dist)
-        xa = sgn(M6["xA_chain"], [ft[k] for k in M6["xA_chain"]["F"]]); xp = hz(a, p, O); cands.append(dict(v=xp * xa, xp=xp, xa=xa, d=d, g=dist_p * 105 / 120, margin=margin_m, status=status))
-    live = sorted([c for c in cands if c["status"] != "certain offside"], key=lambda c: -c["v"]); sure = [c for c in live if c["status"] == "certain onside"]; gone = [c for c in cands if c["status"] == "certain offside"]
+    sit = Situation(a, O, Tm, gks[0]); hd = int(body == "Head"); xg, cont, shot_val, f2 = shot_value(sit, hd); dist = f2["dist"]
+    live, sure, gone = rank_options(pass_options(sit))
     print(f"   Shooter {dist*105/120:.1f} m from goal; defenders in the shooting triangle (keeper included): {f2['n_tri']}; visible teammates {len(Tm)}; options: {len(sure)} certain onside, {len(live)-len(sure)} in doubt, {len(gone)} certainly offside; visible opponents {len(O)} of 11")
     print(f"   Model: shot value {shot_val:.2f} (xG {xg:.2f} + continuation {cont:.2f})")
     if hd: print("   This was a header: a pass was not a realistic alternative, so the comparison is shown but should not be read as advice.")

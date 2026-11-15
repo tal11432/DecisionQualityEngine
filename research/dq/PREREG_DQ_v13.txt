@@ -1,0 +1,35 @@
+DQ-v13 PRE-REGISTRATION: Decision Score v1 (0-100) for on-ball decisions in the attacking third. Written 2026-11-15T12:21:07Z, before any data was downloaded or any new model fitted for it.
+Plan: /root/.claude/plans/reactive-tinkering-creek.md (approved by the user). Scope chosen by the user: attacking third; shot, pass, carry/dribble. Zero-anchor chosen by the user: not a constant turnover but a turnover whose danger depends on the situation.
+
+1. MOMENT. Open-play, the player on the ball, ball at x >= 80 (StatsBomb units, 120 x 80, attacking to x = 120), 360 frame at the action (shots: the shot freeze frame), keeper visible. Horizon H = 10 s. Unit: expected goals (xG) of the possession.
+   Splits as before: TEST = Euro 2024, Bundesliga 2023/24, MLS 2023 (+ Copa America 2024 for shots); all other competitions train. Test competitions never enter any training set.
+2. OPTIONS AND THEIR VALUE Q (net xG in the next 10 s).
+   shot:      Q = xG_geo + continuation (frozen DQ-v5 / DQ-v6 models).
+   pass j:    ground pass to every visible teammate 3-40 m away, not certainly offside (DQ-v10/v12 rule: certain onside needs a 1 m margin; a hidden defender can only help the attacker):  Q = xP_j * xA_chain_j - (1 - xP_j) * L(target_j).
+   carry c:   the ball carried 3, 6 or 10 m in 8 directions (45 degree steps), destination inside the pitch:  Q = P_keep * V_pos(destination) - (1 - P_keep) * L(destination).  Hypothetical option, trained on observed carries.
+   dribble d: take on the nearest opponent within 5 m inside +-45 degrees of the direction to goal:  Q = P_dribble * V_pos(2 m beyond that opponent toward goal) - (1 - P_dribble) * L(current position).
+   L(location, context) = danger of losing the ball there = E[opponent xG within 10 s] - E[own xG within 10 s after the loss] (two fractional-logistic models, opponent-perspective location basis plus 360 context: opponents ahead of the ball, teammates covering behind, opponents and teammates within 10 units).
+   Not in v1 (they need their own completion models): through balls, crosses, lofted passes, clearances, long balls from deep, back-passes as a separate class (a ground pass to a visible teammate behind the ball is already an option).
+3. THE SCORE. Q_floor = -L(actor location): the value of an unforced turnover right here (so a pass to nowhere that leaves an opponent one-on-one scores 0, and a turnover in the opponent box has a much higher floor than one at the edge of our own box).
+   Q_best = max Q over the options above (including the chosen one); Q_chosen = Q of the option matching the action taken (the target of a failed pass is where the ball stopped; flagged).
+   Score = 100 * (Q_chosen - Q_floor) / (Q_best - Q_floor), rounded to an integer; stakes = Q_best - Q_floor.
+   LOW STAKES: stakes < F (F = 0.03 xG; 0.05 when the chosen or best option is a pass longer than 15 m; DQ-v12b) -> the score is shown shrunk toward 50:  50 + (score - 50) * stakes / (stakes + F), and flagged.
+   OFFSIDE DOUBT: Q_best is computed from certain options only (headline) and from certain + doubtful options (reported next to it).
+   UNCERTAINTY BAND: 100 perturbations per decision (every visible player N(0, 0.8 m); pass value scale LogNormal(0, 0.09); shot value scale LogNormal(0, 0.10); carry/dribble value scale LogNormal(0, sigma_c), sigma_c = between-competition spread of the P_keep * V_pos calibration measured in step 5; sizes from DQ-v12b / movement_noise.py); band = 10th to 90th percentile.
+4. NEW MODELS, GATES ON TEST COMPETITIONS (a failed gate removes that option class from v1 and is reported):
+   L (opponent part and own part): pooled predicted/observed in [0.85, 1.15] and fractional log-likelihood gain over the constant with a match-bootstrap 95% CI excluding 0 (positives are rare: wide intervals are expected and reported).
+   P_keep (carries) and P_dribble: calibration slope in [0.8, 1.2], predicted/observed in [0.9, 1.1], AUC >= 0.60; if AUC < 0.60 the carry/dribble options are dropped from v1 and reported as "not supported".
+   V_pos (value of having the ball at a position with these defenders): predicted/observed in [0.85, 1.15], slope in [0.8, 1.2].
+   Between-competition spread tau of each model (leave-one-competition-out, DQ-v7 method) is reported and used for the noise sizes.
+5. VALIDATION GATES (v1 numbers are published only if these pass; otherwise the score is reported as a diagnostic):
+   G-known: among test decisions with stakes >= F, split by terciles of Q_best (situations of comparable promise); inside each tercile the mean REALISED net xG (own xG - opponent xG in the next 10 s) of the top score tercile must exceed that of the bottom score tercile, with a match-bootstrap 95% CI excluding 0 in at least 2 of the 3 strata and the direction right in all 3.
+   G-anchor (unit tests, tests/): a shot from a situation worth 1 xG scores >= 95; a pass to nowhere that leaves an opponent one-on-one scores <= 5; the same turnover scores higher in the opponent box than at the edge of our own box; the score of the best option is 100.
+   G-stability: among decisions with stakes >= F, median band width (90th - 10th percentile) <= 25 points and >= 70% of decisions keep their score tercile in >= 80% of the perturbations.
+   G-visibility (descriptive): hiding a random half of the visible teammates (never the chosen target) changes the score by a median of <= 10 points; reported by number of visible teammates.
+   G-curse (diagnostic): among decisions where the chosen option is also the modelled best, realised / predicted Q_best; if outside [0.8, 1.25] the output flags "optimistic best option"; a statistical correction is a v2 item.
+   G-expert: NOT part of v1. The expert-panel pilot (reports/dq_expert_protocol.md) is the only external validation; until it is run the score is labelled "model-based, not validated by experts".
+6. OUTPUTS. research/dq/dscore/ (module), a Decision Score table for the three stored matches (3895067, 3773526, 3749346) and for the test competitions (CSV, no player names), a report section, a plain-language summary.
+   Shared helpers: research/dq/dscore/core.py replaces the copies in eval_v5 ... eval_v12b and match_review.py; regression check = the three stored match reviews are reproduced identically (done in Phase 0, see below).
+7. LIMITS STATED IN ADVANCE. Carry and dribble options are hypothetical (we do not see which runs were available); no body orientation, velocities or intentions; only visible players count; the best option is a maximum over noisy values (winner's curse; diagnostic only in v1);
+   the 0-100 scale is relative to the modelled options of the same situation, plus a situation-dependent turnover floor; a high score does not mean the player's intention was good; no player-level aggregation.
+PHASE 0 RESULT (written after the refactor): research/dq/dscore/core.py created; research/cases/match_review.py now uses it; regenerated outputs for matches 3895067, 3773526 and 3749346 are IDENTICAL to the stored ones; tests/test_dscore_core.py adds 6 unit tests; full suite 139 passed.
