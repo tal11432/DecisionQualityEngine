@@ -437,3 +437,34 @@ Pre-registration `research/dq/PREREG_DQ_v10.txt` (written before the download); 
 * **Why not recalibrate xP from this data.** The completion probability looks over-optimistic in this area (mean xP 0.91 vs completion rate 0.85; for recorded lengths up to 5 units 0.96 vs 0.45), but the check is confounded: **for a failed pass the only target we know is the point where the ball was stopped**, which is a truncated path whose survival probability is high by construction. The pre-registered target approximation therefore inflates the ex-ante value of failed passes, so the 0.70 is a pessimistic reading of calibration and the verdicts for failed passes are conservative (they favour the pass). An honest recalibration needs the intended target of failed passes, which this data does not provide. No change was made to xP.
 
 **Limits.** Players pass when they see something the model does not (body orientation, a teammate's run, a blocked lane, orders); the shot value of a situation where nobody shoots is an extrapolation; only players visible in the 360 frame are used; failed-pass targets are approximated.
+
+## 17. DQ-v11: a numeric value for every decision (shots and passes in the attacking area)
+
+Pre-registration `research/dq/PREREG_DQ_v11.txt`; scripts `fetch_v11.py`, `eval_v11.py`, `post_v11.py`; output `eval_v11_out.txt`; **data file `research/dq/decision_values_test.csv`** (7,202 decisions from the test competitions: Euro 2024, Bundesliga 2023/24, MLS 2023 and Copa America 2024 for shots; one row per decision; no player names). 447 MB transferred, processed in memory, tables deleted.
+
+**The numbers, per decision** (unit: expected goals of the possession within 10 s; 0.01 = a hundredth of a goal):
+* `v_chosen`: the value of what the player did (a shot: modelled shot value; a pass: xP x chain value at its target).
+* `shot_value`, `best_pass_value`: the value of the best alternative of each kind.
+* `regret` = the best available option minus the one taken (never negative), with the range for the pass value x0.7 to x1.3 (`regret_low`, `regret_high`); `efficiency` = chosen / best (1 = best option).
+* `verdict` (the pre-registered absolute rule, see below) and `verdict_rel` (a scale-free rule, post hoc).
+
+**Results on the test competitions** (2,312 shots and 4,890 passes, all at x >= 90):
+
+| | Mean value of the choice | Mean regret | Mean efficiency |
+|---|---|---|---|
+| Shots | 0.109 | 0.046 | 0.73 |
+| Passes | 0.026 | 0.019 | 0.60 |
+
+* By the relative verdict: shots are near-optimal in 34%, ambiguous in 41%, clearly suboptimal in 25%; passes 17% / 24% / 60%. Close shots (< 12 m) are near-optimal in 53%; passes at every distance are mostly "not the best option".
+* **Pre-registered checks:** (2) completed passes, realised/ex-ante = **0.95 (pass)**; (3) the mean shot value matches StatsBomb's xG plus continuation (0.109 vs 0.107, ratio 1.02) **(pass)**; **(1) known groups failed**: the realised chain of passes judged "near-optimal" (0.0189) is no different from those judged "clearly suboptimal" (0.0199; difference -0.001 [-0.005, +0.003]).
+
+**Why check 1 failed, and the fix (post hoc).**
+* The pre-registered verdict used an *absolute* regret (>= 0.01), which mixes the quality of the situation with the quality of the decision: in a promising position, almost any suboptimal choice loses more than 0.01, and promising positions also realise more. The two groups were confounded by context value.
+* Each component validates on its own. Using only the shot as the alternative: passes judged clearly better than the shot realised 0.024 vs 0.014 for those judged clearly worse (+0.010 [+0.005, +0.016]); using only the best other pass: 0.024 vs 0.012 (+0.012 [+0.008, +0.016]).
+* A **scale-free verdict** (efficiency below 0.7 at every scale = clearly suboptimal; at least 0.9 at every scale = near-optimal) validates: near-optimal passes realised **0.034** against **0.014** for clearly suboptimal ones (+0.020 [+0.013, +0.028]), with the same order in each distance band. This rule was chosen after seeing the failure, so it is labelled post hoc; the test sets were used for both the failure and the repair.
+
+**What to trust.**
+* **Reliable:** `v_chosen` (calibrated: 0.95 for completed passes, 1.02 for shots), and the ordering of decisions by efficiency (it separates what happened next).
+* **Not reliable as an absolute count:** the shares of passes labelled "clearly suboptimal" (60%) are inflated. The best of several noisy options is biased upward (the winner's curse), only visible teammates count, and the ex-ante value of failed passes is overstated because their target is the point where the ball was stopped. Read the verdicts as a ranking, not as a count of mistakes.
+* **Unreliable very near goal:** some candidates at a few metres from goal have values above 0.7 (0.7% of decisions exceed 0.5), an extrapolation of the chain model (observed values there are about 0.25); the largest regrets in the file are of this kind and should not be quoted.
+* The numbers describe expected xG from positions, not the quality of a player: no body orientation, intention or information. Not used for players.

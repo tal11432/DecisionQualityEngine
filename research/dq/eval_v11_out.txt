@@ -1,0 +1,45 @@
+
+[TEST] decisions 7202: shots 2312, passes 4890
+  pass: mean V_chosen 0.0263; mean regret 0.0193 (median 0.0100); mean efficiency 0.597; near-optimal 39.5% | ambiguous 20.0% | clearly suboptimal 40.5%
+     <12m: n=45, mean regret 0.1079, near-optimal 27% / ambiguous 4% / clearly suboptimal 69%
+     12-20m: n=631, mean regret 0.0489, near-optimal 15% / ambiguous 15% / clearly suboptimal 70%
+     >20m: n=4156, mean regret 0.0141, near-optimal 43% / ambiguous 21% / clearly suboptimal 36%
+  shot: mean V_chosen 0.1093; mean regret 0.0459 (median 0.0111); mean efficiency 0.732; near-optimal 35.0% | ambiguous 33.5% | clearly suboptimal 31.4%
+     <12m: n=501, mean regret 0.0777, near-optimal 51% / ambiguous 23% / clearly suboptimal 26%
+     12-20m: n=1096, mean regret 0.0467, near-optimal 34% / ambiguous 31% / clearly suboptimal 34%
+     >20m: n=715, mean regret 0.0224, near-optimal 25% / ambiguous 44% / clearly suboptimal 31%
+
+[IN-SAMPLE (reference)] decisions 16901: shots 4658, passes 12243
+  pass: mean V_chosen 0.0262; mean regret 0.0185 (median 0.0093); mean efficiency 0.609; near-optimal 42.0% | ambiguous 19.2% | clearly suboptimal 38.8%
+     <12m: n=102, mean regret 0.1087, near-optimal 21% / ambiguous 12% / clearly suboptimal 68%
+     12-20m: n=1559, mean regret 0.0461, near-optimal 15% / ambiguous 17% / clearly suboptimal 68%
+     >20m: n=10463, mean regret 0.0137, near-optimal 46% / ambiguous 20% / clearly suboptimal 34%
+  shot: mean V_chosen 0.1190; mean regret 0.0417 (median 0.0061); mean efficiency 0.759; near-optimal 39.6% | ambiguous 31.9% | clearly suboptimal 28.5%
+     <12m: n=1133, mean regret 0.0679, near-optimal 54% / ambiguous 22% / clearly suboptimal 24%
+     12-20m: n=2158, mean regret 0.0410, near-optimal 39% / ambiguous 30% / clearly suboptimal 31%
+     >20m: n=1367, mean regret 0.0212, near-optimal 28% / ambiguous 43% / clearly suboptimal 28%
+
+CHECK 1 known groups (passes, test): realised chain of near-optimal 0.0189 (n=1932) vs clearly suboptimal 0.0199 (n=1981); difference -0.0010 [-0.0052,+0.0032] => FAIL
+CHECK 2 completed passes: realised / ex-ante = 0.948 => PASS (all passes 0.722; failed 0.104)
+CHECK 3 shots: mean V_chosen 0.1093 vs reference StatsBomb xG + continuation 0.1074 (ratio 1.017) => PASS
+
+EXAMPLES, largest regret (test; no player names):
+                    comp   match  period clock             team kind outcome  v_chosen  shot_value  best_pass_value  regret  regret_low  regret_high            verdict
+          UEFA Euro 2024 3930168       1 25:20          Hungary shot Wayward     0.082       0.082            0.839   0.756       0.505        1.008 clearly suboptimal
+ 1. Bundesliga 2023/2024 3895320       2 95:59 Bayer Leverkusen shot    Goal     0.171       0.171            0.815   0.643       0.399        0.888 clearly suboptimal
+          UEFA Euro 2024 3930160       2 54:30          Croatia shot Blocked     0.161       0.161            0.789   0.628       0.391        0.865 clearly suboptimal
+       Copa America 2024 3939981       1 01:17           Panama shot   Off T     0.149       0.149            0.751   0.602       0.377        0.828 clearly suboptimal
+ 1. Bundesliga 2023/2024 3895074       1 34:26    Bayern Munich shot Blocked     0.111       0.111            0.713   0.602       0.388        0.816 clearly suboptimal
+       Copa America 2024 3939977       2 87:12        Argentina shot    Goal     0.211       0.211            0.763   0.552       0.323        0.781 clearly suboptimal
+       Copa America 2024 3939980       2 53:24          Jamaica shot Blocked     0.169       0.169            0.715   0.546       0.332        0.760 clearly suboptimal
+       Copa America 2024 3943076       2 64:29           Canada shot Blocked     0.093       0.093            0.632   0.538       0.349        0.728 clearly suboptimal
+Major League Soccer 2023 3877090       2 93:13             LAFC shot   Off T     0.118       0.118            0.649   0.531       0.336        0.725 clearly suboptimal
+          UEFA Euro 2024 3941022       1 00:58           Turkey shot    Goal     0.389       0.389            0.917   0.528       0.253        0.804 clearly suboptimal
+
+EXAMPLES, near-optimal and a high-value choice:
+                    comp   match  period clock             team kind outcome  v_chosen  shot_value  best_pass_value  regret
+ 1. Bundesliga 2023/2024 3895158       2 78:45 Bayer Leverkusen shot    Goal     0.901       0.901            0.181     0.0
+          UEFA Euro 2024 3938638       2 56:27          Romania shot    Goal     0.740       0.740            0.255     0.0
+          UEFA Euro 2024 3942227       2 74:14      Switzerland shot    Goal     0.726       0.726            0.134     0.0
+          UEFA Euro 2024 3938639       2 96:29           Turkey shot    Goal     0.724       0.724            0.041     0.0
+Major League Soccer 2023 3877060       2 88:25      Inter Miami shot    Goal     0.710       0.710            0.215     0.0
