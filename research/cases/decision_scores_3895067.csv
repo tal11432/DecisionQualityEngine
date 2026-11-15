@@ -1,294 +1,294 @@
-clock,team,kind,score,best_kind,best_score,gap_points,gap_xg,q,q_best,gap_with_doubt_xg,options_certain,verdict,goal,realised
-01:31,Bayer Leverkusen,carry,26,pass,26,0,0.0075,0.0075,0.015,0.0075,6,no clear difference from the best option,0,0.0
-01:34,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0151,0.0084,0.0236,0.0151,6,no clear difference from the best option,0,0.0
-01:35,Bayer Leverkusen,carry,26,pass,28,2,0.0126,0.0129,0.0254,0.0126,8,no clear difference from the best option,0,0.0
-01:41,Bayer Leverkusen,carry,28,pass,36,8,0.0766,0.0264,0.103,0.0766,5,clearly below the best option,0,0.0
-01:43,Bayer Leverkusen,pass (completed),27,pass,29,2,0.0255,0.016,0.0415,0.0255,6,no clear difference from the best option,0,0.0242
-01:44,Bayer Leverkusen,pass (completed),27,pass,30,3,0.0246,0.0194,0.044,0.0246,6,no clear difference from the best option,0,0.0242
-01:45,Bayer Leverkusen,pass (completed),26,pass,30,4,0.0388,0.0129,0.0517,0.0388,6,clearly below the best option,0,0.0242
-01:46,Bayer Leverkusen,carry,26,pass,29,3,0.0228,0.0144,0.0372,0.0228,6,no clear difference from the best option,0,0.0242
-01:48,Bayer Leverkusen,pass (completed),27,pass,28,1,0.0145,0.0159,0.0304,0.0145,5,no clear difference from the best option,0,0.0242
-01:50,Bayer Leverkusen,carry,26,pass,28,2,0.019,0.013,0.032,0.019,6,no clear difference from the best option,0,0.0242
-03:51,Bayer Leverkusen,pass (failed),27,pass,28,1,0.01,0.0214,0.0314,0.01,4,no clear difference from the best option,0,0.0
-04:15,Bayer Leverkusen,pass (completed),25,shot,27,2,0.0125,0.0054,0.0178,0.0125,6,no clear difference from the best option,0,0.0
-04:19,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0177,0.0085,0.0263,0.0177,5,no clear difference from the best option,0,0.0
-04:23,Bayer Leverkusen,pass (completed),26,pass,29,3,0.0339,0.0094,0.0433,0.0339,7,no clear difference from the best option,0,0.0
-04:24,Bayer Leverkusen,carry,25,pass,29,4,0.0366,0.0033,0.0398,0.0366,6,no clear difference from the best option,0,0.0
-04:27,Bayer Leverkusen,pass (completed),25,pass,27,2,0.011,0.0053,0.0162,0.011,6,no clear difference from the best option,0,0.0
-04:28,Bayer Leverkusen,pass (completed),25,pass,27,2,0.015,0.0019,0.0169,0.015,6,no clear difference from the best option,0,0.0
-04:35,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0156,0.014,0.0296,0.0156,7,no clear difference from the best option,0,0.0
-04:36,Bayer Leverkusen,carry,27,pass,29,2,0.021,0.0195,0.0405,0.021,7,no clear difference from the best option,0,0.0
-04:36,Bayer Leverkusen,pass (completed),26,pass,30,4,0.0338,0.0103,0.0441,0.0338,7,clearly below the best option,0,0.0
-04:36,Bayer Leverkusen,carry,26,pass,28,2,0.0199,0.01,0.0298,0.0199,7,no clear difference from the best option,0,0.0
-04:41,Bayer Leverkusen,pass (failed),26,pass,26,0,0.0,0.0155,0.0155,0.0,6,no clear difference from the best option,0,0.0
-04:57,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0109,0.0133,0.0242,0.0109,6,no clear difference from the best option,0,0.0
-04:58,Bayer Leverkusen,carry,27,pass,28,1,0.0113,0.0161,0.0274,0.0113,6,no clear difference from the best option,0,0.0
-04:59,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0155,0.0133,0.0288,0.0155,7,no clear difference from the best option,0,0.0
-05:00,Bayer Leverkusen,carry,25,pass,28,3,0.0289,0.0036,0.0325,0.0289,5,no clear difference from the best option,0,0.0
-05:03,Bayer Leverkusen,pass (completed),25,pass,29,4,0.0328,0.0063,0.0391,0.0328,6,clearly below the best option,0,0.0
-05:08,Bayer Leverkusen,pass (failed),28,pass,28,0,0.0,0.0261,0.0261,0.0,5,no clear difference from the best option,0,0.0
-07:51,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0069,0.0147,0.0216,0.0069,6,no clear difference from the best option,0,0.0
-07:52,Bayer Leverkusen,pass (completed),27,pass,29,2,0.0152,0.0206,0.0359,0.0152,7,no clear difference from the best option,0,0.0
-07:54,Bayer Leverkusen,carry,27,pass,29,2,0.025,0.0164,0.0414,0.025,4,no clear difference from the best option,0,0.0
-07:54,Bayer Leverkusen,pass (completed),29,pass,29,0,0.0004,0.0363,0.0367,0.0004,6,no clear difference from the best option,0,0.0
-07:55,Bayer Leverkusen,carry,31,carry,31,0,0.0,0.0577,0.0577,0.0,6,no clear difference from the best option,0,0.0
-08:35,Bayer Leverkusen,shot,37,pass,39,2,0.0159,0.116,0.1319,0.0159,8,no clear difference from the best option,0,
-08:37,Bayer Leverkusen,carry,28,pass,31,3,0.0279,0.0264,0.0543,0.0279,7,no clear difference from the best option,0,0.0
-08:39,Bayer Leverkusen,pass (failed),27,pass,29,2,0.0194,0.0211,0.0405,0.0194,8,no clear difference from the best option,0,0.0
-09:49,Bayer Leverkusen,pass (completed),25,pass,25,0,0.004,0.0012,0.0052,0.004,7,no clear difference from the best option,0,0.0
-11:13,Bayer Leverkusen,pass (failed),26,pass,28,2,0.0134,0.014,0.0274,0.0134,7,no clear difference from the best option,0,0.0
-13:18,Darmstadt 98,shot,29,shot,29,0,0.0,0.0402,0.0402,0.0,1,no clear difference from the best option,0,
-13:36,Bayer Leverkusen,carry,26,pass,27,1,0.0062,0.0101,0.0163,0.0062,3,no clear difference from the best option,0,0.0
-13:43,Bayer Leverkusen,pass (completed),25,pass,27,2,0.016,0.0043,0.0203,0.016,7,no clear difference from the best option,0,0.0
-13:46,Bayer Leverkusen,pass (completed),25,pass,28,3,0.0225,0.0046,0.0271,0.0225,7,no clear difference from the best option,0,0.0
-13:49,Bayer Leverkusen,pass (completed),25,pass,27,2,0.0195,0.0034,0.0229,0.0267,8,no clear difference from the best option,0,0.0
-13:57,Bayer Leverkusen,pass (completed),27,pass,27,0,0.0085,0.0163,0.0248,0.0085,9,no clear difference from the best option,0,0.0
-13:58,Bayer Leverkusen,pass (completed),27,pass,27,0,0.001,0.0208,0.0218,0.001,7,no clear difference from the best option,0,0.0
-14:13,Bayer Leverkusen,carry,27,shot,28,1,0.0112,0.0181,0.0293,0.0139,7,no clear difference from the best option,0,0.0
-14:17,Bayer Leverkusen,carry,27,pass,27,0,0.0013,0.0201,0.0214,0.0013,5,no clear difference from the best option,0,0.0
-14:37,Bayer Leverkusen,pass (completed),27,pass,29,2,0.0232,0.0204,0.0436,0.0232,8,no clear difference from the best option,0,0.0
-14:38,Bayer Leverkusen,carry,27,pass,31,4,0.0359,0.0238,0.0597,0.0359,9,clearly below the best option,0,0.0
-14:38,Bayer Leverkusen,pass (completed),27,pass,31,4,0.0389,0.0168,0.0557,0.0389,9,clearly below the best option,0,0.0
-14:39,Bayer Leverkusen,carry,26,pass,28,2,0.0223,0.0076,0.03,0.0386,6,no clear difference from the best option,0,0.0
-14:40,Bayer Leverkusen,pass (completed),28,pass,28,0,0.0,0.0268,0.0268,0.0,6,no clear difference from the best option,0,0.0
-14:41,Bayer Leverkusen,pass (failed),35,pass,35,0,0.0,0.0925,0.0925,0.0,5,no clear difference from the best option,0,0.0
-15:30,Bayer Leverkusen,carry,26,pass,27,1,0.0068,0.0129,0.0197,0.0068,6,no clear difference from the best option,0,0.174
-15:32,Bayer Leverkusen,carry,31,shot,34,3,0.0306,0.0571,0.0876,0.0306,7,clearly below the best option,0,0.174
-15:35,Bayer Leverkusen,carry,41,carry,41,0,0.0,0.153,0.153,0.0,6,no clear difference from the best option,0,0.174
-15:36,Bayer Leverkusen,shot,45,shot,45,0,0.0,0.1852,0.1852,0.0,5,no clear difference from the best option,0,
-18:24,Bayer Leverkusen,carry,26,carry,26,0,0.0,0.0125,0.0125,0.0,5,no clear difference from the best option,0,0.0
-18:31,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0226,0.0065,0.0291,0.0226,4,no clear difference from the best option,0,0.0518
-18:34,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0079,0.0152,0.023,0.0079,8,no clear difference from the best option,0,0.1023
-18:37,Bayer Leverkusen,pass (completed),30,pass,30,0,0.0002,0.046,0.0462,0.0002,7,no clear difference from the best option,0,0.1023
-18:38,Bayer Leverkusen,carry,32,pass,34,2,0.0214,0.0651,0.0865,0.0214,8,no clear difference from the best option,0,0.1023
-18:39,Bayer Leverkusen,shot,32,shot,32,0,0.0,0.063,0.063,0.0,7,no clear difference from the best option,0,
-18:40,Bayer Leverkusen,carry,31,shot,32,1,0.0117,0.053,0.0647,0.0283,7,no clear difference from the best option,0,0.0505
-18:42,Bayer Leverkusen,shot,31,shot,31,0,0.0,0.0587,0.0587,0.0,8,no clear difference from the best option,0,
-19:21,Darmstadt 98,pass (completed),31,pass,31,0,0.0,0.0616,0.0616,0.0028,4,no clear difference from the best option,0,0.0744
-19:22,Darmstadt 98,carry,31,shot,41,10,0.0914,0.0595,0.1508,0.0914,5,clearly below the best option,0,0.0744
-19:24,Darmstadt 98,shot,40,shot,40,0,0.0,0.1411,0.1411,0.0,5,no clear difference from the best option,0,
-20:16,Bayer Leverkusen,carry,45,carry,45,0,0.0,0.1857,0.1857,0.0076,2,no clear difference from the best option,0,0.2702
-20:18,Bayer Leverkusen,shot,59,shot,59,0,0.0,0.3207,0.3207,0.0,2,no clear difference from the best option,1,
-26:27,Darmstadt 98,carry,26,shot,32,6,0.0519,0.0149,0.0668,0.0519,3,clearly below the best option,0,0.0
-27:18,Bayer Leverkusen,carry,26,pass,26,0,0.0026,0.0109,0.0135,0.0026,6,no clear difference from the best option,0,0.0
-27:20,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0029,0.0144,0.0173,0.0029,7,no clear difference from the best option,0,0.0
-27:20,Bayer Leverkusen,pass (completed),27,pass,28,1,0.013,0.0167,0.0298,0.013,7,no clear difference from the best option,0,0.0
-27:49,Bayer Leverkusen,carry,27,shot,31,4,0.0423,0.0183,0.0605,0.0423,6,clearly below the best option,0,0.0
-27:51,Bayer Leverkusen,pass (completed),30,pass,30,0,0.0,0.0501,0.0501,0.0,5,no clear difference from the best option,0,0.0
-27:53,Bayer Leverkusen,carry,30,pass,38,8,0.0722,0.0477,0.1199,0.0722,5,clearly below the best option,0,0.0
-28:12,Bayer Leverkusen,pass (completed),25,pass,26,1,0.0067,0.0056,0.0123,0.0067,9,no clear difference from the best option,0,0.0
-28:13,Bayer Leverkusen,carry,26,pass,27,1,0.0126,0.0066,0.0192,0.0126,8,no clear difference from the best option,0,0.0
-28:14,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0092,0.0089,0.0181,0.0092,9,no clear difference from the best option,0,0.0
-28:15,Bayer Leverkusen,carry,26,pass,28,2,0.022,0.0079,0.03,0.022,7,no clear difference from the best option,0,0.0
-28:18,Bayer Leverkusen,pass (failed),26,pass,27,1,0.006,0.0109,0.0169,0.006,5,no clear difference from the best option,0,0.0
-28:25,Bayer Leverkusen,carry,26,carry,26,0,0.0,0.015,0.015,0.0,5,no clear difference from the best option,0,0.0
-29:01,Bayer Leverkusen,carry,26,pass,27,1,0.0107,0.0108,0.0215,0.0107,8,no clear difference from the best option,0,0.0
-29:04,Bayer Leverkusen,pass (completed),27,pass,27,0,0.0047,0.0198,0.0245,0.0047,7,no clear difference from the best option,0,0.0
-29:05,Bayer Leverkusen,pass (completed),26,shot,31,5,0.0488,0.0116,0.0604,0.0488,7,clearly below the best option,0,0.0
-29:06,Bayer Leverkusen,carry,26,shot,28,2,0.0157,0.012,0.0276,0.0157,6,no clear difference from the best option,0,0.0
-29:08,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0191,0.0078,0.0269,0.0284,7,no clear difference from the best option,0,0.0
-29:09,Bayer Leverkusen,carry,26,pass,27,1,0.0128,0.0075,0.0203,0.0128,7,no clear difference from the best option,0,0.0
-29:09,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0087,0.0092,0.0179,0.0108,7,no clear difference from the best option,0,0.0
-29:55,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0082,0.011,0.0192,0.0107,5,no clear difference from the best option,0,0.0
-29:56,Bayer Leverkusen,carry,26,pass,28,2,0.0173,0.0116,0.0289,0.0173,7,no clear difference from the best option,0,0.0
-29:57,Bayer Leverkusen,pass (failed),26,pass,27,1,0.0102,0.0109,0.0211,0.0119,6,no clear difference from the best option,0,0.0
-31:40,Bayer Leverkusen,carry,36,pass,36,0,0.0049,0.1025,0.1074,0.0049,3,no clear difference from the best option,0,0.1478
-31:41,Bayer Leverkusen,carry,36,pass,36,0,0.0014,0.102,0.1034,0.0014,3,no clear difference from the best option,0,0.1478
-31:42,Bayer Leverkusen,shot,40,shot,40,0,0.0,0.1395,0.1395,0.0156,2,no clear difference from the best option,0,
-31:53,Bayer Leverkusen,carry,31,shot,33,2,0.022,0.0579,0.0799,0.022,7,no clear difference from the best option,0,0.0505
-31:54,Bayer Leverkusen,shot,29,pass,31,2,0.0202,0.0414,0.0616,0.0202,6,no clear difference from the best option,0,
-31:58,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0195,0.0119,0.0314,0.0195,7,no clear difference from the best option,0,0.0
-31:59,Bayer Leverkusen,carry,26,pass,28,2,0.024,0.0093,0.0333,0.041,7,no clear difference from the best option,0,0.0
-32:00,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0122,0.0104,0.0225,0.0122,8,no clear difference from the best option,0,0.0
-32:02,Bayer Leverkusen,carry,26,pass,29,3,0.0278,0.0157,0.0435,0.0278,8,no clear difference from the best option,0,0.0
-32:03,Bayer Leverkusen,pass (completed),29,pass,29,0,0.0,0.0347,0.0347,0.0,9,no clear difference from the best option,0,0.0
-32:09,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0083,0.0123,0.0207,0.0083,6,no clear difference from the best option,0,0.1196
-32:10,Bayer Leverkusen,pass (completed),26,pass,26,0,0.0062,0.0075,0.0137,0.0062,6,no clear difference from the best option,0,0.1196
-32:12,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0129,0.0148,0.0277,0.0129,7,no clear difference from the best option,0,0.1196
-32:13,Bayer Leverkusen,pass (completed),30,pass,30,0,0.0,0.0514,0.0514,0.0,8,no clear difference from the best option,0,0.1196
-32:16,Bayer Leverkusen,shot,39,pass,40,1,0.0125,0.1334,0.1459,0.0125,7,no clear difference from the best option,0,
-33:21,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0138,0.0157,0.0296,0.0138,4,no clear difference from the best option,0,0.0405
-33:22,Bayer Leverkusen,pass (completed),27,pass,28,1,0.0042,0.0216,0.0259,0.0042,5,no clear difference from the best option,0,0.0405
-33:25,Bayer Leverkusen,pass (completed),28,pass,29,1,0.0088,0.0265,0.0354,0.0088,6,no clear difference from the best option,0,0.0405
-33:26,Bayer Leverkusen,shot,28,pass,32,4,0.0298,0.034,0.0638,0.0298,7,no clear difference from the best option,0,
-34:41,Darmstadt 98,pass (completed),26,pass,26,0,0.0022,0.0078,0.01,0.0186,3,no clear difference from the best option,0,0.0
-34:41,Darmstadt 98,pass (completed),26,pass,27,1,0.0145,0.0082,0.0227,0.0145,4,no clear difference from the best option,0,0.0
-34:42,Darmstadt 98,carry,26,pass,27,1,0.0148,0.0065,0.0213,0.0148,4,no clear difference from the best option,0,0.0
-34:45,Darmstadt 98,pass (failed),25,pass,26,1,0.0064,0.0058,0.0121,0.0068,3,no clear difference from the best option,0,0.0
-34:56,Darmstadt 98,carry,27,pass,28,1,0.0122,0.0172,0.0294,0.0122,6,no clear difference from the best option,0,0.0
-35:01,Darmstadt 98,pass (failed),27,pass,30,3,0.0219,0.0232,0.0451,0.0219,6,no clear difference from the best option,0,0.0
-35:50,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0083,0.0115,0.0198,0.0083,8,no clear difference from the best option,0,0.0
-35:51,Bayer Leverkusen,carry,27,pass,28,1,0.0138,0.0177,0.0315,0.0138,7,no clear difference from the best option,0,0.0
-35:52,Bayer Leverkusen,pass (completed),29,pass,29,0,0.0016,0.037,0.0386,0.0016,7,no clear difference from the best option,0,0.0
-35:53,Bayer Leverkusen,pass (completed),29,shot,34,5,0.0547,0.0352,0.0899,0.0547,6,clearly below the best option,0,0.0
-35:55,Bayer Leverkusen,carry,28,pass,34,6,0.048,0.0333,0.0812,0.048,4,clearly below the best option,0,0.0
-36:06,Bayer Leverkusen,carry,26,pass,27,1,0.0063,0.015,0.0213,0.0063,6,no clear difference from the best option,0,0.0
-36:06,Bayer Leverkusen,pass (completed),26,pass,26,0,0.0039,0.0111,0.015,0.0039,6,no clear difference from the best option,0,0.0
-36:08,Bayer Leverkusen,pass (completed),26,pass,26,0,0.0079,0.0078,0.0157,0.0079,7,no clear difference from the best option,0,0.0
-36:09,Bayer Leverkusen,carry,26,pass,29,3,0.0331,0.0091,0.0422,0.0331,7,no clear difference from the best option,0,0.0
-36:10,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0198,0.0068,0.0266,0.0198,8,no clear difference from the best option,0,0.0
-36:12,Bayer Leverkusen,carry,26,pass,27,1,0.0098,0.0107,0.0205,0.0222,8,no clear difference from the best option,0,0.0
-36:13,Bayer Leverkusen,pass (completed),25,pass,28,3,0.0242,0.0054,0.0296,0.0242,8,no clear difference from the best option,0,0.0
-36:17,Bayer Leverkusen,pass (failed),28,pass,28,0,0.0023,0.0297,0.032,0.0142,8,no clear difference from the best option,0,0.0
-36:20,Bayer Leverkusen,pass (completed),26,shot,29,3,0.0243,0.0138,0.0382,0.0243,7,no clear difference from the best option,0,0.0
-36:22,Bayer Leverkusen,carry,27,pass,27,0,0.0018,0.0222,0.024,0.0018,8,no clear difference from the best option,0,0.0
-36:23,Bayer Leverkusen,pass (completed),27,pass,29,2,0.021,0.0187,0.0397,0.021,8,no clear difference from the best option,0,0.0
-36:25,Bayer Leverkusen,pass (failed),27,pass,29,2,0.0245,0.0174,0.0419,0.0245,9,no clear difference from the best option,0,0.0
-36:43,Bayer Leverkusen,pass (completed),27,shot,28,1,0.0066,0.0202,0.0268,0.0066,6,no clear difference from the best option,0,0.043
-36:44,Bayer Leverkusen,carry,28,shot,29,1,0.0168,0.0257,0.0424,0.0168,6,no clear difference from the best option,0,0.043
-36:46,Bayer Leverkusen,pass (completed),27,pass,28,1,0.0039,0.0215,0.0254,0.0039,7,no clear difference from the best option,0,0.043
-36:46,Bayer Leverkusen,carry,27,pass,29,2,0.0188,0.0233,0.0421,0.0188,7,no clear difference from the best option,0,0.043
-36:47,Bayer Leverkusen,pass (completed),28,pass,30,2,0.0141,0.0326,0.0467,0.0141,8,no clear difference from the best option,0,0.043
-36:47,Bayer Leverkusen,carry,28,pass,31,3,0.024,0.0321,0.0561,0.024,7,no clear difference from the best option,0,0.043
-36:48,Bayer Leverkusen,pass (completed),28,pass,32,4,0.0387,0.0274,0.0661,0.0387,7,clearly below the best option,0,0.043
-36:50,Bayer Leverkusen,pass (completed),27,pass,28,1,0.0077,0.024,0.0318,0.0128,6,no clear difference from the best option,0,0.043
-36:51,Bayer Leverkusen,carry,29,shot,36,7,0.0584,0.0425,0.1008,0.0584,6,clearly below the best option,0,0.043
-36:52,Bayer Leverkusen,shot,33,shot,33,0,0.0,0.0733,0.0733,0.0,4,no clear difference from the best option,0,
-39:02,Darmstadt 98,pass (completed),26,pass,27,1,0.0119,0.0086,0.0205,0.0119,5,no clear difference from the best option,0,0.0
-39:03,Darmstadt 98,carry,27,pass,27,0,0.0057,0.0188,0.0245,0.0057,5,no clear difference from the best option,0,0.0
-39:06,Darmstadt 98,carry,29,carry,29,0,0.0,0.0414,0.0414,0.0,5,no clear difference from the best option,0,0.0
-39:49,Bayer Leverkusen,pass (failed),26,pass,27,1,0.0135,0.0091,0.0226,0.0135,7,no clear difference from the best option,0,0.0
-40:11,Bayer Leverkusen,pass (completed),27,pass,29,2,0.0226,0.0182,0.0408,0.0226,6,no clear difference from the best option,0,0.0
-40:12,Bayer Leverkusen,carry,26,pass,29,3,0.0294,0.0075,0.037,0.0294,6,no clear difference from the best option,0,0.0
-40:35,Bayer Leverkusen,pass (completed),25,pass,26,1,0.0077,0.003,0.0107,0.0077,9,no clear difference from the best option,0,0.0
-40:40,Bayer Leverkusen,pass (completed),28,pass,28,0,0.0,0.0304,0.0304,0.0,8,no clear difference from the best option,0,0.0
-40:40,Bayer Leverkusen,pass (completed),28,shot,28,0,0.0031,0.0293,0.0323,0.0105,6,no clear difference from the best option,0,0.0
-40:41,Bayer Leverkusen,carry,34,carry,34,0,0.0,0.0867,0.0867,0.0,7,no clear difference from the best option,0,0.0
-41:58,Bayer Leverkusen,pass (completed),29,pass,40,11,0.1014,0.0362,0.1376,0.1014,8,clearly below the best option,0,0.0388
-41:59,Bayer Leverkusen,carry,32,shot,40,8,0.0751,0.0676,0.1427,0.0751,8,clearly below the best option,0,0.0388
-42:01,Bayer Leverkusen,shot,30,pass,35,5,0.0496,0.0464,0.096,0.0496,8,clearly below the best option,0,
-42:57,Bayer Leverkusen,pass (completed),27,pass,27,0,0.0009,0.0201,0.021,0.0009,9,no clear difference from the best option,0,0.0
-42:58,Bayer Leverkusen,pass (failed),27,shot,28,1,0.0052,0.0229,0.0281,0.0052,8,no clear difference from the best option,0,0.0
-45:38,Bayer Leverkusen,carry,26,pass,27,1,0.0061,0.01,0.0161,0.0061,8,no clear difference from the best option,0,0.0605
-45:38,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0125,0.008,0.0205,0.0125,8,no clear difference from the best option,0,0.0605
-45:39,Bayer Leverkusen,pass (completed),27,shot,29,2,0.0189,0.016,0.035,0.0189,8,no clear difference from the best option,0,0.0605
-45:39,Bayer Leverkusen,carry,29,shot,30,1,0.0052,0.0394,0.0446,0.0052,8,no clear difference from the best option,0,0.0605
-45:42,Bayer Leverkusen,shot,31,shot,31,0,0.0,0.0604,0.0604,0.0,4,no clear difference from the best option,0,
-47:05,Bayer Leverkusen,carry,26,pass,27,1,0.0064,0.0127,0.0191,0.0064,6,no clear difference from the best option,0,0.0
-47:07,Bayer Leverkusen,pass (completed),27,pass,28,1,0.0179,0.0159,0.0338,0.0179,6,no clear difference from the best option,0,0.0
-47:09,Bayer Leverkusen,pass (completed),27,pass,29,2,0.0151,0.0202,0.0352,0.0151,7,no clear difference from the best option,0,0.0
-47:10,Bayer Leverkusen,pass (completed),27,pass,27,0,0.0,0.022,0.022,0.0087,6,no clear difference from the best option,0,0.0
-47:11,Bayer Leverkusen,pass (completed),27,shot,29,2,0.0168,0.0187,0.0355,0.0168,8,no clear difference from the best option,0,0.0
-47:13,Bayer Leverkusen,carry,32,shot,42,10,0.0914,0.064,0.1554,0.0914,8,clearly below the best option,0,0.0
-47:13,Bayer Leverkusen,pass (completed),28,shot,32,4,0.0334,0.0314,0.0648,0.0334,7,clearly below the best option,0,0.0
-47:14,Bayer Leverkusen,carry,28,shot,31,3,0.0341,0.0259,0.06,0.0341,7,clearly below the best option,0,0.0
-47:15,Bayer Leverkusen,pass (completed),27,shot,30,3,0.0326,0.019,0.0515,0.0326,8,clearly below the best option,0,0.0
-47:16,Bayer Leverkusen,pass (completed),28,shot,30,2,0.024,0.0253,0.0493,0.024,6,no clear difference from the best option,0,0.0
-47:17,Bayer Leverkusen,carry,28,shot,28,0,0.0049,0.0268,0.0317,0.0137,5,no clear difference from the best option,0,0.0
-47:20,Bayer Leverkusen,carry,31,shot,34,3,0.034,0.0544,0.0884,0.034,8,clearly below the best option,0,0.0
-47:21,Bayer Leverkusen,pass (completed),33,pass,33,0,0.0,0.073,0.073,0.0,8,no clear difference from the best option,0,0.0
-47:21,Bayer Leverkusen,carry,32,shot,38,6,0.054,0.0672,0.1213,0.054,9,clearly below the best option,0,0.0
-47:24,Bayer Leverkusen,pass (failed),39,pass,39,0,0.0,0.13,0.13,0.0,8,no clear difference from the best option,0,0.0
-47:35,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0186,0.0093,0.0278,0.0186,9,no clear difference from the best option,0,0.0
-47:37,Bayer Leverkusen,carry,26,shot,29,3,0.0254,0.0115,0.0369,0.0254,8,no clear difference from the best option,0,0.0
-47:40,Bayer Leverkusen,pass (failed),26,pass,27,1,0.0067,0.015,0.0217,0.0067,8,no clear difference from the best option,0,0.0
-47:44,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0116,0.0127,0.0243,0.0162,7,no clear difference from the best option,0,0.0
-47:47,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0051,0.0128,0.018,0.0051,5,no clear difference from the best option,0,0.0
-47:48,Bayer Leverkusen,pass (completed),28,pass,29,1,0.0119,0.0251,0.037,0.0119,8,no clear difference from the best option,0,0.0
-47:55,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0149,0.0097,0.0246,0.0149,9,no clear difference from the best option,0,0.0
-47:57,Bayer Leverkusen,carry,27,pass,28,1,0.0074,0.0186,0.0261,0.0074,9,no clear difference from the best option,0,0.0
-48:00,Bayer Leverkusen,pass (failed),28,pass,29,1,0.011,0.028,0.0389,0.011,7,no clear difference from the best option,0,0.0
-48:34,Bayer Leverkusen,pass (completed),30,shot,32,2,0.02,0.0447,0.0646,0.02,6,no clear difference from the best option,0,0.0
-48:35,Bayer Leverkusen,carry,29,pass,31,2,0.0199,0.0414,0.0613,0.0199,6,no clear difference from the best option,0,0.0
-46:20,Bayer Leverkusen,pass (completed),26,shot,28,2,0.0214,0.0076,0.029,0.0214,5,no clear difference from the best option,0,0.0
-46:24,Bayer Leverkusen,carry,32,shot,38,6,0.057,0.065,0.122,0.057,5,clearly below the best option,0,0.0
-47:03,Bayer Leverkusen,pass (completed),30,pass,30,0,0.0028,0.0445,0.0473,0.0028,6,no clear difference from the best option,0,0.0
-47:04,Bayer Leverkusen,carry,33,carry,33,0,0.0,0.0777,0.0777,0.0,5,no clear difference from the best option,0,0.0
-48:07,Bayer Leverkusen,carry,36,pass,84,48,0.4488,0.1038,0.5526,0.5815,4,clearly below the best option,0,0.0697
-48:08,Bayer Leverkusen,shot,31,pass,52,21,0.1931,0.0589,0.252,0.2368,4,clearly below the best option,1,
-49:31,Bayer Leverkusen,pass (completed),28,pass,28,0,0.0,0.0282,0.0282,0.0,6,no clear difference from the best option,0,0.0
-49:32,Bayer Leverkusen,carry,30,carry,30,0,0.0,0.0466,0.0466,0.0,5,no clear difference from the best option,0,0.0
-49:59,Bayer Leverkusen,pass (failed),25,pass,26,1,0.0054,0.002,0.0074,0.0054,7,no clear difference from the best option,0,0.0
-50:55,Bayer Leverkusen,pass (failed),25,pass,25,0,0.0,0.0062,0.0062,0.0,5,no clear difference from the best option,0,0.0
-51:31,Bayer Leverkusen,pass (completed),25,pass,26,1,0.0039,0.003,0.0069,0.0039,6,no clear difference from the best option,0,0.0
-51:31,Bayer Leverkusen,carry,25,pass,26,1,0.0035,0.003,0.0065,0.0035,6,no clear difference from the best option,0,0.0
-51:32,Bayer Leverkusen,pass (completed),25,pass,25,0,0.005,0.0005,0.0055,0.005,7,no clear difference from the best option,0,0.0
-51:49,Bayer Leverkusen,carry,28,shot,39,11,0.1009,0.0298,0.1307,0.1009,4,clearly below the best option,0,0.0
-51:50,Bayer Leverkusen,pass (completed),29,pass,30,1,0.0066,0.0417,0.0483,0.0066,6,no clear difference from the best option,0,0.0
-51:51,Bayer Leverkusen,carry,30,shot,47,17,0.1547,0.0483,0.203,0.1547,5,clearly below the best option,0,0.0
-52:01,Bayer Leverkusen,pass (completed),27,pass,34,7,0.0654,0.0221,0.0876,0.0654,5,clearly below the best option,0,0.0
-52:03,Bayer Leverkusen,carry,25,pass,30,5,0.0439,0.0005,0.0444,0.0439,5,clearly below the best option,0,0.0
-53:40,Bayer Leverkusen,pass (failed),26,shot,28,2,0.0173,0.0136,0.0309,0.0173,4,no clear difference from the best option,0,0.0
-54:07,Bayer Leverkusen,pass (completed),25,pass,26,1,0.0101,0.0014,0.0115,0.0101,7,no clear difference from the best option,0,0.0
-54:25,Bayer Leverkusen,pass (completed),28,shot,30,2,0.0209,0.027,0.0478,0.0209,5,no clear difference from the best option,0,0.0
-54:26,Bayer Leverkusen,carry,27,shot,30,3,0.0303,0.0211,0.0514,0.0303,7,clearly below the best option,0,0.0
-54:27,Bayer Leverkusen,pass (completed),27,pass,29,2,0.0228,0.018,0.0407,0.0228,4,no clear difference from the best option,0,0.0
-54:29,Bayer Leverkusen,carry,26,pass,29,3,0.0276,0.0116,0.0392,0.0276,4,no clear difference from the best option,0,0.0
-54:36,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0047,0.0116,0.0163,0.0047,6,no clear difference from the best option,0,0.0
-54:37,Bayer Leverkusen,carry,27,pass,29,2,0.0223,0.0179,0.0402,0.0223,7,no clear difference from the best option,0,0.0
-54:37,Bayer Leverkusen,pass (completed),25,pass,30,5,0.0421,0.0049,0.047,0.0421,7,clearly below the best option,0,0.0
-54:39,Bayer Leverkusen,carry,25,pass,27,2,0.0137,0.0046,0.0183,0.0246,5,no clear difference from the best option,0,0.0
-54:42,Bayer Leverkusen,pass (completed),26,pass,26,0,0.0043,0.0079,0.0122,0.0121,6,no clear difference from the best option,0,0.0
-54:42,Bayer Leverkusen,pass (completed),25,pass,27,2,0.0123,0.0054,0.0177,0.0199,6,no clear difference from the best option,0,0.0
-54:44,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0082,0.01,0.0182,0.0082,7,no clear difference from the best option,0,0.0
-54:44,Bayer Leverkusen,carry,26,pass,27,1,0.0057,0.0138,0.0195,0.0057,6,no clear difference from the best option,0,0.0
-56:13,Bayer Leverkusen,carry,26,carry,26,0,0.0,0.0082,0.0082,0.0,5,no clear difference from the best option,0,0.0
-58:28,Darmstadt 98,carry,26,carry,26,0,0.0,0.0153,0.0153,0.0,5,no clear difference from the best option,0,0.0223
-58:31,Darmstadt 98,pass (completed),28,pass,28,0,0.0,0.0258,0.0258,0.0,5,no clear difference from the best option,0,0.0223
-58:31,Darmstadt 98,pass (completed),29,pass,29,0,0.0,0.0415,0.0415,0.0046,4,no clear difference from the best option,0,0.0223
-58:32,Darmstadt 98,pass (completed),28,shot,29,1,0.0036,0.0344,0.038,0.0502,4,no clear difference from the best option,0,0.0223
-58:33,Darmstadt 98,carry,32,pass,50,18,0.1685,0.0693,0.2378,0.1685,5,clearly below the best option,0,0.0223
-58:34,Darmstadt 98,shot,31,pass,42,11,0.1081,0.0542,0.1623,0.1609,4,clearly below the best option,0,
-58:52,Darmstadt 98,pass (completed),25,pass,27,2,0.0227,0.0008,0.0234,0.0227,4,no clear difference from the best option,0,0.0
-59:47,Bayer Leverkusen,carry,26,pass,26,0,0.0055,0.0094,0.0149,0.0055,4,no clear difference from the best option,0,0.0
-60:19,Bayer Leverkusen,pass (completed),36,pass,36,0,0.0,0.1032,0.1032,0.0,4,no clear difference from the best option,0,0.4024
-60:19,Bayer Leverkusen,carry,49,carry,49,0,0.0,0.2243,0.2243,0.0,3,no clear difference from the best option,0,0.4024
-60:21,Bayer Leverkusen,shot,66,shot,66,0,0.0,0.3829,0.3829,0.0,4,no clear difference from the best option,1,
-63:37,Bayer Leverkusen,carry,36,shot,44,8,0.0713,0.1083,0.1796,0.0713,6,clearly below the best option,0,0.0852
-63:38,Bayer Leverkusen,carry,33,shot,36,3,0.0307,0.0742,0.1049,0.0307,5,clearly below the best option,0,0.0852
-63:40,Bayer Leverkusen,shot,43,shot,43,0,0.0,0.1721,0.1721,0.2422,4,no clear difference from the best option,0,
-66:57,Bayer Leverkusen,pass (completed),27,shot,34,7,0.0671,0.0211,0.0882,0.0671,4,clearly below the best option,0,0.0565
-66:58,Bayer Leverkusen,carry,32,shot,35,3,0.031,0.0638,0.0948,0.031,3,clearly below the best option,0,0.0565
-66:59,Bayer Leverkusen,shot,33,shot,33,0,0.0,0.0805,0.0805,0.0,4,no clear difference from the best option,1,
-70:12,Bayer Leverkusen,pass (completed),25,pass,27,2,0.013,0.0031,0.0161,0.013,5,no clear difference from the best option,0,0.0
-71:39,Bayer Leverkusen,pass (completed),27,shot,29,2,0.0132,0.022,0.0353,0.0132,5,no clear difference from the best option,0,0.0737
-71:41,Bayer Leverkusen,pass (completed),27,shot,30,3,0.0331,0.0167,0.0498,0.0331,6,no clear difference from the best option,0,0.0737
-71:44,Bayer Leverkusen,pass (completed),31,pass,34,3,0.0319,0.058,0.0899,0.0319,6,clearly below the best option,0,0.0737
-73:34,Bayer Leverkusen,pass (completed),25,pass,27,2,0.0147,0.0044,0.0191,0.0147,4,no clear difference from the best option,0,0.0
-73:36,Bayer Leverkusen,pass (completed),26,pass,26,0,0.0062,0.0074,0.0136,0.0139,5,no clear difference from the best option,0,0.0
-73:37,Bayer Leverkusen,carry,25,shot,29,4,0.0325,0.0057,0.0382,0.0325,7,clearly below the best option,0,0.0
-73:39,Bayer Leverkusen,pass (completed),27,pass,27,0,0.0,0.024,0.024,0.0,6,no clear difference from the best option,0,0.0091
-73:39,Bayer Leverkusen,carry,27,shot,35,8,0.0752,0.0221,0.0972,0.0752,6,clearly below the best option,0,0.0091
-73:44,Bayer Leverkusen,carry,27,pass,29,2,0.0231,0.018,0.0411,0.0231,5,no clear difference from the best option,0,0.0091
-73:47,Bayer Leverkusen,shot,27,pass,29,2,0.0154,0.0196,0.035,0.0154,4,no clear difference from the best option,0,
-76:26,Darmstadt 98,shot,27,pass,30,3,0.0303,0.0166,0.0469,0.0303,5,clearly below the best option,0,
-79:59,Bayer Leverkusen,carry,26,pass,28,2,0.023,0.0091,0.0321,0.023,5,no clear difference from the best option,0,0.0
-79:59,Bayer Leverkusen,pass (completed),25,pass,28,3,0.0217,0.0059,0.0277,0.0237,3,no clear difference from the best option,0,0.0
-80:14,Bayer Leverkusen,pass (failed),27,pass,27,0,0.0059,0.0188,0.0247,0.0059,6,no clear difference from the best option,0,0.0
-80:47,Bayer Leverkusen,pass (completed),25,shot,27,2,0.018,0.0034,0.0214,0.018,7,no clear difference from the best option,0,0.0
-80:54,Bayer Leverkusen,pass (completed),26,shot,30,4,0.041,0.0096,0.0506,0.041,8,clearly below the best option,0,0.0
-80:55,Bayer Leverkusen,carry,26,shot,27,1,0.0174,0.0067,0.0241,0.0174,8,no clear difference from the best option,0,0.0
-81:04,Bayer Leverkusen,pass (completed),27,shot,28,1,0.0046,0.024,0.0286,0.0046,7,no clear difference from the best option,0,0.0467
-81:05,Bayer Leverkusen,carry,30,shot,36,6,0.0546,0.0459,0.1005,0.0546,7,clearly below the best option,0,0.0467
-81:06,Bayer Leverkusen,shot,32,shot,32,0,0.0,0.0694,0.0694,0.0,4,no clear difference from the best option,0,
-81:50,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0108,0.0143,0.0251,0.0108,6,no clear difference from the best option,0,0.0
-81:56,Bayer Leverkusen,pass (completed),25,pass,27,2,0.0186,0.0031,0.0217,0.0186,6,no clear difference from the best option,0,0.0
-82:10,Bayer Leverkusen,shot,91,shot,91,0,0.0,0.62,0.62,0.0,3,no clear difference from the best option,1,
-83:45,Bayer Leverkusen,carry,25,shot,29,4,0.0427,0.0002,0.0429,0.0427,4,clearly below the best option,0,0.0
-84:09,Bayer Leverkusen,carry,26,shot,28,2,0.0147,0.0109,0.0255,0.0147,8,no clear difference from the best option,0,0.0
-85:07,Darmstadt 98,carry,25,pass,26,1,0.009,0.0045,0.0135,0.009,6,no clear difference from the best option,0,0.0
-85:08,Darmstadt 98,pass (completed),25,pass,26,1,0.0115,0.0001,0.0117,0.0115,6,no clear difference from the best option,0,0.0
-86:19,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0125,0.0092,0.0217,0.0125,4,no clear difference from the best option,0,0.0
-88:09,Bayer Leverkusen,pass (completed),25,pass,27,2,0.0216,0.0031,0.0247,0.0216,8,no clear difference from the best option,0,0.0
-88:23,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0075,0.0092,0.0167,0.0075,8,no clear difference from the best option,0,0.0
-89:27,Bayer Leverkusen,carry,25,pass,28,3,0.0203,0.0061,0.0264,0.0203,8,no clear difference from the best option,0,0.0
-89:28,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0055,0.0134,0.0189,0.0133,6,no clear difference from the best option,0,0.0
-89:43,Bayer Leverkusen,pass (completed),27,pass,27,0,0.0,0.0203,0.0203,0.0,5,no clear difference from the best option,0,0.0
-89:44,Bayer Leverkusen,carry,38,carry,38,0,0.0,0.1254,0.1254,0.0,6,no clear difference from the best option,0,0.0
-90:05,Bayer Leverkusen,pass (completed),33,pass,33,0,0.0,0.0771,0.0771,0.0,6,no clear difference from the best option,0,0.0603
-90:05,Bayer Leverkusen,carry,36,pass,42,6,0.0566,0.1041,0.1606,0.0566,5,clearly below the best option,0,0.0603
-90:06,Bayer Leverkusen,shot,35,pass,41,6,0.0554,0.0962,0.1515,0.0554,7,clearly below the best option,0,
-90:34,Bayer Leverkusen,shot,45,shot,45,0,0.0,0.1864,0.1864,0.0,6,no clear difference from the best option,0,
-90:36,Bayer Leverkusen,shot,65,shot,65,0,0.0,0.3738,0.3738,0.0,6,no clear difference from the best option,0,
-92:00,Bayer Leverkusen,carry,30,shot,39,9,0.0901,0.0445,0.1345,0.0901,5,clearly below the best option,0,0.0
-92:02,Bayer Leverkusen,pass (failed),26,shot,34,8,0.0742,0.0141,0.0883,0.0742,5,clearly below the best option,0,0.0
-92:26,Bayer Leverkusen,carry,26,shot,27,1,0.0147,0.0103,0.025,0.0147,4,no clear difference from the best option,0,0.0
-92:34,Bayer Leverkusen,pass (completed),29,pass,29,0,0.0,0.0383,0.0383,0.0,4,no clear difference from the best option,0,0.0
-92:34,Bayer Leverkusen,carry,27,shot,32,5,0.0502,0.0161,0.0663,0.0502,2,clearly below the best option,0,0.0
-92:36,Bayer Leverkusen,pass (completed),26,shot,28,2,0.0194,0.0134,0.0328,0.0431,2,no clear difference from the best option,0,0.0
-92:37,Bayer Leverkusen,pass (completed),27,pass,27,0,0.0,0.0179,0.0179,0.0148,3,no clear difference from the best option,0,0.0
-92:38,Bayer Leverkusen,pass (completed),26,shot,30,4,0.0362,0.0084,0.0446,0.0362,5,clearly below the best option,0,0.0
-92:41,Bayer Leverkusen,pass (completed),26,shot,28,2,0.0195,0.0114,0.0309,0.0195,6,no clear difference from the best option,0,0.0
-92:42,Bayer Leverkusen,carry,27,pass,28,1,0.0043,0.0236,0.0279,0.0043,5,no clear difference from the best option,0,0.0
-92:47,Bayer Leverkusen,carry,26,pass,27,1,0.0088,0.0154,0.0242,0.0088,5,no clear difference from the best option,0,0.0
-93:01,Bayer Leverkusen,carry,28,pass,30,2,0.0201,0.0254,0.0455,0.0213,8,no clear difference from the best option,0,0.0
+clock,team,kind,score,best_kind,best_score,gap_points,gap_xg,q,q_best,score_model,q_model,counter_assumed,counter_assumed_any,gap_with_doubt_xg,options_certain,verdict,goal,realised
+01:31,Bayer Leverkusen,carry,26,pass,26,0,0.0075,0.0075,0.015,26,0.0075,False,False,0.0075,6,no clear difference from the best option,0,0.0
+01:34,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0151,0.0084,0.0236,26,0.0084,False,False,0.0151,6,no clear difference from the best option,0,0.0
+01:35,Bayer Leverkusen,carry,26,pass,28,2,0.0126,0.0129,0.0254,26,0.0129,False,False,0.0126,8,no clear difference from the best option,0,0.0
+01:41,Bayer Leverkusen,carry,28,pass,36,8,0.0766,0.0264,0.103,28,0.0264,False,False,0.0766,5,clearly below the best option,0,0.0
+01:43,Bayer Leverkusen,pass (completed),27,pass,29,2,0.0255,0.016,0.0415,27,0.016,False,False,0.0255,6,no clear difference from the best option,0,0.0242
+01:44,Bayer Leverkusen,pass (completed),27,pass,30,3,0.0246,0.0194,0.044,27,0.0194,False,False,0.0246,6,no clear difference from the best option,0,0.0242
+01:45,Bayer Leverkusen,pass (completed),26,pass,30,4,0.0388,0.0129,0.0517,26,0.0129,False,False,0.0388,6,clearly below the best option,0,0.0242
+01:46,Bayer Leverkusen,carry,26,pass,29,3,0.0228,0.0144,0.0372,26,0.0144,False,False,0.0228,6,no clear difference from the best option,0,0.0242
+01:48,Bayer Leverkusen,pass (completed),27,pass,28,1,0.0145,0.0159,0.0304,27,0.0159,False,False,0.0145,5,no clear difference from the best option,0,0.0242
+01:50,Bayer Leverkusen,carry,26,pass,28,2,0.019,0.013,0.032,26,0.013,False,False,0.019,6,no clear difference from the best option,0,0.0242
+03:51,Bayer Leverkusen,pass (failed),27,pass,28,1,0.01,0.0214,0.0314,27,0.0214,False,False,0.01,4,no clear difference from the best option,0,0.0
+04:15,Bayer Leverkusen,pass (completed),25,shot,27,2,0.0125,0.0054,0.0178,25,0.0054,False,False,0.0125,6,no clear difference from the best option,0,0.0
+04:19,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0177,0.0085,0.0263,26,0.0085,False,False,0.0177,5,no clear difference from the best option,0,0.0
+04:23,Bayer Leverkusen,pass (completed),26,pass,29,3,0.0339,0.0094,0.0433,26,0.0094,False,False,0.0339,7,no clear difference from the best option,0,0.0
+04:24,Bayer Leverkusen,carry,25,pass,29,4,0.0366,0.0033,0.0398,25,0.0033,False,False,0.0366,6,no clear difference from the best option,0,0.0
+04:27,Bayer Leverkusen,pass (completed),25,pass,27,2,0.011,0.0053,0.0162,25,0.0053,False,False,0.011,6,no clear difference from the best option,0,0.0
+04:28,Bayer Leverkusen,pass (completed),25,pass,27,2,0.015,0.0019,0.0169,25,0.0019,False,False,0.015,6,no clear difference from the best option,0,0.0
+04:35,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0156,0.014,0.0296,26,0.014,False,False,0.0156,7,no clear difference from the best option,0,0.0
+04:36,Bayer Leverkusen,carry,27,pass,29,2,0.021,0.0195,0.0405,27,0.0195,False,False,0.021,7,no clear difference from the best option,0,0.0
+04:36,Bayer Leverkusen,pass (completed),26,pass,30,4,0.0338,0.0103,0.0441,26,0.0103,False,False,0.0338,7,clearly below the best option,0,0.0
+04:36,Bayer Leverkusen,carry,26,pass,28,2,0.0199,0.01,0.0298,26,0.01,False,False,0.0199,7,no clear difference from the best option,0,0.0
+04:41,Bayer Leverkusen,pass (failed),26,pass,26,0,0.0,0.0155,0.0155,26,0.0155,False,False,0.0,6,no clear difference from the best option,0,0.0
+04:57,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0109,0.0133,0.0242,26,0.0133,False,False,0.0109,6,no clear difference from the best option,0,0.0
+04:58,Bayer Leverkusen,carry,27,pass,28,1,0.0113,0.0161,0.0274,27,0.0161,False,False,0.0113,6,no clear difference from the best option,0,0.0
+04:59,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0155,0.0133,0.0288,26,0.0133,False,False,0.0155,7,no clear difference from the best option,0,0.0
+05:00,Bayer Leverkusen,carry,25,pass,28,3,0.0289,0.0036,0.0325,25,0.0036,False,False,0.0289,5,no clear difference from the best option,0,0.0
+05:03,Bayer Leverkusen,pass (completed),25,pass,29,4,0.0328,0.0063,0.0391,25,0.0063,False,False,0.0328,6,clearly below the best option,0,0.0
+05:08,Bayer Leverkusen,pass (failed),28,pass,28,0,0.0,0.0261,0.0261,28,0.0261,False,False,0.0,5,no clear difference from the best option,0,0.0
+07:51,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0069,0.0147,0.0216,26,0.0147,False,False,0.0069,6,no clear difference from the best option,0,0.0
+07:52,Bayer Leverkusen,pass (completed),27,pass,29,2,0.0152,0.0206,0.0359,27,0.0206,False,False,0.0152,7,no clear difference from the best option,0,0.0
+07:54,Bayer Leverkusen,carry,27,pass,29,2,0.025,0.0164,0.0414,27,0.0164,False,False,0.025,4,no clear difference from the best option,0,0.0
+07:54,Bayer Leverkusen,pass (completed),29,pass,29,0,0.0004,0.0363,0.0367,29,0.0363,False,False,0.0004,6,no clear difference from the best option,0,0.0
+07:55,Bayer Leverkusen,carry,31,carry,31,0,0.0,0.0577,0.0577,31,0.0577,False,False,0.0,6,no clear difference from the best option,0,0.0
+08:35,Bayer Leverkusen,shot,37,pass,39,2,0.0159,0.116,0.1319,37,0.116,False,False,0.0159,8,no clear difference from the best option,0,
+08:37,Bayer Leverkusen,carry,28,pass,31,3,0.0279,0.0264,0.0543,28,0.0264,False,False,0.0279,7,no clear difference from the best option,0,0.0
+08:39,Bayer Leverkusen,pass (failed),27,pass,29,2,0.0194,0.0211,0.0405,27,0.0211,False,False,0.0194,8,no clear difference from the best option,0,0.0
+09:49,Bayer Leverkusen,pass (completed),25,pass,25,0,0.004,0.0012,0.0052,25,0.0012,False,False,0.004,7,no clear difference from the best option,0,0.0
+11:13,Bayer Leverkusen,pass (failed),26,pass,28,2,0.0134,0.014,0.0274,26,0.014,False,False,0.0134,7,no clear difference from the best option,0,0.0
+13:18,Darmstadt 98,shot,29,shot,29,0,0.0,0.0402,0.0402,29,0.0402,False,False,0.0,1,no clear difference from the best option,0,
+13:36,Bayer Leverkusen,carry,26,pass,27,1,0.0062,0.0101,0.0163,26,0.0101,False,False,0.0062,3,no clear difference from the best option,0,0.0
+13:43,Bayer Leverkusen,pass (completed),25,pass,27,2,0.016,0.0043,0.0203,25,0.0043,False,False,0.016,7,no clear difference from the best option,0,0.0
+13:46,Bayer Leverkusen,pass (completed),25,pass,28,3,0.0225,0.0046,0.0271,25,0.0046,False,False,0.0225,7,no clear difference from the best option,0,0.0
+13:49,Bayer Leverkusen,pass (completed),25,pass,27,2,0.0195,0.0034,0.0229,25,0.0034,False,False,0.0267,8,no clear difference from the best option,0,0.0
+13:57,Bayer Leverkusen,pass (completed),27,pass,27,0,0.0085,0.0163,0.0248,27,0.0163,False,False,0.0085,9,no clear difference from the best option,0,0.0
+13:58,Bayer Leverkusen,pass (completed),27,pass,27,0,0.001,0.0208,0.0218,27,0.0208,False,False,0.001,7,no clear difference from the best option,0,0.0
+14:13,Bayer Leverkusen,carry,27,shot,28,1,0.0112,0.0181,0.0293,27,0.0181,False,False,0.0139,7,no clear difference from the best option,0,0.0
+14:17,Bayer Leverkusen,carry,27,pass,27,0,0.0013,0.0201,0.0214,27,0.0201,False,False,0.0013,5,no clear difference from the best option,0,0.0
+14:37,Bayer Leverkusen,pass (completed),27,pass,29,2,0.0232,0.0204,0.0436,27,0.0204,False,False,0.0232,8,no clear difference from the best option,0,0.0
+14:38,Bayer Leverkusen,carry,27,pass,31,4,0.0359,0.0238,0.0597,27,0.0238,False,False,0.0359,9,clearly below the best option,0,0.0
+14:38,Bayer Leverkusen,pass (completed),27,pass,31,4,0.0389,0.0168,0.0557,27,0.0168,False,False,0.0389,9,clearly below the best option,0,0.0
+14:39,Bayer Leverkusen,carry,26,pass,28,2,0.0223,0.0076,0.03,26,0.0076,False,False,0.0386,6,no clear difference from the best option,0,0.0
+14:40,Bayer Leverkusen,pass (completed),28,pass,28,0,0.0,0.0268,0.0268,28,0.0268,False,False,0.0,6,no clear difference from the best option,0,0.0
+14:41,Bayer Leverkusen,pass (failed),35,pass,35,0,0.0,0.0925,0.0925,35,0.0925,False,False,0.0,5,no clear difference from the best option,0,0.0
+15:30,Bayer Leverkusen,carry,26,pass,27,1,0.0068,0.0129,0.0197,26,0.0129,False,False,0.0068,6,no clear difference from the best option,0,0.174
+15:32,Bayer Leverkusen,carry,31,shot,34,3,0.0306,0.0571,0.0876,31,0.0571,False,False,0.0306,7,clearly below the best option,0,0.174
+15:35,Bayer Leverkusen,carry,41,carry,41,0,0.0,0.153,0.153,41,0.153,False,False,0.0,6,no clear difference from the best option,0,0.174
+15:36,Bayer Leverkusen,shot,45,shot,45,0,0.0,0.1852,0.1852,45,0.1852,False,False,0.0,5,no clear difference from the best option,0,
+18:24,Bayer Leverkusen,carry,26,carry,26,0,0.0,0.0125,0.0125,26,0.0125,False,False,0.0,5,no clear difference from the best option,0,0.0
+18:31,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0226,0.0065,0.0291,26,0.0065,False,False,0.0226,4,no clear difference from the best option,0,0.0518
+18:34,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0079,0.0152,0.023,26,0.0152,False,False,0.0079,8,no clear difference from the best option,0,0.1023
+18:37,Bayer Leverkusen,pass (completed),30,pass,30,0,0.0002,0.046,0.0462,30,0.046,False,False,0.0002,7,no clear difference from the best option,0,0.1023
+18:38,Bayer Leverkusen,carry,32,pass,34,2,0.0214,0.0651,0.0865,32,0.0651,False,False,0.0214,8,no clear difference from the best option,0,0.1023
+18:39,Bayer Leverkusen,shot,32,shot,32,0,0.0,0.063,0.063,32,0.063,False,False,0.0,7,no clear difference from the best option,0,
+18:40,Bayer Leverkusen,carry,31,shot,32,1,0.0117,0.053,0.0647,31,0.053,False,False,0.0283,7,no clear difference from the best option,0,0.0505
+18:42,Bayer Leverkusen,shot,31,shot,31,0,0.0,0.0587,0.0587,31,0.0587,False,False,0.0,8,no clear difference from the best option,0,
+19:21,Darmstadt 98,pass (completed),31,pass,31,0,0.0,0.0616,0.0616,31,0.0616,False,False,0.0028,4,no clear difference from the best option,0,0.0744
+19:22,Darmstadt 98,carry,31,shot,41,10,0.0914,0.0595,0.1508,31,0.0595,False,False,0.0914,5,clearly below the best option,0,0.0744
+19:24,Darmstadt 98,shot,40,shot,40,0,0.0,0.1411,0.1411,40,0.1411,False,False,0.0,5,no clear difference from the best option,0,
+20:16,Bayer Leverkusen,carry,45,carry,45,0,0.0,0.1857,0.1857,45,0.1857,False,False,0.0076,2,no clear difference from the best option,0,0.2702
+20:18,Bayer Leverkusen,shot,59,shot,59,0,0.0,0.3207,0.3207,59,0.3207,False,False,0.0,2,no clear difference from the best option,1,
+26:27,Darmstadt 98,carry,26,shot,32,6,0.0519,0.0149,0.0668,26,0.0149,False,False,0.0519,3,clearly below the best option,0,0.0
+27:18,Bayer Leverkusen,carry,26,pass,26,0,0.0026,0.0109,0.0135,26,0.0109,False,False,0.0026,6,no clear difference from the best option,0,0.0
+27:20,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0029,0.0144,0.0173,26,0.0144,False,False,0.0029,7,no clear difference from the best option,0,0.0
+27:20,Bayer Leverkusen,pass (completed),27,pass,28,1,0.013,0.0167,0.0298,27,0.0167,False,False,0.013,7,no clear difference from the best option,0,0.0
+27:49,Bayer Leverkusen,carry,27,shot,31,4,0.0423,0.0183,0.0605,27,0.0183,False,False,0.0423,6,clearly below the best option,0,0.0
+27:51,Bayer Leverkusen,pass (completed),30,pass,30,0,0.0,0.0501,0.0501,30,0.0501,False,False,0.0,5,no clear difference from the best option,0,0.0
+27:53,Bayer Leverkusen,carry,30,pass,38,8,0.0722,0.0477,0.1199,30,0.0477,False,False,0.0722,5,clearly below the best option,0,0.0
+28:12,Bayer Leverkusen,pass (completed),25,pass,26,1,0.0067,0.0056,0.0123,25,0.0056,False,False,0.0067,9,no clear difference from the best option,0,0.0
+28:13,Bayer Leverkusen,carry,26,pass,27,1,0.0126,0.0066,0.0192,26,0.0066,False,False,0.0126,8,no clear difference from the best option,0,0.0
+28:14,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0092,0.0089,0.0181,26,0.0089,False,False,0.0092,9,no clear difference from the best option,0,0.0
+28:15,Bayer Leverkusen,carry,26,pass,28,2,0.022,0.0079,0.03,26,0.0079,False,False,0.022,7,no clear difference from the best option,0,0.0
+28:18,Bayer Leverkusen,pass (failed),26,pass,27,1,0.006,0.0109,0.0169,26,0.0109,False,False,0.006,5,no clear difference from the best option,0,0.0
+28:25,Bayer Leverkusen,carry,26,carry,26,0,0.0,0.015,0.015,26,0.015,False,False,0.0,5,no clear difference from the best option,0,0.0
+29:01,Bayer Leverkusen,carry,26,pass,27,1,0.0107,0.0108,0.0215,26,0.0108,False,False,0.0107,8,no clear difference from the best option,0,0.0
+29:04,Bayer Leverkusen,pass (completed),27,pass,27,0,0.0047,0.0198,0.0245,27,0.0198,False,False,0.0047,7,no clear difference from the best option,0,0.0
+29:05,Bayer Leverkusen,pass (completed),26,shot,31,5,0.0488,0.0116,0.0604,26,0.0116,False,False,0.0488,7,clearly below the best option,0,0.0
+29:06,Bayer Leverkusen,carry,26,shot,28,2,0.0157,0.012,0.0276,26,0.012,False,False,0.0157,6,no clear difference from the best option,0,0.0
+29:08,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0191,0.0078,0.0269,26,0.0078,False,False,0.0284,7,no clear difference from the best option,0,0.0
+29:09,Bayer Leverkusen,carry,26,pass,27,1,0.0128,0.0075,0.0203,26,0.0075,False,False,0.0128,7,no clear difference from the best option,0,0.0
+29:09,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0087,0.0092,0.0179,26,0.0092,False,False,0.0108,7,no clear difference from the best option,0,0.0
+29:55,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0082,0.011,0.0192,26,0.011,False,False,0.0107,5,no clear difference from the best option,0,0.0
+29:56,Bayer Leverkusen,carry,26,pass,28,2,0.0173,0.0116,0.0289,26,0.0116,False,False,0.0173,7,no clear difference from the best option,0,0.0
+29:57,Bayer Leverkusen,pass (failed),26,pass,27,1,0.0102,0.0109,0.0211,26,0.0109,False,False,0.0119,6,no clear difference from the best option,0,0.0
+31:40,Bayer Leverkusen,carry,36,pass,36,0,0.0049,0.1025,0.1074,36,0.1025,False,False,0.0049,3,no clear difference from the best option,0,0.1478
+31:41,Bayer Leverkusen,carry,36,pass,36,0,0.0014,0.102,0.1034,36,0.102,False,False,0.0014,3,no clear difference from the best option,0,0.1478
+31:42,Bayer Leverkusen,shot,40,shot,40,0,0.0,0.1395,0.1395,40,0.1395,False,False,0.0156,2,no clear difference from the best option,0,
+31:53,Bayer Leverkusen,carry,31,shot,33,2,0.022,0.0579,0.0799,31,0.0579,False,False,0.022,7,no clear difference from the best option,0,0.0505
+31:54,Bayer Leverkusen,shot,29,pass,31,2,0.0202,0.0414,0.0616,29,0.0414,False,False,0.0202,6,no clear difference from the best option,0,
+31:58,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0195,0.0119,0.0314,26,0.0119,False,False,0.0195,7,no clear difference from the best option,0,0.0
+31:59,Bayer Leverkusen,carry,26,pass,28,2,0.024,0.0093,0.0333,26,0.0093,False,False,0.041,7,no clear difference from the best option,0,0.0
+32:00,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0122,0.0104,0.0225,26,0.0104,False,False,0.0122,8,no clear difference from the best option,0,0.0
+32:02,Bayer Leverkusen,carry,26,pass,29,3,0.0278,0.0157,0.0435,26,0.0157,False,False,0.0278,8,no clear difference from the best option,0,0.0
+32:03,Bayer Leverkusen,pass (completed),29,pass,29,0,0.0,0.0347,0.0347,29,0.0347,False,False,0.0,9,no clear difference from the best option,0,0.0
+32:09,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0083,0.0123,0.0207,26,0.0123,False,False,0.0083,6,no clear difference from the best option,0,0.1196
+32:10,Bayer Leverkusen,pass (completed),26,pass,26,0,0.0062,0.0075,0.0137,26,0.0075,False,False,0.0062,6,no clear difference from the best option,0,0.1196
+32:12,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0129,0.0148,0.0277,26,0.0148,False,False,0.0129,7,no clear difference from the best option,0,0.1196
+32:13,Bayer Leverkusen,pass (completed),30,pass,30,0,0.0,0.0514,0.0514,30,0.0514,False,False,0.0,8,no clear difference from the best option,0,0.1196
+32:16,Bayer Leverkusen,shot,39,pass,40,1,0.0125,0.1334,0.1459,39,0.1334,False,False,0.0125,7,no clear difference from the best option,0,
+33:21,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0138,0.0157,0.0296,26,0.0157,False,False,0.0138,4,no clear difference from the best option,0,0.0405
+33:22,Bayer Leverkusen,pass (completed),27,pass,28,1,0.0042,0.0216,0.0259,27,0.0216,False,False,0.0042,5,no clear difference from the best option,0,0.0405
+33:25,Bayer Leverkusen,pass (completed),28,pass,29,1,0.0088,0.0265,0.0354,28,0.0265,False,False,0.0088,6,no clear difference from the best option,0,0.0405
+33:26,Bayer Leverkusen,shot,28,pass,32,4,0.0298,0.034,0.0638,28,0.034,False,False,0.0298,7,no clear difference from the best option,0,
+34:41,Darmstadt 98,pass (completed),26,pass,26,0,0.0022,0.0078,0.01,26,0.0078,False,False,0.0186,3,no clear difference from the best option,0,0.0
+34:41,Darmstadt 98,pass (completed),26,pass,27,1,0.0145,0.0082,0.0227,26,0.0082,False,False,0.0145,4,no clear difference from the best option,0,0.0
+34:42,Darmstadt 98,carry,26,pass,27,1,0.0148,0.0065,0.0213,26,0.0065,False,False,0.0148,4,no clear difference from the best option,0,0.0
+34:45,Darmstadt 98,pass (failed),25,pass,26,1,0.0064,0.0058,0.0121,25,0.0058,False,False,0.0068,3,no clear difference from the best option,0,0.0
+34:56,Darmstadt 98,carry,27,pass,28,1,0.0122,0.0172,0.0294,27,0.0172,False,False,0.0122,6,no clear difference from the best option,0,0.0
+35:01,Darmstadt 98,pass (failed),27,pass,30,3,0.0219,0.0232,0.0451,27,0.0232,False,False,0.0219,6,no clear difference from the best option,0,0.0
+35:50,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0083,0.0115,0.0198,26,0.0115,False,False,0.0083,8,no clear difference from the best option,0,0.0
+35:51,Bayer Leverkusen,carry,27,pass,28,1,0.0138,0.0177,0.0315,27,0.0177,False,False,0.0138,7,no clear difference from the best option,0,0.0
+35:52,Bayer Leverkusen,pass (completed),29,pass,29,0,0.0016,0.037,0.0386,29,0.037,False,False,0.0016,7,no clear difference from the best option,0,0.0
+35:53,Bayer Leverkusen,pass (completed),29,shot,34,5,0.0547,0.0352,0.0899,29,0.0352,False,False,0.0547,6,clearly below the best option,0,0.0
+35:55,Bayer Leverkusen,carry,28,pass,34,6,0.048,0.0333,0.0812,28,0.0333,False,False,0.048,4,clearly below the best option,0,0.0
+36:06,Bayer Leverkusen,carry,26,pass,27,1,0.0063,0.015,0.0213,26,0.015,False,False,0.0063,6,no clear difference from the best option,0,0.0
+36:06,Bayer Leverkusen,pass (completed),26,pass,26,0,0.0039,0.0111,0.015,26,0.0111,False,False,0.0039,6,no clear difference from the best option,0,0.0
+36:08,Bayer Leverkusen,pass (completed),26,pass,26,0,0.0079,0.0078,0.0157,26,0.0078,False,False,0.0079,7,no clear difference from the best option,0,0.0
+36:09,Bayer Leverkusen,carry,26,pass,29,3,0.0331,0.0091,0.0422,26,0.0091,False,False,0.0331,7,no clear difference from the best option,0,0.0
+36:10,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0198,0.0068,0.0266,26,0.0068,False,False,0.0198,8,no clear difference from the best option,0,0.0
+36:12,Bayer Leverkusen,carry,26,pass,27,1,0.0098,0.0107,0.0205,26,0.0107,False,False,0.0222,8,no clear difference from the best option,0,0.0
+36:13,Bayer Leverkusen,pass (completed),25,pass,28,3,0.0242,0.0054,0.0296,25,0.0054,False,False,0.0242,8,no clear difference from the best option,0,0.0
+36:17,Bayer Leverkusen,pass (failed),28,pass,28,0,0.0023,0.0297,0.032,28,0.0297,False,False,0.0142,8,no clear difference from the best option,0,0.0
+36:20,Bayer Leverkusen,pass (completed),26,shot,29,3,0.0243,0.0138,0.0382,26,0.0138,False,False,0.0243,7,no clear difference from the best option,0,0.0
+36:22,Bayer Leverkusen,carry,27,pass,27,0,0.0018,0.0222,0.024,27,0.0222,False,False,0.0018,8,no clear difference from the best option,0,0.0
+36:23,Bayer Leverkusen,pass (completed),27,pass,29,2,0.021,0.0187,0.0397,27,0.0187,False,False,0.021,8,no clear difference from the best option,0,0.0
+36:25,Bayer Leverkusen,pass (failed),27,pass,29,2,0.0245,0.0174,0.0419,27,0.0174,False,False,0.0245,9,no clear difference from the best option,0,0.0
+36:43,Bayer Leverkusen,pass (completed),27,shot,28,1,0.0066,0.0202,0.0268,27,0.0202,False,False,0.0066,6,no clear difference from the best option,0,0.043
+36:44,Bayer Leverkusen,carry,28,shot,29,1,0.0168,0.0257,0.0424,28,0.0257,False,False,0.0168,6,no clear difference from the best option,0,0.043
+36:46,Bayer Leverkusen,pass (completed),27,pass,28,1,0.0039,0.0215,0.0254,27,0.0215,False,False,0.0039,7,no clear difference from the best option,0,0.043
+36:46,Bayer Leverkusen,carry,27,pass,29,2,0.0188,0.0233,0.0421,27,0.0233,False,False,0.0188,7,no clear difference from the best option,0,0.043
+36:47,Bayer Leverkusen,pass (completed),28,pass,30,2,0.0141,0.0326,0.0467,28,0.0326,False,False,0.0141,8,no clear difference from the best option,0,0.043
+36:47,Bayer Leverkusen,carry,28,pass,31,3,0.024,0.0321,0.0561,28,0.0321,False,False,0.024,7,no clear difference from the best option,0,0.043
+36:48,Bayer Leverkusen,pass (completed),28,pass,32,4,0.0387,0.0274,0.0661,28,0.0274,False,False,0.0387,7,clearly below the best option,0,0.043
+36:50,Bayer Leverkusen,pass (completed),27,pass,28,1,0.0077,0.024,0.0318,27,0.024,False,False,0.0128,6,no clear difference from the best option,0,0.043
+36:51,Bayer Leverkusen,carry,29,shot,36,7,0.0584,0.0425,0.1008,29,0.0425,False,False,0.0584,6,clearly below the best option,0,0.043
+36:52,Bayer Leverkusen,shot,33,shot,33,0,0.0,0.0733,0.0733,33,0.0733,False,False,0.0,4,no clear difference from the best option,0,
+39:02,Darmstadt 98,pass (completed),26,pass,27,1,0.0119,0.0086,0.0205,26,0.0086,False,False,0.0119,5,no clear difference from the best option,0,0.0
+39:03,Darmstadt 98,carry,27,pass,27,0,0.0057,0.0188,0.0245,27,0.0188,False,False,0.0057,5,no clear difference from the best option,0,0.0
+39:06,Darmstadt 98,carry,29,carry,29,0,0.0,0.0414,0.0414,29,0.0414,False,False,0.0,5,no clear difference from the best option,0,0.0
+39:49,Bayer Leverkusen,pass (failed),26,pass,27,1,0.0135,0.0091,0.0226,26,0.0091,False,False,0.0135,7,no clear difference from the best option,0,0.0
+40:11,Bayer Leverkusen,pass (completed),27,pass,29,2,0.0226,0.0182,0.0408,27,0.0182,False,False,0.0226,6,no clear difference from the best option,0,0.0
+40:12,Bayer Leverkusen,carry,26,pass,29,3,0.0294,0.0075,0.037,26,0.0075,False,False,0.0294,6,no clear difference from the best option,0,0.0
+40:35,Bayer Leverkusen,pass (completed),25,pass,26,1,0.0077,0.003,0.0107,25,0.003,False,False,0.0077,9,no clear difference from the best option,0,0.0
+40:40,Bayer Leverkusen,pass (completed),28,pass,28,0,0.0,0.0304,0.0304,28,0.0304,False,False,0.0,8,no clear difference from the best option,0,0.0
+40:40,Bayer Leverkusen,pass (completed),28,shot,28,0,0.0031,0.0293,0.0323,28,0.0293,False,False,0.0105,6,no clear difference from the best option,0,0.0
+40:41,Bayer Leverkusen,carry,34,carry,34,0,0.0,0.0867,0.0867,34,0.0867,False,False,0.0,7,no clear difference from the best option,0,0.0
+41:58,Bayer Leverkusen,pass (completed),29,pass,40,11,0.1014,0.0362,0.1376,29,0.0362,False,False,0.1014,8,clearly below the best option,0,0.0388
+41:59,Bayer Leverkusen,carry,32,shot,40,8,0.0751,0.0676,0.1427,32,0.0676,False,False,0.0751,8,clearly below the best option,0,0.0388
+42:01,Bayer Leverkusen,shot,30,pass,35,5,0.0496,0.0464,0.096,30,0.0464,False,False,0.0496,8,clearly below the best option,0,
+42:57,Bayer Leverkusen,pass (completed),27,pass,27,0,0.0009,0.0201,0.021,27,0.0201,False,False,0.0009,9,no clear difference from the best option,0,0.0
+42:58,Bayer Leverkusen,pass (failed),27,shot,28,1,0.0052,0.0229,0.0281,27,0.0229,False,False,0.0052,8,no clear difference from the best option,0,0.0
+45:38,Bayer Leverkusen,carry,26,pass,27,1,0.0061,0.01,0.0161,26,0.01,False,False,0.0061,8,no clear difference from the best option,0,0.0605
+45:38,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0125,0.008,0.0205,26,0.008,False,False,0.0125,8,no clear difference from the best option,0,0.0605
+45:39,Bayer Leverkusen,pass (completed),27,shot,29,2,0.0189,0.016,0.035,27,0.016,False,False,0.0189,8,no clear difference from the best option,0,0.0605
+45:39,Bayer Leverkusen,carry,29,shot,30,1,0.0052,0.0394,0.0446,29,0.0394,False,False,0.0052,8,no clear difference from the best option,0,0.0605
+45:42,Bayer Leverkusen,shot,31,shot,31,0,0.0,0.0604,0.0604,31,0.0604,False,False,0.0,4,no clear difference from the best option,0,
+47:05,Bayer Leverkusen,carry,26,pass,27,1,0.0064,0.0127,0.0191,26,0.0127,False,False,0.0064,6,no clear difference from the best option,0,0.0
+47:07,Bayer Leverkusen,pass (completed),27,pass,28,1,0.0179,0.0159,0.0338,27,0.0159,False,False,0.0179,6,no clear difference from the best option,0,0.0
+47:09,Bayer Leverkusen,pass (completed),27,pass,29,2,0.0151,0.0202,0.0352,27,0.0202,False,False,0.0151,7,no clear difference from the best option,0,0.0
+47:10,Bayer Leverkusen,pass (completed),27,pass,27,0,0.0,0.022,0.022,27,0.022,False,False,0.0087,6,no clear difference from the best option,0,0.0
+47:11,Bayer Leverkusen,pass (completed),27,shot,29,2,0.0168,0.0187,0.0355,27,0.0187,False,False,0.0168,8,no clear difference from the best option,0,0.0
+47:13,Bayer Leverkusen,carry,32,shot,42,10,0.0914,0.064,0.1554,32,0.064,False,False,0.0914,8,clearly below the best option,0,0.0
+47:13,Bayer Leverkusen,pass (completed),28,shot,32,4,0.0334,0.0314,0.0648,28,0.0314,False,False,0.0334,7,clearly below the best option,0,0.0
+47:14,Bayer Leverkusen,carry,28,shot,31,3,0.0341,0.0259,0.06,28,0.0259,False,False,0.0341,7,clearly below the best option,0,0.0
+47:15,Bayer Leverkusen,pass (completed),27,shot,30,3,0.0326,0.019,0.0515,27,0.019,False,False,0.0326,8,clearly below the best option,0,0.0
+47:16,Bayer Leverkusen,pass (completed),28,shot,30,2,0.024,0.0253,0.0493,28,0.0253,False,False,0.024,6,no clear difference from the best option,0,0.0
+47:17,Bayer Leverkusen,carry,28,shot,28,0,0.0049,0.0268,0.0317,28,0.0268,False,False,0.0137,5,no clear difference from the best option,0,0.0
+47:20,Bayer Leverkusen,carry,31,shot,34,3,0.034,0.0544,0.0884,31,0.0544,False,False,0.034,8,clearly below the best option,0,0.0
+47:21,Bayer Leverkusen,pass (completed),33,pass,33,0,0.0,0.073,0.073,33,0.073,False,False,0.0,8,no clear difference from the best option,0,0.0
+47:21,Bayer Leverkusen,carry,32,shot,38,6,0.054,0.0672,0.1213,32,0.0672,False,False,0.054,9,clearly below the best option,0,0.0
+47:24,Bayer Leverkusen,pass (failed),39,pass,39,0,0.0,0.13,0.13,39,0.13,False,False,0.0,8,no clear difference from the best option,0,0.0
+47:35,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0186,0.0093,0.0278,26,0.0093,False,False,0.0186,9,no clear difference from the best option,0,0.0
+47:37,Bayer Leverkusen,carry,26,shot,29,3,0.0254,0.0115,0.0369,26,0.0115,False,False,0.0254,8,no clear difference from the best option,0,0.0
+47:40,Bayer Leverkusen,pass (failed),26,pass,27,1,0.0067,0.015,0.0217,26,0.015,False,False,0.0067,8,no clear difference from the best option,0,0.0
+47:44,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0116,0.0127,0.0243,26,0.0127,False,False,0.0162,7,no clear difference from the best option,0,0.0
+47:47,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0051,0.0128,0.018,26,0.0128,False,False,0.0051,5,no clear difference from the best option,0,0.0
+47:48,Bayer Leverkusen,pass (completed),28,pass,29,1,0.0119,0.0251,0.037,28,0.0251,False,False,0.0119,8,no clear difference from the best option,0,0.0
+47:55,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0149,0.0097,0.0246,26,0.0097,False,False,0.0149,9,no clear difference from the best option,0,0.0
+47:57,Bayer Leverkusen,carry,27,pass,28,1,0.0074,0.0186,0.0261,27,0.0186,False,False,0.0074,9,no clear difference from the best option,0,0.0
+48:00,Bayer Leverkusen,pass (failed),28,pass,29,1,0.011,0.028,0.0389,28,0.028,False,False,0.011,7,no clear difference from the best option,0,0.0
+48:34,Bayer Leverkusen,pass (completed),30,shot,32,2,0.02,0.0447,0.0646,30,0.0447,False,False,0.02,6,no clear difference from the best option,0,0.0
+48:35,Bayer Leverkusen,carry,29,pass,31,2,0.0199,0.0414,0.0613,29,0.0414,False,False,0.0199,6,no clear difference from the best option,0,0.0
+46:20,Bayer Leverkusen,pass (completed),26,shot,28,2,0.0214,0.0076,0.029,26,0.0076,False,False,0.0214,5,no clear difference from the best option,0,0.0
+46:24,Bayer Leverkusen,carry,32,shot,38,6,0.057,0.065,0.122,32,0.065,False,False,0.057,5,clearly below the best option,0,0.0
+47:03,Bayer Leverkusen,pass (completed),30,pass,30,0,0.0028,0.0445,0.0473,30,0.0445,False,False,0.0028,6,no clear difference from the best option,0,0.0
+47:04,Bayer Leverkusen,carry,33,carry,33,0,0.0,0.0777,0.0777,33,0.0777,False,False,0.0,5,no clear difference from the best option,0,0.0
+48:07,Bayer Leverkusen,carry,36,pass,84,48,0.4488,0.1038,0.5526,36,0.1038,False,False,0.5815,4,clearly below the best option,0,0.0697
+48:08,Bayer Leverkusen,shot,31,pass,52,21,0.1931,0.0589,0.252,31,0.0589,False,False,0.2368,4,clearly below the best option,1,
+49:31,Bayer Leverkusen,pass (completed),28,pass,28,0,0.0,0.0282,0.0282,28,0.0282,False,False,0.0,6,no clear difference from the best option,0,0.0
+49:32,Bayer Leverkusen,carry,30,carry,30,0,0.0,0.0466,0.0466,30,0.0466,False,False,0.0,5,no clear difference from the best option,0,0.0
+49:59,Bayer Leverkusen,pass (failed),25,pass,26,1,0.0054,0.002,0.0074,25,0.002,False,False,0.0054,7,no clear difference from the best option,0,0.0
+50:55,Bayer Leverkusen,pass (failed),25,pass,25,0,0.0,0.0062,0.0062,25,0.0062,False,False,0.0,5,no clear difference from the best option,0,0.0
+51:31,Bayer Leverkusen,pass (completed),25,pass,26,1,0.0039,0.003,0.0069,25,0.003,False,False,0.0039,6,no clear difference from the best option,0,0.0
+51:31,Bayer Leverkusen,carry,25,pass,26,1,0.0035,0.003,0.0065,25,0.003,False,False,0.0035,6,no clear difference from the best option,0,0.0
+51:32,Bayer Leverkusen,pass (completed),25,pass,25,0,0.005,0.0005,0.0055,25,0.0005,False,False,0.005,7,no clear difference from the best option,0,0.0
+51:49,Bayer Leverkusen,carry,28,shot,39,11,0.1009,0.0298,0.1307,28,0.0298,False,False,0.1009,4,clearly below the best option,0,0.0
+51:50,Bayer Leverkusen,pass (completed),29,pass,30,1,0.0066,0.0417,0.0483,29,0.0417,False,False,0.0066,6,no clear difference from the best option,0,0.0
+51:51,Bayer Leverkusen,carry,30,shot,47,17,0.1547,0.0483,0.203,30,0.0483,False,False,0.1547,5,clearly below the best option,0,0.0
+52:01,Bayer Leverkusen,pass (completed),27,pass,34,7,0.0654,0.0221,0.0876,27,0.0221,False,False,0.0654,5,clearly below the best option,0,0.0
+52:03,Bayer Leverkusen,carry,25,pass,30,5,0.0439,0.0005,0.0444,25,0.0005,False,False,0.0439,5,clearly below the best option,0,0.0
+53:40,Bayer Leverkusen,pass (failed),26,shot,28,2,0.0173,0.0136,0.0309,26,0.0136,False,False,0.0173,4,no clear difference from the best option,0,0.0
+54:07,Bayer Leverkusen,pass (completed),25,pass,26,1,0.0101,0.0014,0.0115,25,0.0014,False,False,0.0101,7,no clear difference from the best option,0,0.0
+54:25,Bayer Leverkusen,pass (completed),28,shot,30,2,0.0209,0.027,0.0478,28,0.027,False,False,0.0209,5,no clear difference from the best option,0,0.0
+54:26,Bayer Leverkusen,carry,27,shot,30,3,0.0303,0.0211,0.0514,27,0.0211,False,False,0.0303,7,clearly below the best option,0,0.0
+54:27,Bayer Leverkusen,pass (completed),27,pass,29,2,0.0228,0.018,0.0407,27,0.018,False,False,0.0228,4,no clear difference from the best option,0,0.0
+54:29,Bayer Leverkusen,carry,26,pass,29,3,0.0276,0.0116,0.0392,26,0.0116,False,False,0.0276,4,no clear difference from the best option,0,0.0
+54:36,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0047,0.0116,0.0163,26,0.0116,False,False,0.0047,6,no clear difference from the best option,0,0.0
+54:37,Bayer Leverkusen,carry,27,pass,29,2,0.0223,0.0179,0.0402,27,0.0179,False,False,0.0223,7,no clear difference from the best option,0,0.0
+54:37,Bayer Leverkusen,pass (completed),25,pass,30,5,0.0421,0.0049,0.047,25,0.0049,False,False,0.0421,7,clearly below the best option,0,0.0
+54:39,Bayer Leverkusen,carry,25,pass,27,2,0.0137,0.0046,0.0183,25,0.0046,False,False,0.0246,5,no clear difference from the best option,0,0.0
+54:42,Bayer Leverkusen,pass (completed),26,pass,26,0,0.0043,0.0079,0.0122,26,0.0079,False,False,0.0121,6,no clear difference from the best option,0,0.0
+54:42,Bayer Leverkusen,pass (completed),25,pass,27,2,0.0123,0.0054,0.0177,25,0.0054,False,False,0.0199,6,no clear difference from the best option,0,0.0
+54:44,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0082,0.01,0.0182,26,0.01,False,False,0.0082,7,no clear difference from the best option,0,0.0
+54:44,Bayer Leverkusen,carry,26,pass,27,1,0.0057,0.0138,0.0195,26,0.0138,False,False,0.0057,6,no clear difference from the best option,0,0.0
+56:13,Bayer Leverkusen,carry,26,carry,26,0,0.0,0.0082,0.0082,26,0.0082,False,True,0.0,5,no clear difference from the best option,0,0.0
+58:28,Darmstadt 98,carry,26,carry,26,0,0.0,0.0153,0.0153,26,0.0153,False,False,0.0,5,no clear difference from the best option,0,0.0223
+58:31,Darmstadt 98,pass (completed),28,pass,28,0,0.0,0.0258,0.0258,28,0.0258,False,False,0.0,5,no clear difference from the best option,0,0.0223
+58:31,Darmstadt 98,pass (completed),29,pass,29,0,0.0,0.0415,0.0415,29,0.0415,False,False,0.0046,4,no clear difference from the best option,0,0.0223
+58:32,Darmstadt 98,pass (completed),28,shot,29,1,0.0036,0.0344,0.038,28,0.0344,False,False,0.0502,4,no clear difference from the best option,0,0.0223
+58:33,Darmstadt 98,carry,32,pass,50,18,0.1685,0.0693,0.2378,32,0.0693,False,False,0.1685,5,clearly below the best option,0,0.0223
+58:34,Darmstadt 98,shot,31,pass,42,11,0.1081,0.0542,0.1623,31,0.0542,False,False,0.1609,4,clearly below the best option,0,
+58:52,Darmstadt 98,pass (completed),25,pass,27,2,0.0227,0.0008,0.0234,25,0.0008,False,False,0.0227,4,no clear difference from the best option,0,0.0
+59:47,Bayer Leverkusen,carry,26,pass,26,0,0.0055,0.0094,0.0149,26,0.0094,False,False,0.0055,4,no clear difference from the best option,0,0.0
+60:19,Bayer Leverkusen,pass (completed),36,pass,36,0,0.0,0.1032,0.1032,36,0.1032,False,False,0.0,4,no clear difference from the best option,0,0.4024
+60:19,Bayer Leverkusen,carry,49,carry,49,0,0.0,0.2243,0.2243,49,0.2243,False,False,0.0,3,no clear difference from the best option,0,0.4024
+60:21,Bayer Leverkusen,shot,66,shot,66,0,0.0,0.3829,0.3829,66,0.3829,False,False,0.0,4,no clear difference from the best option,1,
+63:37,Bayer Leverkusen,carry,36,shot,44,8,0.0713,0.1083,0.1796,36,0.1083,False,False,0.0713,6,clearly below the best option,0,0.0852
+63:38,Bayer Leverkusen,carry,33,shot,36,3,0.0307,0.0742,0.1049,33,0.0742,False,False,0.0307,5,clearly below the best option,0,0.0852
+63:40,Bayer Leverkusen,shot,43,shot,43,0,0.0,0.1721,0.1721,43,0.1721,False,False,0.2422,4,no clear difference from the best option,0,
+66:57,Bayer Leverkusen,pass (completed),27,shot,34,7,0.0671,0.0211,0.0882,27,0.0211,False,False,0.0671,4,clearly below the best option,0,0.0565
+66:58,Bayer Leverkusen,carry,32,shot,35,3,0.031,0.0638,0.0948,32,0.0638,False,False,0.031,3,clearly below the best option,0,0.0565
+66:59,Bayer Leverkusen,shot,33,shot,33,0,0.0,0.0805,0.0805,33,0.0805,False,False,0.0,4,no clear difference from the best option,1,
+70:12,Bayer Leverkusen,pass (completed),25,pass,27,2,0.013,0.0031,0.0161,25,0.0031,False,False,0.013,5,no clear difference from the best option,0,0.0
+71:39,Bayer Leverkusen,pass (completed),27,shot,29,2,0.0132,0.022,0.0353,27,0.022,False,False,0.0132,5,no clear difference from the best option,0,0.0737
+71:41,Bayer Leverkusen,pass (completed),27,shot,30,3,0.0331,0.0167,0.0498,27,0.0167,False,False,0.0331,6,no clear difference from the best option,0,0.0737
+71:44,Bayer Leverkusen,pass (completed),31,pass,34,3,0.0319,0.058,0.0899,31,0.058,False,False,0.0319,6,clearly below the best option,0,0.0737
+73:34,Bayer Leverkusen,pass (completed),25,pass,27,2,0.0147,0.0044,0.0191,25,0.0044,False,False,0.0147,4,no clear difference from the best option,0,0.0
+73:36,Bayer Leverkusen,pass (completed),26,pass,26,0,0.0062,0.0074,0.0136,26,0.0074,False,False,0.0139,5,no clear difference from the best option,0,0.0
+73:37,Bayer Leverkusen,carry,25,shot,29,4,0.0325,0.0057,0.0382,25,0.0057,False,False,0.0325,7,clearly below the best option,0,0.0
+73:39,Bayer Leverkusen,pass (completed),27,pass,27,0,0.0,0.024,0.024,27,0.024,False,False,0.0,6,no clear difference from the best option,0,0.0091
+73:39,Bayer Leverkusen,carry,27,shot,35,8,0.0752,0.0221,0.0972,27,0.0221,False,False,0.0752,6,clearly below the best option,0,0.0091
+73:44,Bayer Leverkusen,carry,27,pass,29,2,0.0231,0.018,0.0411,27,0.018,False,False,0.0231,5,no clear difference from the best option,0,0.0091
+73:47,Bayer Leverkusen,shot,27,pass,29,2,0.0154,0.0196,0.035,27,0.0196,False,False,0.0154,4,no clear difference from the best option,0,
+76:26,Darmstadt 98,shot,27,pass,30,3,0.0303,0.0166,0.0469,27,0.0166,False,False,0.0303,5,clearly below the best option,0,
+79:59,Bayer Leverkusen,carry,26,pass,28,2,0.023,0.0091,0.0321,26,0.0091,False,False,0.023,5,no clear difference from the best option,0,0.0
+79:59,Bayer Leverkusen,pass (completed),25,pass,28,3,0.0217,0.0059,0.0277,25,0.0059,False,False,0.0237,3,no clear difference from the best option,0,0.0
+80:14,Bayer Leverkusen,pass (failed),27,pass,27,0,0.0059,0.0188,0.0247,27,0.0188,False,False,0.0059,6,no clear difference from the best option,0,0.0
+80:47,Bayer Leverkusen,pass (completed),25,shot,27,2,0.018,0.0034,0.0214,25,0.0034,False,False,0.018,7,no clear difference from the best option,0,0.0
+80:54,Bayer Leverkusen,pass (completed),26,shot,30,4,0.041,0.0096,0.0506,26,0.0096,False,False,0.041,8,clearly below the best option,0,0.0
+80:55,Bayer Leverkusen,carry,26,shot,27,1,0.0174,0.0067,0.0241,26,0.0067,False,False,0.0174,8,no clear difference from the best option,0,0.0
+81:04,Bayer Leverkusen,pass (completed),27,shot,28,1,0.0046,0.024,0.0286,27,0.024,False,False,0.0046,7,no clear difference from the best option,0,0.0467
+81:05,Bayer Leverkusen,carry,30,shot,36,6,0.0546,0.0459,0.1005,30,0.0459,False,False,0.0546,7,clearly below the best option,0,0.0467
+81:06,Bayer Leverkusen,shot,32,shot,32,0,0.0,0.0694,0.0694,32,0.0694,False,False,0.0,4,no clear difference from the best option,0,
+81:50,Bayer Leverkusen,pass (completed),26,pass,28,2,0.0108,0.0143,0.0251,26,0.0143,False,False,0.0108,6,no clear difference from the best option,0,0.0
+81:56,Bayer Leverkusen,pass (completed),25,pass,27,2,0.0186,0.0031,0.0217,25,0.0031,False,False,0.0186,6,no clear difference from the best option,0,0.0
+82:10,Bayer Leverkusen,shot,91,shot,91,0,0.0,0.62,0.62,91,0.62,False,False,0.0,3,no clear difference from the best option,1,
+83:45,Bayer Leverkusen,carry,25,shot,29,4,0.0427,0.0002,0.0429,25,0.0002,False,False,0.0427,4,clearly below the best option,0,0.0
+84:09,Bayer Leverkusen,carry,26,shot,28,2,0.0147,0.0109,0.0255,26,0.0109,False,False,0.0147,8,no clear difference from the best option,0,0.0
+85:07,Darmstadt 98,carry,25,pass,26,1,0.009,0.0045,0.0135,25,0.0045,False,False,0.009,6,no clear difference from the best option,0,0.0
+85:08,Darmstadt 98,pass (completed),25,pass,26,1,0.0115,0.0001,0.0117,25,0.0001,False,False,0.0115,6,no clear difference from the best option,0,0.0
+86:19,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0125,0.0092,0.0217,26,0.0092,False,False,0.0125,4,no clear difference from the best option,0,0.0
+88:09,Bayer Leverkusen,pass (completed),25,pass,27,2,0.0216,0.0031,0.0247,25,0.0031,False,False,0.0216,8,no clear difference from the best option,0,0.0
+88:23,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0075,0.0092,0.0167,26,0.0092,False,False,0.0075,8,no clear difference from the best option,0,0.0
+89:27,Bayer Leverkusen,carry,25,pass,28,3,0.0203,0.0061,0.0264,25,0.0061,False,False,0.0203,8,no clear difference from the best option,0,0.0
+89:28,Bayer Leverkusen,pass (completed),26,pass,27,1,0.0055,0.0134,0.0189,26,0.0134,False,False,0.0133,6,no clear difference from the best option,0,0.0
+89:43,Bayer Leverkusen,pass (completed),27,pass,27,0,0.0,0.0203,0.0203,27,0.0203,False,False,0.0,5,no clear difference from the best option,0,0.0
+89:44,Bayer Leverkusen,carry,38,carry,38,0,0.0,0.1254,0.1254,38,0.1254,False,False,0.0,6,no clear difference from the best option,0,0.0
+90:05,Bayer Leverkusen,pass (completed),33,pass,33,0,0.0,0.0771,0.0771,33,0.0771,False,False,0.0,6,no clear difference from the best option,0,0.0603
+90:05,Bayer Leverkusen,carry,36,pass,42,6,0.0566,0.1041,0.1606,36,0.1041,False,False,0.0566,5,clearly below the best option,0,0.0603
+90:06,Bayer Leverkusen,shot,35,pass,41,6,0.0554,0.0962,0.1515,35,0.0962,False,False,0.0554,7,clearly below the best option,0,
+90:34,Bayer Leverkusen,shot,45,shot,45,0,0.0,0.1864,0.1864,45,0.1864,False,False,0.0,6,no clear difference from the best option,0,
+90:36,Bayer Leverkusen,shot,65,shot,65,0,0.0,0.3738,0.3738,65,0.3738,False,False,0.0,6,no clear difference from the best option,0,
+92:00,Bayer Leverkusen,carry,30,shot,39,9,0.0901,0.0445,0.1345,30,0.0445,False,False,0.0901,5,clearly below the best option,0,0.0
+92:02,Bayer Leverkusen,pass (failed),26,shot,34,8,0.0742,0.0141,0.0883,26,0.0141,False,False,0.0742,5,clearly below the best option,0,0.0
+92:26,Bayer Leverkusen,carry,26,shot,27,1,0.0147,0.0103,0.025,26,0.0103,False,False,0.0147,4,no clear difference from the best option,0,0.0
+92:34,Bayer Leverkusen,pass (completed),29,pass,29,0,0.0,0.0383,0.0383,29,0.0383,False,False,0.0,4,no clear difference from the best option,0,0.0
+92:34,Bayer Leverkusen,carry,27,shot,32,5,0.0502,0.0161,0.0663,27,0.0161,False,False,0.0502,2,clearly below the best option,0,0.0
+92:36,Bayer Leverkusen,pass (completed),26,shot,28,2,0.0194,0.0134,0.0328,26,0.0134,False,False,0.0431,2,no clear difference from the best option,0,0.0
+92:37,Bayer Leverkusen,pass (completed),27,pass,27,0,0.0,0.0179,0.0179,27,0.0179,False,False,0.0148,3,no clear difference from the best option,0,0.0
+92:38,Bayer Leverkusen,pass (completed),26,shot,30,4,0.0362,0.0084,0.0446,26,0.0084,False,False,0.0362,5,clearly below the best option,0,0.0
+92:41,Bayer Leverkusen,pass (completed),26,shot,28,2,0.0195,0.0114,0.0309,26,0.0114,False,False,0.0195,6,no clear difference from the best option,0,0.0
+92:42,Bayer Leverkusen,carry,27,pass,28,1,0.0043,0.0236,0.0279,27,0.0236,False,False,0.0043,5,no clear difference from the best option,0,0.0
+92:47,Bayer Leverkusen,carry,26,pass,27,1,0.0088,0.0154,0.0242,26,0.0154,False,False,0.0088,5,no clear difference from the best option,0,0.0
+93:01,Bayer Leverkusen,carry,28,pass,30,2,0.0201,0.0254,0.0455,28,0.0254,False,False,0.0213,8,no clear difference from the best option,0,0.0

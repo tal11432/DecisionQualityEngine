@@ -2,15 +2,16 @@ MATCH 3773526: 293 scored decisions at x >= 80 ({'pass': np.int64(157), 'carry':
 score of the option taken: median 26, 10th/90th 25/31; gap >= the noise floor in 12% of decisions (the rest: no clear difference from the best option)
    Barcelona: 263 decisions, median score 26, mean Q +0.029, clearly-below-best 12%
    Deportivo Alavés: 30 decisions, median score 28, mean Q +0.046, clearly-below-best 13%
+marked assumption A1: the option taken is flagged in 0 of 293 decisions, some option of the moment in 1; the score of the option taken differs from the model-only score in 0 decisions
 
 GOALS (shots that scored):
-clock             team                                           scorer  score best_kind  best_score  gap_points  gap_xg                                  verdict
-28:54        Barcelona Francisco António Machado Mota de Castro Trincão     35      pass          72          37   0.339            clearly below the best option
-45:50        Barcelona                   Lionel Andrés Messi Cuccittini     29      shot          29           0   0.000 no clear difference from the best option
-56:43 Deportivo Alavés                        Luis Jesús Rioja González     47      shot          47           0   0.000 no clear difference from the best option
-73:27        Barcelona Francisco António Machado Mota de Castro Trincão     68      shot          68           0   0.000 no clear difference from the best option
-74:47        Barcelona                   Lionel Andrés Messi Cuccittini     30      shot          30           0   0.000 no clear difference from the best option
-79:11        Barcelona                       Héctor Junior Firpo Adames     97      shot          97           0   0.000 no clear difference from the best option
+clock             team                                           scorer  score  score_model best_kind  best_score  gap_points  gap_xg                                  verdict
+28:54        Barcelona Francisco António Machado Mota de Castro Trincão     35           35      pass          72          37   0.339            clearly below the best option
+45:50        Barcelona                   Lionel Andrés Messi Cuccittini     29           29      shot          29           0   0.000 no clear difference from the best option
+56:43 Deportivo Alavés                        Luis Jesús Rioja González     47           47      shot          47           0   0.000 no clear difference from the best option
+73:27        Barcelona Francisco António Machado Mota de Castro Trincão     68           68      shot          68           0   0.000 no clear difference from the best option
+74:47        Barcelona                   Lionel Andrés Messi Cuccittini     30           30      shot          30           0   0.000 no clear difference from the best option
+79:11        Barcelona                       Héctor Junior Firpo Adames     97           97      shot          97           0   0.000 no clear difference from the best option
 
 LARGEST CLEAR GAPS (the option taken was clearly below the best one):
 clock             team             kind  score best_kind  best_score  gap_xg     q  q_best

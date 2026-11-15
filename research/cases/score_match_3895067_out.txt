@@ -2,14 +2,15 @@ MATCH 3895067: 293 scored decisions at x >= 80 ({'pass': np.int64(158), 'carry':
 score of the option taken: median 27, 10th/90th 25/33; gap >= the noise floor in 18% of decisions (the rest: no clear difference from the best option)
    Bayer Leverkusen: 269 decisions, median score 27, mean Q +0.036, clearly-below-best 18%
    Darmstadt 98: 24 decisions, median score 27, mean Q +0.030, clearly-below-best 21%
+marked assumption A1: the option taken is flagged in 0 of 293 decisions, some option of the moment in 1; the score of the option taken differs from the model-only score in 0 decisions
 
 GOALS (shots that scored):
-clock             team                      scorer  score best_kind  best_score  gap_points  gap_xg                                  verdict
-20:18 Bayer Leverkusen        Victor Okoh Boniface     59      shot          59           0   0.000 no clear difference from the best option
-48:08 Bayer Leverkusen Exequiel Alejandro Palacios     31      pass          52          21   0.193            clearly below the best option
-60:21 Bayer Leverkusen        Victor Okoh Boniface     66      shot          66           0   0.000 no clear difference from the best option
-66:59 Bayer Leverkusen               Jonas Hofmann     33      shot          33           0   0.000 no clear difference from the best option
-82:10 Bayer Leverkusen                 Adam Hložek     91      shot          91           0   0.000 no clear difference from the best option
+clock             team                      scorer  score  score_model best_kind  best_score  gap_points  gap_xg                                  verdict
+20:18 Bayer Leverkusen        Victor Okoh Boniface     59           59      shot          59           0   0.000 no clear difference from the best option
+48:08 Bayer Leverkusen Exequiel Alejandro Palacios     31           31      pass          52          21   0.193            clearly below the best option
+60:21 Bayer Leverkusen        Victor Okoh Boniface     66           66      shot          66           0   0.000 no clear difference from the best option
+66:59 Bayer Leverkusen               Jonas Hofmann     33           33      shot          33           0   0.000 no clear difference from the best option
+82:10 Bayer Leverkusen                 Adam Hložek     91           91      shot          91           0   0.000 no clear difference from the best option
 
 LARGEST CLEAR GAPS (the option taken was clearly below the best one):
 clock             team             kind  score best_kind  best_score  gap_xg     q  q_best

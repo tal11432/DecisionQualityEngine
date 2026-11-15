@@ -74,14 +74,16 @@ def test_a_covered_lane_scores_below_a_free_lane_and_above_nowhere():
     assert S.q_to_score(c["v"]) >= S.q_to_score(nw["v"])                                    # but arrival creates a chance, so it is not scored like a pass to nowhere
 
 
-@pytest.mark.xfail(strict=False, reason="amendment F: one 360 frame (visible players, no velocities) does not identify a counter-attack with a numerical advantage (G-counter failed); a model that can see it will turn this into an XPASS")
-def test_a_loss_with_a_counter_scores_low_and_more_than_without():
+def test_a_loss_with_a_counter_scores_low_under_the_marked_assumption():
     # edge of our own box, three opponents beyond the ball against one of ours covering (a counter-attack with a numerical advantage) vs nobody beyond the ball
     O_c = np.array([[10.0, 36.0], [12.0, 44.0], [14.0, 40.0], [40.0, 40.0]]); T_c = np.array([[4.0, 40.0], [60.0, 30.0]])
     O_n = np.array([[40.0, 40.0], [45.0, 30.0]]); T_n = np.array([[4.0, 40.0], [10.0, 30.0], [12.0, 50.0]])
     l_c = S.loss_danger(np.array([18.0, 40.0]), O_c, T_c, "pass"); l_n = S.loss_danger(np.array([18.0, 40.0]), O_n, T_n, "pass")
-    assert l_c > l_n + 0.02                                                                 # the counter-attack is clearly more dangerous
+    assert l_c > l_n + 0.02                                                                 # the counter-attack is clearly more dangerous (marked assumption A1: the model alone cannot see it, amendment F)
     assert S.q_to_score(-l_c) <= 15 and S.q_to_score(-l_c) < S.q_to_score(-l_n)             # pre-registered: <= 15
+    assert S.counter_flag([18.0, 40.0], O_c, T_c) and not S.counter_flag([18.0, 40.0], O_n, T_n)
+    with S.assumption(False): l_model = S.loss_danger(np.array([18.0, 40.0]), O_c, T_c, "pass")
+    assert l_model < 0.1 and abs(l_c - S.v15()["C"]) < 1e-9                                  # the model alone gives a small cost; the assumption sets it to C
 
 
 @pytest.mark.xfail(strict=False, reason="amendment F: same limitation (the modelled cost of a loss does not rise with the opponents' visible numerical advantage)")
@@ -91,3 +93,12 @@ def test_a_crowded_carry_is_worse_when_a_loss_means_a_counter():
     safe = Situation([95.0, 40.0], np.array(crowd), [np.array(m) for m in ([97.0, 55.0], [70.0, 40.0], [72.0, 30.0], [75.0, 50.0])], [118.0, 40.0])
     c = S.carry_value(counter, [100.0, 40.0]); s_ = S.carry_value(safe, [100.0, 40.0])
     assert c["loss"] > s_["loss"] and c["v"] < s_["v"] and S.q_to_score(c["v"]) < S.q_to_score(s_["v"])
+
+
+def test_assumption_is_off_by_switch_and_flagged_on_options():
+    O = np.array([[10.0, 36.0], [12.0, 44.0], [14.0, 40.0], [40.0, 40.0]]); T = np.array([[4.0, 40.0], [60.0, 30.0]]); p = np.array([18.0, 40.0])
+    assert S.counter_flag(p, O, T) and not S.counter_flag([100.0, 40.0], O, T)             # not beyond x = 70
+    with S.assumption(False): off = S.loss_danger(p, O, T, "pass")
+    on = S.loss_danger(p, O, T, "pass"); assert on > off                                   # A1 on by default, the switch restores the model
+    j = S.judge_both(_sit([112.0, 40.0]), ("shot",))
+    assert j["q_chosen"] == j["q_chosen_model"] and j["score_chosen"] == j["score_chosen_model"] and j["counter_assumed_chosen"] is False   # a shot is untouched by the assumption
