@@ -11,7 +11,7 @@ from dscore.core import GX, SC, Situation, sgm, ang, tri
 
 _X = {}
 def v13():
-    if not _X: _X["m"] = pd.read_pickle(os.path.join(DQ, "v13_models.pkl"))
+    if "m" not in _X: _X["m"] = pd.read_pickle(os.path.join(DQ, "v13_models.pkl"))
     return _X["m"]
 
 def v15():

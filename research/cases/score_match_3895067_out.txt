@@ -1,34 +1,34 @@
 MATCH 3895067: 293 scored decisions at x >= 80 ({'pass': np.int64(158), 'carry': np.int64(109), 'shot': np.int64(26)}); frames for passes/carries: yes
-score of the option taken: median 56, 10th/90th 16/90; gap >= the noise floor in 18% of decisions (the rest: no clear difference from the best option)
-   Bayer Leverkusen: 269 decisions, median score 56, mean Q +0.036, clearly-below-best 18%
-   Darmstadt 98: 24 decisions, median score 56, mean Q +0.030, clearly-below-best 21%
+score of the option taken: median 27, 10th/90th 25/33; gap >= the noise floor in 18% of decisions (the rest: no clear difference from the best option)
+   Bayer Leverkusen: 269 decisions, median score 27, mean Q +0.036, clearly-below-best 18%
+   Darmstadt 98: 24 decisions, median score 27, mean Q +0.030, clearly-below-best 21%
 
 GOALS (shots that scored):
 clock             team                      scorer  score best_kind  best_score  gap_points  gap_xg                                  verdict
-20:18 Bayer Leverkusen        Victor Okoh Boniface     99      shot          99           0   0.000 no clear difference from the best option
-48:08 Bayer Leverkusen Exequiel Alejandro Palacios     88      pass          98          10   0.193            clearly below the best option
-60:21 Bayer Leverkusen        Victor Okoh Boniface     99      shot          99           0   0.000 no clear difference from the best option
-66:59 Bayer Leverkusen               Jonas Hofmann     92      shot          92           0   0.000 no clear difference from the best option
-82:10 Bayer Leverkusen                 Adam Hložek    100      shot         100           0   0.000 no clear difference from the best option
+20:18 Bayer Leverkusen        Victor Okoh Boniface     59      shot          59           0   0.000 no clear difference from the best option
+48:08 Bayer Leverkusen Exequiel Alejandro Palacios     31      pass          52          21   0.193            clearly below the best option
+60:21 Bayer Leverkusen        Victor Okoh Boniface     66      shot          66           0   0.000 no clear difference from the best option
+66:59 Bayer Leverkusen               Jonas Hofmann     33      shot          33           0   0.000 no clear difference from the best option
+82:10 Bayer Leverkusen                 Adam Hložek     91      shot          91           0   0.000 no clear difference from the best option
 
 LARGEST CLEAR GAPS (the option taken was clearly below the best one):
 clock             team             kind  score best_kind  best_score  gap_xg     q  q_best
-48:07 Bayer Leverkusen            carry     94      pass         100   0.449 0.104   0.553
-48:08 Bayer Leverkusen             shot     88      pass          98   0.193 0.059   0.252
-58:33     Darmstadt 98            carry     90      pass          98   0.168 0.069   0.238
-51:51 Bayer Leverkusen            carry     84      shot          97   0.155 0.048   0.203
-58:34     Darmstadt 98             shot     86      pass          97   0.108 0.054   0.162
-41:58 Bayer Leverkusen pass (completed)     77      pass          96   0.101 0.036   0.138
-51:49 Bayer Leverkusen            carry     72      shot          96   0.101 0.030   0.131
-47:13 Bayer Leverkusen            carry     89      shot          96   0.091 0.064   0.155
+48:07 Bayer Leverkusen            carry     36      pass          84   0.449 0.104   0.553
+48:08 Bayer Leverkusen             shot     31      pass          52   0.193 0.059   0.252
+58:33     Darmstadt 98            carry     32      pass          50   0.168 0.069   0.238
+51:51 Bayer Leverkusen            carry     30      shot          47   0.155 0.048   0.203
+58:34     Darmstadt 98             shot     31      pass          42   0.108 0.054   0.162
+41:58 Bayer Leverkusen pass (completed)     29      pass          40   0.101 0.036   0.138
+51:49 Bayer Leverkusen            carry     28      shot          39   0.101 0.030   0.131
+47:13 Bayer Leverkusen            carry     32      shot          42   0.091 0.064   0.155
 
 HIGHEST SCORES:
 clock             team  kind  score  gap_xg     q  realised
-82:10 Bayer Leverkusen  shot    100     0.0 0.620       NaN
-20:18 Bayer Leverkusen  shot     99     0.0 0.321       NaN
-60:21 Bayer Leverkusen  shot     99     0.0 0.383       NaN
-90:36 Bayer Leverkusen  shot     99     0.0 0.374       NaN
-60:19 Bayer Leverkusen carry     98     0.0 0.224     0.402
-20:16 Bayer Leverkusen carry     97     0.0 0.186     0.270
+82:10 Bayer Leverkusen  shot     91     0.0 0.620       NaN
+60:21 Bayer Leverkusen  shot     66     0.0 0.383       NaN
+90:36 Bayer Leverkusen  shot     65     0.0 0.374       NaN
+20:18 Bayer Leverkusen  shot     59     0.0 0.321       NaN
+60:19 Bayer Leverkusen carry     49     0.0 0.224     0.402
+90:34 Bayer Leverkusen  shot     45     0.0 0.186       NaN
 
 wrote research/cases/decision_scores_3895067.csv (no player names)
