@@ -30,26 +30,33 @@ def loss_danger(p, O, T, kind="pass"):
     f = dict(c, dist_own=dist_own, ang_own=an, lx=p[0], d2=dist_own ** 2, ad=an * dist_own, k_pass=float(kind == "pass"), k_dribble=0.0, k_dispossessed=float(kind == "dispossessed"))
     X = [f[k] for k in m["F"]]; return sgm(m["opp"], X) - sgm(m["own"], X)
 
+def _carry_option(s: Situation, d, st, T, pdist, m):
+    a, O, gk = s.a, s.O, s.gk; ar = _around(d, O, T); dist = float(np.hypot(GX - d[0], 40 - d[1])); an = ang(*d); Lu = float(np.hypot(*(d - a)))
+    f = dict(dist=dist, angle=an, x=d[0], d2=dist ** 2, ad=an * dist, n_tri=sum(tri(o, d) for o in O), n3=ar["n_opp3"], n6=ar["n_opp6"], nn=ar["nn_opp"], gk_d=float(np.hypot(GX - gk[0], 40 - gk[1])), plen=Lu, L=Lu, fwd=float(d[0] - a[0]), pdist=pdist,
+             s_n_opp3=st["n_opp3"], s_nn_opp=st["nn_opp"], s_n_opp6=st["n_opp6"])
+    pk = sgm(m["P_keep"], [f[k2] for k2 in m["P_keep"]["F"]]); vp = sgm(m["V_pos_refit"], [f[k2] for k2 in m["V_pos_refit"]["F"]]); lo = loss_danger(d, O, T, "dispossessed")
+    return dict(kind="carry", v=pk * vp - (1 - pk) * lo, p_keep=pk, value_after=vp, loss=lo, target=d, status="certain onside")
+
 def carry_options(s: Situation, lengths_m=(3, 6, 10), n_dirs=8):
-    """Hypothetical carries: the ball carried 3/6/10 m in 8 directions (destination inside the pitch). Q = P_keep * V_pos(dest) - (1 - P_keep) * L(dest)."""
-    m = v13(); a, O, gk = s.a, s.O, s.gk; T = np.array(s.mates, float).reshape(-1, 2); out = []; st = _around(a, O, T); pdist = float(np.hypot(GX - a[0], 40 - a[1]))
+    """Hypothetical carries (3/6/10 m, 8 directions). NOT supported as alternatives in v1 (PREREG_DQ_v13 amendment C): V_pos is extrapolated and the maximum over destinations is biased up."""
+    m = v13(); a = s.a; T = np.array(s.mates, float).reshape(-1, 2); st = _around(a, s.O, T); pdist = float(np.hypot(GX - a[0], 40 - a[1])); out = []
     for Lm in lengths_m:
         for k in range(n_dirs):
             th = 2 * np.pi * k / n_dirs; d = a + np.array([np.cos(th) * Lm / SC[0], np.sin(th) * Lm / SC[1]])
-            if not (0 <= d[0] <= GX and 0 <= d[1] <= 80): continue
-            ar = _around(d, O, T); dist = float(np.hypot(GX - d[0], 40 - d[1])); an = ang(*d); Lu = float(np.hypot(*(d - a)))
-            f = dict(dist=dist, angle=an, x=d[0], d2=dist ** 2, ad=an * dist, n_tri=sum(tri(o, d) for o in O), n3=ar["n_opp3"], n6=ar["n_opp6"], nn=ar["nn_opp"], gk_d=float(np.hypot(GX - gk[0], 40 - gk[1])), plen=Lu, L=Lu, fwd=float(d[0] - a[0]), pdist=pdist,
-                     s_n_opp3=st["n_opp3"], s_nn_opp=st["nn_opp"], s_n_opp6=st["n_opp6"])
-            pk = sgm(m["P_keep"], [f[k2] for k2 in m["P_keep"]["F"]]); vp = sgm(m["V_pos_refit"], [f[k2] for k2 in m["V_pos_refit"]["F"]]); lo = loss_danger(d, O, T, "dispossessed")
-            out.append(dict(kind="carry", v=pk * vp - (1 - pk) * lo, p_keep=pk, value_after=vp, loss=lo, length_m=Lm, direction_deg=int(round(np.degrees(th))), target=d, status="certain onside"))
+            if 0 <= d[0] <= GX and 0 <= d[1] <= 80: o = _carry_option(s, d, st, T, pdist, m); o.update(length_m=Lm, direction_deg=int(round(np.degrees(th)))); out.append(o)
     return out
 
-def all_options(s: Situation, header=0):
-    """Every option of the moment with its value Q: shot, passes (with offside status), carries, the unforced turnover."""
+def carry_value(s: Situation, dest):
+    """The carry actually made (destination dest): P_keep x V_pos(dest) - (1 - P_keep) x L(dest), calibrated on carries that were made."""
+    m = v13(); T = np.array(s.mates, float).reshape(-1, 2)
+    return _carry_option(s, np.asarray(dest, float), _around(s.a, s.O, T), T, float(np.hypot(GX - s.a[0], 40 - s.a[1])), m)
+
+def all_options(s: Situation, header=0, carries=False):
+    """Every option of the moment with its value Q: shot, passes (with offside status), the unforced turnover; hypothetical carries only when carries=True (NOT supported in v1, amendment C)."""
     T = np.array(s.mates, float).reshape(-1, 2); xg, cont, sv, _ = core.shot_value(s, header); opts = [dict(kind="shot", v=sv, xg=xg, cont=cont, status="certain onside", target=None)]
     for o in core.pass_options(s):
         lo = loss_danger(o["target"], s.O, T, "pass"); o = dict(o, kind="pass", loss=lo, v=o["xp"] * o["xa"] - (1 - o["xp"]) * lo); opts.append(o)
-    opts += carry_options(s)
+    if carries: opts += carry_options(s)
     opts.append(dict(kind="turnover", v=-loss_danger(s.a, s.O, T, "pass"), status="certain onside", target=s.a, note="unforced turnover here"))
     for o in opts: o["score"] = q_to_score(o["v"])
     return opts
@@ -60,6 +67,7 @@ def judge(s: Situation, chosen, header=0, include_doubt=False):
     opts = all_options(s, header); ok = [o for o in opts if o["status"] == "certain onside" or (include_doubt and o["status"].startswith("DOUBT"))]
     kind = chosen[0]
     if kind == "shot": ch = next(o for o in opts if o["kind"] == "shot")
+    elif kind == "carry": ch = carry_value(s, chosen[1]); ch["score"] = q_to_score(ch["v"])
     else:
         pool = [o for o in opts if o["kind"] == kind and o["target"] is not None]
         if not pool: raise ValueError("no option of that kind")
