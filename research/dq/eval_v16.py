@@ -22,7 +22,11 @@ def perturb(args):
     o = score_row(r2, scales={"shot": float(np.exp(g.normal(0, 0.10))), "pass": float(np.exp(g.normal(0, 0.09))), "carry": float(np.exp(g.normal(0, 0.178)))}); return o["score_chosen"], o["gap_points"]
 if __name__ == "__main__":
     t_start = pd.Timestamp.now(); print(f"test decisions {len(Dd)}: {dict(Dd.kind.value_counts())}; by zone {dict(Dd.zone.value_counts())}; competitions {dict(Dd.comp.value_counts())}", flush=True)
-    with Pool(4) as pool: R = pool.map(work, range(len(Dd)), chunksize=200)
+    RAW = f"{D}/v16_scored_raw.pkl"
+    if os.path.exists(RAW): R = pd.read_pickle(RAW).to_dict("records"); print("loaded cached scoring", len(R))
+    else:
+        with Pool(4) as pool: R = pool.map(work, range(len(Dd)), chunksize=200)
+        pd.DataFrame(R).to_pickle(RAW)
     T = pd.concat([Dd.drop(columns=["opps", "mates", "gk"]), pd.DataFrame(R)], axis=1); mins = (pd.Timestamp.now() - t_start).total_seconds() / 60; print(f"scored {len(T)} decisions in {mins:.1f} min", flush=True)
     T["realised"] = T.own10 - T.opp10 + np.where(T.kind == "shot", T.sb_xg.fillna(0), 0.0); T["pct_chosen"] = np.nan
     def sp(x, y): return float(pd.Series(x).rank().corr(pd.Series(y).rank()))
@@ -55,9 +59,9 @@ if __name__ == "__main__":
     for z, g0 in [("ALL", T)] + [(z, T[T.zone == z]) for z in ZN]:
         g0 = g0.assign(qb=pd.qcut(g0.q_best_model.rank(method="first"), 3, labels=False)); right = okc = 0; parts = []
         for q, g in g0.groupby("qb"):
-            g = g.assign(gt=pd.qcut(g.gap_xg_model.rank(method="first"), 3, labels=False)); hi, lo = g[g.gt == 2], g[g.gt == 0]; diff = hi.realised.mean() - lo.realised.mean(); um = g.match.unique(); idx = {u: np.flatnonzero(g.match.to_numpy() == u) for u in um}; bs = []
+            g = g.assign(gtile=pd.qcut(g.gap_xg_model.rank(method="first"), 3, labels=False)); hi, lo = g[g.gtile == 2], g[g.gtile == 0]; diff = hi.realised.mean() - lo.realised.mean(); um = g.match.unique(); idx = {u: np.flatnonzero(g.match.to_numpy() == u) for u in um}; bs = []
             for _ in range(300):
-                x = g.iloc[np.concatenate([idx[u] for u in rng.choice(um, len(um))])]; bs.append(x[x.gt == 2].realised.mean() - x[x.gt == 0].realised.mean())
+                x = g.iloc[np.concatenate([idx[u] for u in rng.choice(um, len(um))])]; bs.append(x[x.gtile == 2].realised.mean() - x[x.gtile == 0].realised.mean())
             l_, h_ = np.percentile(bs, [2.5, 97.5]); right += diff < 0; okc += h_ < 0; parts.append(f"tercile {q+1}: top gap {hi.realised.mean():+.4f} (mean gap {hi.gap_xg_model.mean():.3f}) vs bottom {lo.realised.mean():+.4f}; diff {diff:+.4f} [{l_:+.4f},{h_:+.4f}]")
         print(f"   {z}: direction right {right}/3, CI excluding 0 in {okc}/3 => {'PASS' if right == 3 and okc >= 2 else 'FAIL'}   |   " + " | ".join(parts))
     # ---------------- G-best-sanity, G-curse
