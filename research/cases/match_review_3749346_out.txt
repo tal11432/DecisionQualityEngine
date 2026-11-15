@@ -1,0 +1,49 @@
+MATCH 3749346: Arsenal vs Leeds United; goals found: 5
+
+== 7:17  Arsenal: Thierry Henry, right foot, open play, play pattern From Free Kick (assist: Ashley Cole, ground pass); StatsBomb xG 0.34
+   Shooter 11.5 m from goal; defenders in the shooting triangle (keeper included): 1; visible teammates 1; options: 1 certain onside, 0 in doubt, 0 certainly offside; visible opponents 4 of 11
+   Model: shot value 0.26 (xG 0.24 + continuation 0.02)
+     option: 21 m away, 19 m from goal; reaches him 37%, chain value 0.06 => pass value 0.02; offside margin +9.8 m => certain onside
+   VERDICT: shot clearly better. Best pass value 0.02 (certainly onside by 9.8 m) vs shot value 0.26 (ratio 0.08).
+
+== 16:28  Arsenal: Robert Pirès, left foot, open play, play pattern Regular Play; StatsBomb xG 0.30
+   Shooter 10.5 m from goal; defenders in the shooting triangle (keeper included): 1; visible teammates 2; options: 2 certain onside, 0 in doubt, 0 certainly offside; visible opponents 4 of 11
+   Model: shot value 0.28 (xG 0.26 + continuation 0.02)
+     option: 8 m away, 10 m from goal; reaches him 99%, chain value 0.28 => pass value 0.28; offside margin +5.6 m => certain onside
+     option: 15 m away, 11 m from goal; reaches him 69%, chain value 0.16 => pass value 0.11; offside margin +4.7 m => certain onside
+   VERDICT: no clear difference. Best pass value 0.28 (certainly onside by 5.6 m) vs shot value 0.28 (ratio 1.01).
+
+== 31:56  Arsenal: Thierry Henry, right foot, open play, play pattern Regular Play; StatsBomb xG 0.14
+   Shooter 13.4 m from goal; defenders in the shooting triangle (keeper included): 1; visible teammates 3; options: 3 certain onside, 0 in doubt, 0 certainly offside; visible opponents 5 of 11
+   Model: shot value 0.19 (xG 0.18 + continuation 0.01)
+     option: 18 m away, 11 m from goal; reaches him 76%, chain value 0.16 => pass value 0.12; offside margin +1.1 m => certain onside
+     option: 17 m away, 13 m from goal; reaches him 73%, chain value 0.13 => pass value 0.09; offside margin +5.3 m => certain onside
+     option: 22 m away, 17 m from goal; reaches him 48%, chain value 0.06 => pass value 0.03; offside margin +6.6 m => certain onside
+   VERDICT: leans shot. Best pass value 0.12 (certainly onside by 1.1 m) vs shot value 0.19 (ratio 0.64).
+
+== 49:29  Arsenal: Gilberto Aparecido da Silva, left foot, open play, play pattern From Free Kick (assist: Sulzeer Jeremiah ''Sol' Campbell, ground pass); StatsBomb xG 0.09
+   Shooter 11.5 m from goal; defenders in the shooting triangle (keeper included): 2; visible teammates 4; options: 2 certain onside, 1 in doubt, 0 certainly offside; visible opponents 6 of 11
+   Model: shot value 0.11 (xG 0.09 + continuation 0.02)
+     option: 5 m away, 8 m from goal; reaches him 83%, chain value 0.22 => pass value 0.19; offside margin +0.9 m => DOUBT (within 1 m of the line)
+     option: 6 m away, 12 m from goal; reaches him 94%, chain value 0.13 => pass value 0.12; offside margin +4.3 m => certain onside
+     option: 11 m away, 14 m from goal; reaches him 74%, chain value 0.07 => pass value 0.05; offside margin +3.7 m => certain onside
+   The best-valued option is in DOUBT; the next option that is certainly onside: 6 m away, 12 m from goal, value 0.12, onside by 4.3 m
+   VERDICT: counting the doubtful option: leans pass (pass 0.19 vs shot 0.11); counting only certain options: no clear difference (pass 0.12 vs shot 0.11)
+
+== 62:30  Leeds United: Alan Smith, right foot, open play, play pattern Regular Play (assist: Aaron Lennon, cross); StatsBomb xG 0.19
+   Shooter 9.2 m from goal; defenders in the shooting triangle (keeper included): 1; visible teammates 1; options: 0 certain onside, 1 in doubt, 0 certainly offside; visible opponents 4 of 11
+   Model: shot value 0.24 (xG 0.22 + continuation 0.02)
+   This was a first-time finish from a cross: passing was rarely a realistic alternative, so read the comparison with caution.
+     option: 13 m away, 10 m from goal; reaches him 59%, chain value 0.17 => pass value 0.10; offside margin +0.5 m => DOUBT (within 1 m of the line)
+   The best-valued option is in DOUBT; the next option that is certainly onside: none in view
+   VERDICT: counting the doubtful option: shot clearly better (pass 0.10 vs shot 0.24); counting only certain options: the shot was the only certain option
+
+
+SUMMARY TABLE
+| minute | team / scorer | kind | shot value | best option (value, status) | next certainly-onside option | verdict (certain options only) | verdict if the doubtful option counts |
+|---|---|---|---|---|---|---|---|
+| 7:17 | Arsenal / Thierry Henry | foot | 0.26 | 0.02 (certain onside, +9.8 m) | (same) | shot clearly better | shot clearly better |
+| 16:28 | Arsenal / Robert Pirès | foot | 0.28 | 0.28 (certain onside, +5.6 m) | (same) | no clear difference | no clear difference |
+| 31:56 | Arsenal / Thierry Henry | foot | 0.19 | 0.12 (certain onside, +1.1 m) | (same) | leans shot | leans shot |
+| 49:29 | Arsenal / Gilberto Aparecido da Silva | foot | 0.11 | 0.19 (DOUBT, +0.9 m) | 0.12 (6 m away) | no clear difference | leans pass |
+| 62:30 | Leeds United / Alan Smith | first-time from a cross | 0.24 | 0.10 (DOUBT, +0.5 m) | none | shot only certain option | shot clearly better |
