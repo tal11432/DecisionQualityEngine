@@ -1,0 +1,63 @@
+MATCH 3773526: Barcelona vs Deportivo Alavés; goals found: 6
+
+== 28:54  Barcelona: Francisco António Machado Mota de Castro Trincão, left foot, open play, play pattern From Throw In (assist: Moriba Kourouma Kourouma, ground pass); StatsBomb xG 0.09
+   Shooter 11.1 m from goal; defenders in the shooting triangle (keeper included): 5; visible teammates 6; options: 3 certain onside, 1 in doubt, 0 certainly offside; visible opponents 10 of 11
+   Model: shot value 0.10 (xG 0.06 + continuation 0.04)
+     option: 9 m away, 2 m from goal; reaches him 65%, chain value 0.97 => pass value 0.63; offside margin +0.4 m => DOUBT (within 1 m of the line)
+     option: 9 m away, 5 m from goal; reaches him 83%, chain value 0.52 => pass value 0.43; offside margin +2.2 m => certain onside
+     option: 8 m away, 11 m from goal; reaches him 90%, chain value 0.13 => pass value 0.12; offside margin +6.0 m => certain onside
+   The best-valued option is in DOUBT; the next option that is certainly onside: 9 m away, 5 m from goal, value 0.43, onside by 2.2 m
+   VERDICT: counting the doubtful option: pass clearly better (pass 0.63 vs shot 0.10); counting only certain options: pass clearly better (pass 0.43 vs shot 0.10)
+
+== 45:50  Barcelona: Lionel Andrés Messi Cuccittini, left foot, open play, play pattern From Throw In (assist: Sergio Busquets i Burgos, ground pass); StatsBomb xG 0.03
+   Shooter 23.3 m from goal; defenders in the shooting triangle (keeper included): 2; visible teammates 6; options: 5 certain onside, 1 in doubt, 0 certainly offside; visible opponents 9 of 11
+   Model: shot value 0.03 (xG 0.03 + continuation 0.01)
+     option: 8 m away, 16 m from goal; reaches him 84%, chain value 0.07 => pass value 0.06; offside margin -2.4 m => DOUBT (offside by the visible players, but a defender is out of view)
+     option: 12 m away, 24 m from goal; reaches him 91%, chain value 0.04 => pass value 0.03; offside margin +7.3 m => certain onside
+     option: 5 m away, 26 m from goal; reaches him 99%, chain value 0.02 => pass value 0.02; offside margin +6.0 m => certain onside
+   The best-valued option is in DOUBT; the next option that is certainly onside: 12 m away, 24 m from goal, value 0.03, onside by 7.3 m
+   VERDICT: counting the doubtful option: pass clearly better (pass 0.06 vs shot 0.03); counting only certain options: ambiguous (pass 0.03 vs shot 0.03)
+
+== 56:43  Deportivo Alavés: Luis Jesús Rioja González, left foot, open play, play pattern From Free Kick; StatsBomb xG 0.20
+   Shooter 13.7 m from goal; defenders in the shooting triangle (keeper included): 1; visible teammates 2; options: 2 certain onside, 0 in doubt, 0 certainly offside; visible opponents 7 of 11
+   Model: shot value 0.21 (xG 0.19 + continuation 0.01)
+     option: 11 m away, 16 m from goal; reaches him 84%, chain value 0.12 => pass value 0.10; offside margin +2.6 m => certain onside
+     option: 9 m away, 23 m from goal; reaches him 99%, chain value 0.05 => pass value 0.05; offside margin +10.7 m => certain onside
+   VERDICT: shot clearly better. Best pass value 0.10 (certainly onside by 2.6 m) vs shot value 0.21 (ratio 0.48).
+
+== 73:27  Barcelona: Francisco António Machado Mota de Castro Trincão, left foot, open play, play pattern From Throw In (assist: Lionel Andrés Messi Cuccittini, ground pass); StatsBomb xG 0.34
+   Shooter 14.4 m from goal; defenders in the shooting triangle (keeper included): 1; visible teammates 2; options: 1 certain onside, 1 in doubt, 0 certainly offside; visible opponents 6 of 11
+   Model: shot value 0.40 (xG 0.38 + continuation 0.02)
+     option: 5 m away, 10 m from goal; reaches him 98%, chain value 0.31 => pass value 0.31; offside margin -1.0 m => DOUBT (within 1 m of the line)
+     option: 4 m away, 17 m from goal; reaches him 97%, chain value 0.11 => pass value 0.11; offside margin +6.6 m => certain onside
+   The best-valued option is in DOUBT; the next option that is certainly onside: 4 m away, 17 m from goal, value 0.11, onside by 6.6 m
+   VERDICT: counting the doubtful option: shot clearly better (pass 0.31 vs shot 0.40); counting only certain options: shot clearly better (pass 0.11 vs shot 0.40)
+
+== 74:47  Barcelona: Lionel Andrés Messi Cuccittini, left foot, open play, play pattern Regular Play (assist: Antoine Griezmann, ground pass); StatsBomb xG 0.05
+   Shooter 21.7 m from goal; defenders in the shooting triangle (keeper included): 2; visible teammates 4; options: 3 certain onside, 1 in doubt, 0 certainly offside; visible opponents 9 of 11
+   Model: shot value 0.05 (xG 0.04 + continuation 0.01)
+     option: 13 m away, 14 m from goal; reaches him 71%, chain value 0.09 => pass value 0.06; offside margin -4.0 m => DOUBT (offside by the visible players, but a defender is out of view)
+     option: 5 m away, 18 m from goal; reaches him 98%, chain value 0.04 => pass value 0.04; offside margin +2.9 m => certain onside
+     option: 6 m away, 20 m from goal; reaches him 95%, chain value 0.04 => pass value 0.03; offside margin +4.4 m => certain onside
+   The best-valued option is in DOUBT; the next option that is certainly onside: 5 m away, 18 m from goal, value 0.04, onside by 2.9 m
+   VERDICT: counting the doubtful option: ambiguous (pass 0.06 vs shot 0.05); counting only certain options: ambiguous (pass 0.04 vs shot 0.05)
+
+== 79:11  Barcelona: Héctor Junior Firpo Adames, left foot, open play, play pattern Regular Play (assist: Antoine Griezmann, cross); StatsBomb xG 0.78
+   Shooter 4.2 m from goal; defenders in the shooting triangle (keeper included): 0; visible teammates 5; options: 4 certain onside, 1 in doubt, 0 certainly offside; visible opponents 8 of 11
+   Model: shot value 0.67 (xG 0.65 + continuation 0.02)
+   This was a first-time finish from a cross: passing was rarely a realistic alternative, so read the comparison with caution.
+     option: 8 m away, 8 m from goal; reaches him 81%, chain value 0.28 => pass value 0.23; offside margin +4.2 m => certain onside
+     option: 10 m away, 12 m from goal; reaches him 91%, chain value 0.18 => pass value 0.16; offside margin +9.3 m => certain onside
+     option: 11 m away, 14 m from goal; reaches him 79%, chain value 0.12 => pass value 0.10; offside margin +10.9 m => certain onside
+   VERDICT: shot clearly better. Best pass value 0.23 (certainly onside by 4.2 m) vs shot value 0.67 (ratio 0.34).
+
+
+SUMMARY TABLE
+| minute | team / scorer | kind | shot value | best option (value, status) | next certainly-onside option | verdict (certain options only) | verdict if the doubtful option counts |
+|---|---|---|---|---|---|---|---|
+| 28:54 | Barcelona / Francisco António Machado Mota de Castro Trincão | foot | 0.10 | 0.63 (DOUBT, +0.4 m) | 0.43 (9 m away) | pass clearly better | pass clearly better |
+| 45:50 | Barcelona / Lionel Andrés Messi Cuccittini | foot | 0.03 | 0.06 (DOUBT, -2.4 m) | 0.03 (12 m away) | ambiguous | pass clearly better |
+| 56:43 | Deportivo Alavés / Luis Jesús Rioja González | foot | 0.21 | 0.10 (certain onside, +2.6 m) | (same) | shot clearly better | shot clearly better |
+| 73:27 | Barcelona / Francisco António Machado Mota de Castro Trincão | foot | 0.40 | 0.31 (DOUBT, -1.0 m) | 0.11 (4 m away) | shot clearly better | shot clearly better |
+| 74:47 | Barcelona / Lionel Andrés Messi Cuccittini | foot | 0.05 | 0.06 (DOUBT, -4.0 m) | 0.04 (5 m away) | ambiguous | ambiguous |
+| 79:11 | Barcelona / Héctor Junior Firpo Adames | first-time from a cross | 0.67 | 0.23 (certain onside, +4.2 m) | (same) | shot clearly better | shot clearly better |
