@@ -58,7 +58,7 @@ for k, (comp, has360, m) in enumerate(jobs):
             row = ctx(a, opps, np.array(kp_[0], float)); row.update(comp=comp, match=mid, v_chain=chain, completed=int("outcome" not in ps), end=ps["end_location"][:2], opps=opps, mates=mates, gk=kp_[0], time=t0)
             moments.append(row)
     if k % 100 == 0: print(k, comp, f"{xfer/1e6:.0f} MB, shots {len(shots)}, pass moments {len(moments)}", flush=True)
-Sh, Mo = pd.DataFrame(shots), pd.DataFrame(moments)
+Sh, Mo = pd.DataFrame(shots, columns=["comp"]), pd.DataFrame(moments)
 for df in (Sh, Mo): df["test"] = df.comp.str.contains("Euro 2024|Copa America 2024|Bundesliga 2023/2024|Major League Soccer 2023")
 Sh.to_pickle(f"{D}/v10_shots.pkl"); Mo.to_pickle(f"{D}/v10_moments.pkl")
 print(f"DONE matches {len(jobs)}, transferred {xfer/1e6:.0f} MB; shots {len(Sh)}, pass moments {len(Mo)}")
