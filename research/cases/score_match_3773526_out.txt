@@ -1,12 +1,13 @@
-MATCH 3773526: 293 scored decisions at x >= 80 ({'pass': np.int64(157), 'carry': np.int64(116), 'shot': np.int64(20)}); frames for passes/carries: yes
-score of the option taken: median 26, 10th/90th 25/31; gap >= the noise floor in 12% of decisions (the rest: no clear difference from the best option)
-   Barcelona: 263 decisions, median score 26, mean Q +0.029, clearly-below-best 12%
-   Deportivo Alavés: 30 decisions, median score 28, mean Q +0.046, clearly-below-best 13%
-marked assumption A1: the option taken is flagged in 0 of 293 decisions, some option of the moment in 1; the score of the option taken differs from the model-only score in 0 decisions
+MATCH 3773526: 1508 scored decisions ({'pass': np.int64(858), 'carry': np.int64(630), 'shot': np.int64(20)}); frames for passes/carries: yes
+score of the option taken: median 25, 10th/90th 25/27; gap >= the noise floor in 3% of decisions (the rest: no clear difference from the best option)
+   by zone: attacking: n=403, median score 26, 10th/90th 25/29, lowest 25, highest 97, clearly-below-best 10%; middle: n=845, median score 25, 10th/90th 25/26, lowest 19, highest 37, clearly-below-best 0%; own third: n=260, median score 25, 10th/90th 25/25, lowest 24, highest 25, clearly-below-best 0%
+   Barcelona: 1185 decisions, median score 25, mean Q +0.009, clearly-below-best 3%
+   Deportivo Alavés: 323 decisions, median score 25, mean Q +0.007, clearly-below-best 2%
+marked assumption A1: the option taken is flagged in 16 of 1508 decisions, some option of the moment in 135; the score of the option taken differs from the model-only score in 9 decisions
 
 GOALS (shots that scored):
 clock             team                                           scorer  score  score_model best_kind  best_score  gap_points  gap_xg                                  verdict
-28:54        Barcelona Francisco António Machado Mota de Castro Trincão     35           35      pass          72          37   0.339            clearly below the best option
+28:54        Barcelona Francisco António Machado Mota de Castro Trincão     35           35      pass          75          40   0.376            clearly below the best option
 45:50        Barcelona                   Lionel Andrés Messi Cuccittini     29           29      shot          29           0   0.000 no clear difference from the best option
 56:43 Deportivo Alavés                        Luis Jesús Rioja González     47           47      shot          47           0   0.000 no clear difference from the best option
 73:27        Barcelona Francisco António Machado Mota de Castro Trincão     68           68      shot          68           0   0.000 no clear difference from the best option
@@ -15,22 +16,22 @@ clock             team                                           scorer  score  
 
 LARGEST CLEAR GAPS (the option taken was clearly below the best one):
 clock             team             kind  score best_kind  best_score  gap_xg     q  q_best
-28:54        Barcelona             shot     35      pass          72   0.339 0.096   0.436
-06:26        Barcelona            carry     27      shot          55   0.256 0.022   0.278
-28:52        Barcelona            carry     40      shot          58   0.168 0.138   0.307
-01:24        Barcelona            carry     34      shot          49   0.138 0.089   0.227
-69:12        Barcelona pass (completed)     29      pass          43   0.130 0.039   0.169
-13:32 Deportivo Alavés    pass (failed)     29      pass          38   0.086 0.035   0.121
-01:24        Barcelona pass (completed)     44      shot          53   0.085 0.177   0.262
-06:32        Barcelona             shot     40      pass          49   0.081 0.140   0.221
+28:54        Barcelona             shot     35      pass          75   0.376 0.096   0.472
+06:26        Barcelona            carry     26      shot          46   0.190 0.011   0.201
+69:12        Barcelona pass (completed)     27      pass          47   0.182 0.023   0.205
+01:24        Barcelona            carry     33      shot          49   0.147 0.080   0.227
+01:25        Barcelona            carry     35      shot          49   0.128 0.097   0.226
+72:51 Deportivo Alavés            carry     30      shot          41   0.104 0.044   0.147
+01:24        Barcelona pass (completed)     42      shot          53   0.099 0.163   0.262
+13:32 Deportivo Alavés    pass (failed)     29      pass          39   0.095 0.039   0.134
 
 HIGHEST SCORES:
-clock             team kind  score  gap_xg     q  realised
-79:11        Barcelona shot     97     0.0 0.669       NaN
-73:27        Barcelona shot     68     0.0 0.402       NaN
-01:25        Barcelona shot     67     0.0 0.390       NaN
-61:57        Barcelona shot     59     0.0 0.319       NaN
-65:39        Barcelona shot     54     0.0 0.271       NaN
-56:43 Deportivo Alavés shot     47     0.0 0.205       NaN
+clock             team          kind  score  gap_xg     q  realised
+79:11        Barcelona          shot     97     0.0 0.669       NaN
+73:27        Barcelona          shot     68     0.0 0.402       NaN
+01:25        Barcelona          shot     67     0.0 0.390       NaN
+61:57        Barcelona          shot     59     0.0 0.319       NaN
+65:39        Barcelona          shot     54     0.0 0.271       NaN
+69:45 Deportivo Alavés pass (failed)     48     0.0 0.217       0.0
 
 wrote research/cases/decision_scores_3773526.csv (no player names)

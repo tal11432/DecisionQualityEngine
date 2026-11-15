@@ -1,0 +1,61 @@
+test decisions 109984: {'pass': np.int64(56787), 'carry': np.int64(50758), 'shot': np.int64(2439)}; by zone {'middle': np.int64(57743), 'attacking': np.int64(26722), 'own third': np.int64(25519)}; competitions {'UEFA Euro 2024': np.int64(63665), '1. Bundesliga 2023/2024': np.int64(42202), 'Major League Soccer 2023': np.int64(3556), 'Copa America 2024': np.int64(561)}
+VARIANT: SENSITIVITY with the per-zone xP recalibration (DQ_XP_CAL=1)
+scored 109984 decisions in 2.8 min
+
+== RANGE REPORT (descriptive, requested by the user): score of the options taken, by zone (A1 on = primary)
+   ALL: n=109984; percentiles 0.1%: 21, 1%: 24, 5%: 25, 50%: 25, 95%: 28, 99%: 36, 99.9%: 69; min 12, max 100; model-only 0.1%/50%/99.9%: 24/25/69
+   own third: n=25519; percentiles 0.1%: 22, 1%: 24, 5%: 25, 50%: 25, 95%: 25, 99%: 25, 99.9%: 26; min 12, max 35; model-only 0.1%/50%/99.9%: 23/25/26
+   middle: n=57743; percentiles 0.1%: 20, 1%: 24, 5%: 25, 50%: 25, 95%: 26, 99%: 27, 99.9%: 32; min 16, max 67; model-only 0.1%/50%/99.9%: 25/25/32
+   attacking: n=26722; percentiles 0.1%: 25, 1%: 25, 5%: 25, 50%: 26, 95%: 35, 99%: 54, 99.9%: 90; min 24, max 100; model-only 0.1%/50%/99.9%: 25/26/90
+   by kind: carry: 1%/50%/99% 24/25/33; pass: 1%/50%/99% 25/25/31; shot: 1%/50%/99% 26/31/91
+== the WORST real option (a pass or carry to somewhere bad) available in each moment, excluding the hypothetical unforced turnover: own third: 1%/5%/50% 14/21/25; middle: 1%/5%/50% 18/22/25; attacking: 1%/5%/50% 25/25/25; incl. the unforced turnover, 1%/50%: 10/25
+
+== MARKED ASSUMPTION A1 by zone (visible balance >= 2 at a loss point with x <= 70 costs at least C): effect on the test decisions
+   ALL: some option flagged in 8.6% of decisions; the option TAKEN flagged in 1182 (1.07%); best flagged 118; score of the option taken changes in 0.86% (mean 2.2 points when it changes); gap changes in 0.83%; gap >= 0.03 xG: A1 7.3% vs model-only 7.1%
+   own third: some option flagged in 12.5% of decisions; the option TAKEN flagged in 293 (1.15%); best flagged 56; score of the option taken changes in 0.68% (mean 2.1 points when it changes); gap changes in 0.67%; gap >= 0.03 xG: A1 0.1% vs model-only 0.0%
+   middle: some option flagged in 10.7% of decisions; the option TAKEN flagged in 889 (1.54%); best flagged 62; score of the option taken changes in 1.33% (mean 2.2 points when it changes); gap changes in 1.29%; gap >= 0.03 xG: A1 1.8% vs model-only 1.5%
+   attacking: some option flagged in 0.4% of decisions; the option TAKEN flagged in 0 (0.00%); best flagged 0; score of the option taken changes in 0.00% (mean 0.0 points when it changes); gap changes in 0.00%; gap >= 0.03 xG: A1 26.0% vs model-only 26.0%
+   flagged options TAKEN: predicted Q with A1 -0.0147 vs model-only +0.0014 vs realised +0.0042 (n=1182; the assumption is expected to disagree with the realised value)
+
+== G-calibration per zone (MODEL-ONLY Q of the option taken vs realised net xG of the next 10 s; in a zone with |mean realised| < 0.01 the ratio is replaced by |mean Q - mean realised| <= 0.005)
+   ALL / all decisions: n=109984, mean Q +0.0080, realised +0.0071, ratio 1.13, Spearman over deciles 1.00 => PASS
+   ALL / without failed passes: n=106763, mean Q +0.0077, realised +0.0074, ratio 1.05, Spearman over deciles 1.00 => PASS
+   own third / all decisions: n=25519, mean Q -0.0000, realised -0.0003, ratio 0.14, Spearman over deciles 0.88 => FAIL
+   own third / without failed passes: n=24992, mean Q -0.0001, realised -0.0001, ratio 0.46, Spearman over deciles 0.83 => FAIL
+   middle / all decisions: n=57743, mean Q +0.0030, realised +0.0030, ratio 1.01, Spearman over deciles 0.99 => PASS
+   middle / without failed passes: n=56406, mean Q +0.0029, realised +0.0031, ratio 0.94, Spearman over deciles 1.00 => PASS
+   attacking / all decisions: n=26722, mean Q +0.0265, realised +0.0232, ratio 1.14, Spearman over deciles 1.00 => PASS
+   attacking / without failed passes: n=25365, mean Q +0.0259, realised +0.0242, ratio 1.07, Spearman over deciles 1.00 => PASS
+      own third, carry: n=13058, mean Q -0.0003, realised -0.0001, ratio 2.31
+      own third, pass: n=12461, mean Q +0.0002, realised -0.0005, ratio -0.40
+      middle, carry: n=25884, mean Q +0.0033, realised +0.0034, ratio 0.96
+      middle, pass: n=31844, mean Q +0.0029, realised +0.0027, ratio 1.07
+      middle, shot: n=15, mean Q +0.0090, realised +0.0136, ratio 0.66
+      attacking, carry: n=11816, mean Q +0.0209, realised +0.0180, ratio 1.16
+      attacking, pass: n=12482, mean Q +0.0163, realised +0.0125, ratio 1.30
+      attacking, shot: n=2424, mean Q +0.1067, realised +0.1031, ratio 1.03
+
+== G-gap per zone: inside terciles of Q_best (model-only), realised value of the top vs bottom tercile of the gap (expected: top gap realises LESS)
+   ALL: direction right 3/3, CI excluding 0 in 3/3 => PASS   |   tercile 1: top gap -0.0000 (mean gap 0.002) vs bottom +0.0007; diff -0.0007 [-0.0014,-0.0001] | tercile 2: top gap +0.0013 (mean gap 0.007) vs bottom +0.0055; diff -0.0042 [-0.0054,-0.0031] | tercile 3: top gap +0.0186 (mean gap 0.053) vs bottom +0.0308; diff -0.0122 [-0.0153,-0.0095]
+   own third: direction right 3/3, CI excluding 0 in 1/3 => FAIL   |   tercile 1: top gap -0.0010 (mean gap 0.002) vs bottom -0.0008; diff -0.0002 [-0.0012,+0.0007] | tercile 2: top gap -0.0007 (mean gap 0.001) vs bottom -0.0000; diff -0.0007 [-0.0016,+0.0002] | tercile 3: top gap -0.0002 (mean gap 0.002) vs bottom +0.0018; diff -0.0020 [-0.0030,-0.0008]
+   middle: direction right 3/3, CI excluding 0 in 3/3 => PASS   |   tercile 1: top gap +0.0010 (mean gap 0.002) vs bottom +0.0032; diff -0.0022 [-0.0036,-0.0008] | tercile 2: top gap +0.0007 (mean gap 0.006) vs bottom +0.0053; diff -0.0046 [-0.0058,-0.0034] | tercile 3: top gap +0.0025 (mean gap 0.022) vs bottom +0.0092; diff -0.0067 [-0.0083,-0.0054]
+   attacking: direction right 3/3, CI excluding 0 in 3/3 => PASS   |   tercile 1: top gap +0.0025 (mean gap 0.013) vs bottom +0.0086; diff -0.0061 [-0.0083,-0.0041] | tercile 2: top gap +0.0069 (mean gap 0.029) vs bottom +0.0205; diff -0.0136 [-0.0170,-0.0102] | tercile 3: top gap +0.0374 (mean gap 0.115) vs bottom +0.0950; diff -0.0576 [-0.0645,-0.0500]
+
+== G-best-sanity: shots with Q >= 0.30 n=187; median gap 0 points; share with gap 0 93% => PASS
+== G-curse: decisions where the option taken is the modelled best (n=67333): mean Q +0.0068 vs realised +0.0062 (ratio 1.09)
+== noise floor: gap >= 0.03 xG by zone (model-only): own third: 0.0%; middle: 1.5%; attacking: 26.0%; by kind: carry: 7.5%; pass: 5.5%; shot: 37.5%
+
+== G-no-regression (x >= 80): 17867 decisions matched with commit 5de0656; Spearman new vs old Q of the option taken 0.981; mean |difference| 0.0031 xG; mean Q old +0.0345 new +0.0335; by kind: carry: Spearman 0.987, mean |diff| 0.0030; pass: Spearman 0.963, mean |diff| 0.0038; shot: Spearman 0.997, mean |diff| 0.0008
+   => PASS (needs Spearman >= 0.95, mean |difference| <= 0.01 and the calibration gate in the attacking zone)
+
+== G-stability per zone (250 decisions, 60 perturbations each: 0.8 m positions; value scales 9% pass, 10% shot, 18% carry)
+   own third: median band width of the score 0.0 points, of the gap 0.0; 98% keep their score tercile in >= 80% of draws => PASS
+   middle: median band width of the score 0.0 points, of the gap 0.0; 99% keep their score tercile in >= 80% of draws => PASS
+   attacking: median band width of the score 1.0 points, of the gap 2.0; 84% keep their score tercile in >= 80% of draws => PASS
+
+== NAMED PROBES (synthetic situations, StatsBomb units; A1 on / model-only)
+   pass into the opponent's feet in our own box (target (18, 41) next to an opponent at (18, 41)): score 25 / 25 (Q -0.000 / -0.000); best option pass score 25; worst real option 22
+   safe 6 m pass to a free centre-back in our own box (target (8, 30)): score 25 / 25 (Q +0.000 / +0.000); best option pass score 25; worst real option 22
+   carry 5 m straight into three opponents in our own box: score 24 / 24 (Q -0.003 / -0.003); best option pass score 25; worst real option 22
+   shot at an almost open goal from 8 units with the keeper out of position: score 100 / 100 (Q +0.932 / +0.932); best option shot score 100; worst real option 41
+   safe 4 m pass to a teammate who has the goal open (teammate at (116, 40)): score 100 / 100 (Q +0.909 / +0.909); best option shot score 100; worst real option 100
