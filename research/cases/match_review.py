@@ -1,6 +1,7 @@
 """Goal-by-goal review of one match with the frozen DQ models (xG_geo + continuation for the shot; xP x chain value for the best visible teammate). Usage: python research/cases/match_review.py MATCH_ID"""
 import sys, json, gzip, urllib.request, numpy as np, pandas as pd
 sys.path.insert(0, "research/dq"); from tfcommon import steps, FEATS as HFT
+FLOOR = 0.02   # absolute floor (xG): a verdict needs the ratio rule (pass value x0.7 / x1.3) AND a difference of at least 0.02 at the conservative end
 GX = 120.0; SC = np.array([105 / 120, 68 / 80]); mid = sys.argv[1]
 B = "https://raw.githubusercontent.com/statsbomb/open-data/master/data/"
 def get(p):
@@ -53,7 +54,7 @@ for e in goals:
     print(f"   Model: shot value {shot_val:.2f} (xG {xg:.2f} + continuation {cont:.2f})")
     if hd: print("   This was a header: a pass was not a realistic alternative, so the comparison is shown but should not be read as advice.")
     elif kpp.get("cross"): print("   This was a first-time finish from a cross: passing was rarely a realistic alternative, so read the comparison with caution.")
-    def verdict(bv): return "pass clearly better" if 0.7 * bv > shot_val else ("shot clearly better" if 1.3 * bv < shot_val else "ambiguous")
+    def verdict(bv): return "pass clearly better" if 0.7 * bv - shot_val >= FLOOR else ("shot clearly better" if shot_val - 1.3 * bv >= FLOOR else "no clear difference")
     for c in live[:3]: print(f"     option: {c['d']:.0f} m away, {c['g']:.0f} m from goal; reaches him {c['xp']*100:.0f}%, chain value {c['xa']:.2f} => pass value {c['v']:.2f}; offside margin {c['margin']:+.1f} m => {c['status']}")
     rec = dict(minute=mn, team=tm, scorer=scorer, how=("header" if hd else ("first-time from a cross" if kpp.get("cross") else "foot")), shot=shot_val, dist=dist * 105 / 120, best=live[0] if live else None, sure=sure[0] if sure else None)
     if not live: print("   No receiver in view that is onside or in doubt. VERDICT: the shot was the only visible option.\n"); summary.append(rec); continue
@@ -66,7 +67,7 @@ for e in goals:
 print("\nSUMMARY TABLE")
 print("| minute | team / scorer | kind | shot value | best option (value, status) | next certainly-onside option | verdict (certain options only) | verdict if the doubtful option counts |")
 print("|---|---|---|---|---|---|---|---|")
-vv = lambda bv, sv: "pass clearly better" if 0.7 * bv > sv else ("shot clearly better" if 1.3 * bv < sv else "ambiguous")
+vv = lambda bv, sv: "pass clearly better" if 0.7 * bv - sv >= FLOOR else ("shot clearly better" if sv - 1.3 * bv >= FLOOR else "no clear difference")
 for r in summary:
     b, c0 = r["best"], r["sure"]
     if b is None: print(f"| {r['minute']} | {r['team']} / {r['scorer']} | {r['how']} | {r['shot']:.2f} | none in view | none | shot only option | shot only option |"); continue

@@ -16,7 +16,7 @@ MATCH 3773526: Barcelona vs Deportivo Alavés; goals found: 6
      option: 12 m away, 24 m from goal; reaches him 91%, chain value 0.04 => pass value 0.03; offside margin +7.3 m => certain onside
      option: 5 m away, 26 m from goal; reaches him 99%, chain value 0.02 => pass value 0.02; offside margin +6.0 m => certain onside
    The best-valued option is in DOUBT; the next option that is certainly onside: 12 m away, 24 m from goal, value 0.03, onside by 7.3 m
-   VERDICT: counting the doubtful option: pass clearly better (pass 0.06 vs shot 0.03); counting only certain options: ambiguous (pass 0.03 vs shot 0.03)
+   VERDICT: counting the doubtful option: no clear difference (pass 0.06 vs shot 0.03); counting only certain options: no clear difference (pass 0.03 vs shot 0.03)
 
 == 56:43  Deportivo Alavés: Luis Jesús Rioja González, left foot, open play, play pattern From Free Kick; StatsBomb xG 0.20
    Shooter 13.7 m from goal; defenders in the shooting triangle (keeper included): 1; visible teammates 2; options: 2 certain onside, 0 in doubt, 0 certainly offside; visible opponents 7 of 11
@@ -31,7 +31,7 @@ MATCH 3773526: Barcelona vs Deportivo Alavés; goals found: 6
      option: 5 m away, 10 m from goal; reaches him 98%, chain value 0.31 => pass value 0.31; offside margin -1.0 m => DOUBT (within 1 m of the line)
      option: 4 m away, 17 m from goal; reaches him 97%, chain value 0.11 => pass value 0.11; offside margin +6.6 m => certain onside
    The best-valued option is in DOUBT; the next option that is certainly onside: 4 m away, 17 m from goal, value 0.11, onside by 6.6 m
-   VERDICT: counting the doubtful option: shot clearly better (pass 0.31 vs shot 0.40); counting only certain options: shot clearly better (pass 0.11 vs shot 0.40)
+   VERDICT: counting the doubtful option: no clear difference (pass 0.31 vs shot 0.40); counting only certain options: shot clearly better (pass 0.11 vs shot 0.40)
 
 == 74:47  Barcelona: Lionel Andrés Messi Cuccittini, left foot, open play, play pattern Regular Play (assist: Antoine Griezmann, ground pass); StatsBomb xG 0.05
    Shooter 21.7 m from goal; defenders in the shooting triangle (keeper included): 2; visible teammates 4; options: 3 certain onside, 1 in doubt, 0 certainly offside; visible opponents 9 of 11
@@ -40,7 +40,7 @@ MATCH 3773526: Barcelona vs Deportivo Alavés; goals found: 6
      option: 5 m away, 18 m from goal; reaches him 98%, chain value 0.04 => pass value 0.04; offside margin +2.9 m => certain onside
      option: 6 m away, 20 m from goal; reaches him 95%, chain value 0.04 => pass value 0.03; offside margin +4.4 m => certain onside
    The best-valued option is in DOUBT; the next option that is certainly onside: 5 m away, 18 m from goal, value 0.04, onside by 2.9 m
-   VERDICT: counting the doubtful option: ambiguous (pass 0.06 vs shot 0.05); counting only certain options: ambiguous (pass 0.04 vs shot 0.05)
+   VERDICT: counting the doubtful option: no clear difference (pass 0.06 vs shot 0.05); counting only certain options: no clear difference (pass 0.04 vs shot 0.05)
 
 == 79:11  Barcelona: Héctor Junior Firpo Adames, left foot, open play, play pattern Regular Play (assist: Antoine Griezmann, cross); StatsBomb xG 0.78
    Shooter 4.2 m from goal; defenders in the shooting triangle (keeper included): 0; visible teammates 5; options: 4 certain onside, 1 in doubt, 0 certainly offside; visible opponents 8 of 11
@@ -56,8 +56,8 @@ SUMMARY TABLE
 | minute | team / scorer | kind | shot value | best option (value, status) | next certainly-onside option | verdict (certain options only) | verdict if the doubtful option counts |
 |---|---|---|---|---|---|---|---|
 | 28:54 | Barcelona / Francisco António Machado Mota de Castro Trincão | foot | 0.10 | 0.63 (DOUBT, +0.4 m) | 0.43 (9 m away) | pass clearly better | pass clearly better |
-| 45:50 | Barcelona / Lionel Andrés Messi Cuccittini | foot | 0.03 | 0.06 (DOUBT, -2.4 m) | 0.03 (12 m away) | ambiguous | pass clearly better |
+| 45:50 | Barcelona / Lionel Andrés Messi Cuccittini | foot | 0.03 | 0.06 (DOUBT, -2.4 m) | 0.03 (12 m away) | no clear difference | no clear difference |
 | 56:43 | Deportivo Alavés / Luis Jesús Rioja González | foot | 0.21 | 0.10 (certain onside, +2.6 m) | (same) | shot clearly better | shot clearly better |
-| 73:27 | Barcelona / Francisco António Machado Mota de Castro Trincão | foot | 0.40 | 0.31 (DOUBT, -1.0 m) | 0.11 (4 m away) | shot clearly better | shot clearly better |
-| 74:47 | Barcelona / Lionel Andrés Messi Cuccittini | foot | 0.05 | 0.06 (DOUBT, -4.0 m) | 0.04 (5 m away) | ambiguous | ambiguous |
+| 73:27 | Barcelona / Francisco António Machado Mota de Castro Trincão | foot | 0.40 | 0.31 (DOUBT, -1.0 m) | 0.11 (4 m away) | shot clearly better | no clear difference |
+| 74:47 | Barcelona / Lionel Andrés Messi Cuccittini | foot | 0.05 | 0.06 (DOUBT, -4.0 m) | 0.04 (5 m away) | no clear difference | no clear difference |
 | 79:11 | Barcelona / Héctor Junior Firpo Adames | first-time from a cross | 0.67 | 0.23 (certain onside, +4.2 m) | (same) | shot clearly better | shot clearly better |
