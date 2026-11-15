@@ -1,0 +1,2 @@
+window 0.4s: any player median 0.56 m, mean 0.71, 90th 1.49; players within 25 m of the ball: median 0.91, mean 1.01, 90th 1.85; implied per-axis sd 0.80 m
+window 1.0s: any player median 1.38 m, mean 1.75, 90th 3.69; players within 25 m of the ball: median 2.24, mean 2.48, 90th 4.55; implied per-axis sd 1.98 m
