@@ -35,20 +35,24 @@ for e in goals:
     gk = np.array(gks[0], float); dd = np.hypot(*(O - a).T); v = np.array([GX, 40.0]) - a; dist = float(np.hypot(*v)); an = ang(*a); gl = float(abs(v[0] * (gk[1] - a[1]) - v[1] * (gk[0] - a[0])) / (dist + 1e-9))
     hd = int(body == "Head"); f2 = dict(dist=dist, angle=an, header=hd, n_tri=sum(tri(o, a) for o in O), gk_d=float(np.hypot(GX - gk[0], 40 - gk[1])), gk_lat=gl, n_opp2=int((dd <= 2).sum()), nn_opp=float(dd.min()), da=dist * an, ldist=float(np.log(dist)))
     xg = sgn(M5["xG_geo"], [f2[k] for k in M5["xG_geo"]["F"]]); cont = sgn(M6["cont"], [f2[k] for k in M6["cont"]["F"]]); shot_val = xg + cont
-    t0 = secs(e); ox = np.sort(O[:, 0]); lineo = max(ox[-2] if len(ox) > 1 else ox[-1], a[0]); best = (0.0, None); cands = []
+    t0 = secs(e); ox = np.sort(O[:, 0]); second_last = ox[-2] if len(ox) > 1 else ox[-1]; lineo = max(second_last, a[0]); cands = []
     for p in Tm:
         d = float(np.hypot(*((p - a) * SC)))
-        if not (3 <= d <= 40) or (p[0] > lineo and p[0] > 60): continue
+        if not (3 <= d <= 40): continue
+        margin_m = float((lineo - p[0]) * 105 / 120)          # > 0: onside by this many metres; < 0: offside by this many metres (position proxy; only applies in the opponent half)
+        offside = (p[0] > lineo) and (p[0] > 60)
         dp = np.hypot(*(O - p).T); dist_p = float(np.hypot(GX - p[0], 40 - p[1])); an_p = ang(*p)
         ft = dict(dist=dist_p, angle=an_p, x=p[0], d2=dist_p ** 2, ad=an_p * dist_p, n_tri=sum(tri(o, p) for o in O), n3=int((dp <= 3).sum()), n6=int((dp <= 6).sum()), nn=float(dp.min()), gk_d=float(np.hypot(GX - gk[0], 40 - gk[1])), plen=float(np.hypot(*(p - a))), fwd=float(p[0] - a[0]), pdist=dist)
-        xa = sgn(M6["xA_chain"], [ft[k] for k in M6["xA_chain"]["F"]]); xp = hz(a, p, O); cands.append((xp * xa, xp, xa, d, dist_p * 105 / 120)); best = max(best, (xp * xa, p), key=lambda z: z[0])
-    cands.sort(reverse=True)
-    print(f"   Shooter {dist*105/120:.1f} m from goal; defenders in the shooting triangle (keeper included): {f2['n_tri']}; visible teammates: {len(Tm)}, admissible receivers: {len(cands)}")
+        xa = sgn(M6["xA_chain"], [ft[k] for k in M6["xA_chain"]["F"]]); xp = hz(a, p, O); cands.append(dict(v=xp * xa, xp=xp, xa=xa, d=d, g=dist_p * 105 / 120, off=offside, margin=margin_m))
+    on = sorted([c for c in cands if not c["off"]], key=lambda c: -c["v"]); offs = sorted([c for c in cands if c["off"]], key=lambda c: -c["v"]); cands = on
+    print(f"   Shooter {dist*105/120:.1f} m from goal; defenders in the shooting triangle (keeper included): {f2['n_tri']}; visible teammates: {len(Tm)}, admissible (onside) receivers: {len(on)}, offside and excluded: {len(offs)}; visible opponents: {len(O)} (second-last visible defender at {(GX-second_last)*105/120:.1f} m from the goal line)")
     print(f"   Model: shot value {shot_val:.2f} (xG {xg:.2f} + continuation {cont:.2f})")
     if hd: print("   This was a header: a pass was not a realistic alternative, so the comparison is shown but should not be read as advice.")
     elif kpp.get("cross"): print("   This was a first-time finish from a cross: passing was rarely a realistic alternative, so read the comparison with caution.")
     if cands:
-        for c in cands[:3]: print(f"     best pass option: {c[3]:.0f} m away, {c[4]:.0f} m from goal; reaches him {c[1]*100:.0f}%, chain value {c[2]:.2f} => pass value {c[0]:.2f}")
-        bv = cands[0][0]; pc, sc = 0.7 * bv > shot_val, 1.3 * bv < shot_val; verdict = "a pass was clearly better" if pc else ("the shot was clearly better" if sc else "ambiguous (pass value within +-30% of the shot)")
+        for c in cands[:3]: print(f"     best pass option: {c['d']:.0f} m away, {c['g']:.0f} m from goal; reaches him {c['xp']*100:.0f}%, chain value {c['xa']:.2f} => pass value {c['v']:.2f}; OFFSIDE CHECK: onside by {c['margin']:.1f} m" + (" (MARGINAL: within 1 m of the line, a small tracking error could flip it)" if c['margin'] < 1.0 else ""))
+        bo = [c for c in offs if c["v"] > cands[0]["v"]]
+        if bo: print(f"     NOTE: a better-looking option was excluded as OFFSIDE: {bo[0]['d']:.0f} m away, {bo[0]['g']:.0f} m from goal, offside by {-bo[0]['margin']:.1f} m, value would be {bo[0]['v']:.2f}")
+        bv = cands[0]["v"]; pc, sc = 0.7 * bv > shot_val, 1.3 * bv < shot_val; verdict = "a pass was clearly better" if pc else ("the shot was clearly better" if sc else "ambiguous (pass value within +-30% of the shot)")
         print(f"   VERDICT: {verdict}. Best pass value {bv:.2f} vs shot value {shot_val:.2f} (ratio {bv/shot_val:.2f}).\n")
-    else: print("   No admissible receiver in view. VERDICT: the shot was the only visible option.\n")
+    else: print("   No onside receiver in view. VERDICT: the shot was the only visible option." + (f" (offside candidates excluded: {len(offs)})" if offs else "") + "\n")

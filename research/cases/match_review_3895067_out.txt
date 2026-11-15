@@ -1,52 +1,52 @@
 MATCH 3895067: Bayer Leverkusen vs Darmstadt 98; goals found: 6
 
 == 20:18  Bayer Leverkusen: Victor Okoh Boniface, right foot, open play, play pattern From Counter (assist: Jeremie Frimpong, ground pass); StatsBomb xG 0.27
-   Shooter 9.1 m from goal; defenders in the shooting triangle (keeper included): 1; visible teammates: 3, admissible receivers: 2
+   Shooter 9.1 m from goal; defenders in the shooting triangle (keeper included): 1; visible teammates: 3, admissible (onside) receivers: 2, offside and excluded: 0; visible opponents: 5 (second-last visible defender at 4.8 m from the goal line)
    Model: shot value 0.32 (xG 0.30 + continuation 0.02)
-     best pass option: 9 m away, 12 m from goal; reaches him 72%, chain value 0.19 => pass value 0.14
-     best pass option: 18 m away, 16 m from goal; reaches him 61%, chain value 0.14 => pass value 0.09
+     best pass option: 9 m away, 12 m from goal; reaches him 72%, chain value 0.19 => pass value 0.14; OFFSIDE CHECK: onside by 6.7 m
+     best pass option: 18 m away, 16 m from goal; reaches him 61%, chain value 0.14 => pass value 0.09; OFFSIDE CHECK: onside by 7.6 m
    VERDICT: the shot was clearly better. Best pass value 0.14 vs shot value 0.32 (ratio 0.44).
 
 == 23:57  Darmstadt 98: Oscar Vilhelmsson, head, open play, play pattern From Free Kick (assist: Christoph Klarer, ground pass); StatsBomb xG 0.44
-   Shooter 3.0 m from goal; defenders in the shooting triangle (keeper included): 1; visible teammates: 5, admissible receivers: 4
+   Shooter 3.0 m from goal; defenders in the shooting triangle (keeper included): 1; visible teammates: 5, admissible (onside) receivers: 4, offside and excluded: 0; visible opponents: 11 (second-last visible defender at 1.2 m from the goal line)
    Model: shot value 0.40 (xG 0.38 + continuation 0.02)
    This was a header: a pass was not a realistic alternative, so the comparison is shown but should not be read as advice.
-     best pass option: 4 m away, 5 m from goal; reaches him 86%, chain value 0.59 => pass value 0.51
-     best pass option: 7 m away, 10 m from goal; reaches him 74%, chain value 0.19 => pass value 0.14
-     best pass option: 14 m away, 15 m from goal; reaches him 47%, chain value 0.11 => pass value 0.05
+     best pass option: 4 m away, 5 m from goal; reaches him 86%, chain value 0.59 => pass value 0.51; OFFSIDE CHECK: onside by 3.5 m
+     best pass option: 7 m away, 10 m from goal; reaches him 74%, chain value 0.19 => pass value 0.14; OFFSIDE CHECK: onside by 5.9 m
+     best pass option: 14 m away, 15 m from goal; reaches him 47%, chain value 0.11 => pass value 0.05; OFFSIDE CHECK: onside by 12.6 m
    VERDICT: ambiguous (pass value within +-30% of the shot). Best pass value 0.51 vs shot value 0.40 (ratio 1.28).
 
 == 48:08  Bayer Leverkusen: Exequiel Alejandro Palacios, right foot, open play, play pattern From Free Kick (assist: Jeremie Frimpong, cross); StatsBomb xG 0.07
-   Shooter 14.5 m from goal; defenders in the shooting triangle (keeper included): 5; visible teammates: 6, admissible receivers: 5
+   Shooter 14.5 m from goal; defenders in the shooting triangle (keeper included): 5; visible teammates: 6, admissible (onside) receivers: 5, offside and excluded: 1; visible opponents: 10 (second-last visible defender at 2.4 m from the goal line)
    Model: shot value 0.06 (xG 0.03 + continuation 0.03)
    This was a first-time finish from a cross: passing was rarely a realistic alternative, so read the comparison with caution.
-     best pass option: 12 m away, 5 m from goal; reaches him 71%, chain value 0.41 => pass value 0.29
-     best pass option: 8 m away, 9 m from goal; reaches him 95%, chain value 0.27 => pass value 0.25
-     best pass option: 10 m away, 6 m from goal; reaches him 79%, chain value 0.28 => pass value 0.22
+     best pass option: 12 m away, 5 m from goal; reaches him 71%, chain value 0.41 => pass value 0.29; OFFSIDE CHECK: onside by 0.4 m (MARGINAL: within 1 m of the line, a small tracking error could flip it)
+     best pass option: 8 m away, 9 m from goal; reaches him 95%, chain value 0.27 => pass value 0.25; OFFSIDE CHECK: onside by 5.4 m
+     best pass option: 10 m away, 6 m from goal; reaches him 79%, chain value 0.28 => pass value 0.22; OFFSIDE CHECK: onside by 2.0 m
    VERDICT: a pass was clearly better. Best pass value 0.29 vs shot value 0.06 (ratio 4.90).
 
 == 60:21  Bayer Leverkusen: Victor Okoh Boniface, left foot, open play, play pattern From Throw In (assist: Florian Wirtz, ground pass); StatsBomb xG 0.40
-   Shooter 9.3 m from goal; defenders in the shooting triangle (keeper included): 1; visible teammates: 4, admissible receivers: 4
+   Shooter 9.3 m from goal; defenders in the shooting triangle (keeper included): 1; visible teammates: 4, admissible (onside) receivers: 4, offside and excluded: 0; visible opponents: 7 (second-last visible defender at 8.3 m from the goal line)
    Model: shot value 0.38 (xG 0.36 + continuation 0.02)
-     best pass option: 5 m away, 10 m from goal; reaches him 95%, chain value 0.27 => pass value 0.25
-     best pass option: 11 m away, 10 m from goal; reaches him 66%, chain value 0.23 => pass value 0.15
-     best pass option: 15 m away, 24 m from goal; reaches him 91%, chain value 0.06 => pass value 0.05
+     best pass option: 5 m away, 10 m from goal; reaches him 95%, chain value 0.27 => pass value 0.25; OFFSIDE CHECK: onside by 3.0 m
+     best pass option: 11 m away, 10 m from goal; reaches him 66%, chain value 0.23 => pass value 0.15; OFFSIDE CHECK: onside by 1.5 m
+     best pass option: 15 m away, 24 m from goal; reaches him 91%, chain value 0.06 => pass value 0.05; OFFSIDE CHECK: onside by 7.3 m
    VERDICT: the shot was clearly better. Best pass value 0.25 vs shot value 0.38 (ratio 0.66).
 
 == 66:59  Bayer Leverkusen: Jonas Hofmann, right foot, open play, play pattern From Keeper (assist: Victor Okoh Boniface, ground pass); StatsBomb xG 0.06
-   Shooter 19.5 m from goal; defenders in the shooting triangle (keeper included): 1; visible teammates: 6, admissible receivers: 6
+   Shooter 19.5 m from goal; defenders in the shooting triangle (keeper included): 1; visible teammates: 6, admissible (onside) receivers: 6, offside and excluded: 0; visible opponents: 7 (second-last visible defender at 11.1 m from the goal line)
    Model: shot value 0.08 (xG 0.07 + continuation 0.01)
-     best pass option: 6 m away, 15 m from goal; reaches him 92%, chain value 0.06 => pass value 0.05
-     best pass option: 15 m away, 12 m from goal; reaches him 57%, chain value 0.09 => pass value 0.05
-     best pass option: 19 m away, 16 m from goal; reaches him 41%, chain value 0.06 => pass value 0.02
+     best pass option: 6 m away, 15 m from goal; reaches him 92%, chain value 0.06 => pass value 0.05; OFFSIDE CHECK: onside by 1.2 m
+     best pass option: 15 m away, 12 m from goal; reaches him 57%, chain value 0.09 => pass value 0.05; OFFSIDE CHECK: onside by 0.0 m (MARGINAL: within 1 m of the line, a small tracking error could flip it)
+     best pass option: 19 m away, 16 m from goal; reaches him 41%, chain value 0.06 => pass value 0.02; OFFSIDE CHECK: onside by 0.9 m (MARGINAL: within 1 m of the line, a small tracking error could flip it)
    VERDICT: the shot was clearly better. Best pass value 0.05 vs shot value 0.08 (ratio 0.66).
 
 == 82:10  Bayer Leverkusen: Adam Hložek, left foot, open play, play pattern From Corner (assist: Noah Mbamba, cross); StatsBomb xG 0.59
-   Shooter 3.8 m from goal; defenders in the shooting triangle (keeper included): 1; visible teammates: 4, admissible receivers: 4
+   Shooter 3.8 m from goal; defenders in the shooting triangle (keeper included): 1; visible teammates: 4, admissible (onside) receivers: 4, offside and excluded: 0; visible opponents: 8 (second-last visible defender at 5.0 m from the goal line)
    Model: shot value 0.62 (xG 0.60 + continuation 0.02)
    This was a first-time finish from a cross: passing was rarely a realistic alternative, so read the comparison with caution.
-     best pass option: 8 m away, 10 m from goal; reaches him 80%, chain value 0.17 => pass value 0.13
-     best pass option: 17 m away, 20 m from goal; reaches him 55%, chain value 0.06 => pass value 0.03
-     best pass option: 25 m away, 28 m from goal; reaches him 18%, chain value 0.03 => pass value 0.00
+     best pass option: 8 m away, 10 m from goal; reaches him 80%, chain value 0.17 => pass value 0.13; OFFSIDE CHECK: onside by 3.6 m
+     best pass option: 17 m away, 20 m from goal; reaches him 55%, chain value 0.06 => pass value 0.03; OFFSIDE CHECK: onside by 12.2 m
+     best pass option: 25 m away, 28 m from goal; reaches him 18%, chain value 0.03 => pass value 0.00; OFFSIDE CHECK: onside by 15.9 m
    VERDICT: the shot was clearly better. Best pass value 0.13 vs shot value 0.62 (ratio 0.22).
 
