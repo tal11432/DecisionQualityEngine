@@ -2,6 +2,11 @@ reference built: 9000 decisions
 reference: 9000 decisions of the training competitions; Q of the options taken, 10th/50th/90th/99th pct: +0.0042, +0.0150, +0.0702, +0.3538
 test decisions 17867: {'pass': np.int64(7920), 'carry': np.int64(7523), 'shot': np.int64(2424)}; competitions {'UEFA Euro 2024': np.int64(10065), '1. Bundesliga 2023/2024': np.int64(6689), 'Major League Soccer 2023': np.int64(557), 'Copa America 2024': np.int64(556)}
 
+== MARKED ASSUMPTION A1 (visible balance >= 2 at a loss point with x <= 70: loss cost >= C): how much it touches the test decisions
+   options flagged somewhere in the moment: 0.2% of decisions; the option TAKEN is flagged in 0 decisions (0.00%); the BEST option is flagged in 0
+   score of the option taken changes in 0 decisions (0.00%), by a mean of 0.0 points when it changes; the gap changes in 0 decisions (0.00%); by kind of the option taken, flagged: {}
+   gap >= noise floor (0.03 xG): with A1 19.0% vs model-only 19.0%
+
 == DISTRIBUTION of the score of the option taken (ABSOLUTE scale, C = 0.231), by kind (test); no resolution gate (withdrawn in amendment E)
    pooled 10th/50th/90th/99th 25/26/33/61; share <= 10: 0.0%, >= 50: 2.1%, >= 80: 0.4%
    carry: n=7523, score_chosen mean 27.6 (10th/50th/90th 25/26/31); gap points mean 2.8, median 1, share with gap 0 27%, gap > 10 pts 4%; best option kind {'pass': np.float64(0.63), 'shot': np.float64(0.23), 'carry': np.float64(0.15)}
@@ -30,8 +35,8 @@ test decisions 17867: {'pass': np.int64(7920), 'carry': np.int64(7523), 'shot': 
 
 == G-anchor: the scale and modelled counter-attack situations (the face-validity unit tests are in tests/test_dscore_score.py)
    share of the options taken that score <= 5: 0.00%; score 100: 0.06%
-   scale: Q=1.0 -> 100 | 0.70 -> 100 | 0.32 -> 59 | 0.08 -> 33 | 0.06 -> 31 | 0.01 -> 26 | 0 -> 25 | -0.012 -> 24 | -C -> 0
-   a loss at the edge of our box, 3 opponents beyond the ball, 1 of ours covering: L = +0.0539 xG -> score of the turnover 19
+   A1 is ON in every number above unless a column says _model. scale: Q=1.0 -> 100 | 0.70 -> 100 | 0.32 -> 59 | 0.08 -> 33 | 0.06 -> 31 | 0.01 -> 26 | 0 -> 25 | -0.012 -> 24 | -C -> 0
+   a loss at the edge of our box, 3 opponents beyond the ball, 1 of ours covering: L = +0.2310 xG -> score of the turnover 0
    the same loss, nobody of theirs beyond the ball, 3 of ours covering: L = +0.0455 xG -> score of the turnover 20
    a loss in the opponent box, 3 of ours covering: L = -0.0027 xG -> score of the turnover 25
 
