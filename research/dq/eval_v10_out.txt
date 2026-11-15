@@ -1,0 +1,37 @@
+moments: test 4890 (comps {'UEFA Euro 2024': np.int64(2789), '1. Bundesliga 2023/2024': np.int64(1954), 'Major League Soccer 2023': np.int64(147)}), in-sample 360 competitions 12243
+
+[TEST; could-shoot threshold 0.05] ground passes from x>=90: 4890; with a shot worth >= 0.05: 790 (16.2%); mean shot value 0.084; mean ex-ante value of the pass taken 0.066; best available pass 0.078; realised chain 0.046
+  was the pass taken right? pass clearly better 8.7% | shot clearly better 63.9% | ambiguous 27.3%
+  versus the BEST pass available: some pass clearly better than the shot 15.9% | the shot clearly better than every pass 53.7% | ambiguous 30.4%
+    completed: n=568, pass clearly better 7%, shot clearly better 70%
+    failed: n=222, pass clearly better 12%, shot clearly better 48%
+    <12m: n=43; pass clearly better 37%, shot clearly better 33% ; mean shot 0.170 vs pass 0.206; realised chain 0.114
+    12-20m: n=377; pass clearly better 11%, shot clearly better 54% ; mean shot 0.089 vs pass 0.076; realised chain 0.053
+    20-30m: n=367; pass clearly better 3%, shot clearly better 78% ; mean shot 0.070 vs pass 0.039; realised chain 0.032
+  KNOWN GROUPS: realised chain of passes classed 'pass clearly better' 0.1673 (n=69) vs 'shot clearly better' 0.0274 (n=505); difference +0.1399 [+0.0906,+0.1907]  => PASS
+  shot-clearly-better passes: the shot would have been worth 0.085 (model) vs the pass chain realised 0.027; ex-ante pass value 0.039
+  CALIBRATION among could-shoot passes: realised / ex-ante = 0.700 [0.587,0.820]  => within 0.7-1.3
+
+[TEST; could-shoot threshold 0.1] ground passes from x>=90: 4890; with a shot worth >= 0.1: 160 (3.3%); mean shot value 0.146; mean ex-ante value of the pass taken 0.118; best available pass 0.126; realised chain 0.089
+  was the pass taken right? pass clearly better 13.1% | shot clearly better 65.0% | ambiguous 21.9%
+  versus the BEST pass available: some pass clearly better than the shot 12.5% | the shot clearly better than every pass 63.7% | ambiguous 23.8%
+    completed: n=111, pass clearly better 13%, shot clearly better 70%
+    failed: n=49, pass clearly better 14%, shot clearly better 53%
+    <12m: n=34; pass clearly better 35%, shot clearly better 38% ; mean shot 0.195 vs pass 0.222; realised chain 0.114
+    12-20m: n=101; pass clearly better 9%, shot clearly better 69% ; mean shot 0.135 vs pass 0.099; realised chain 0.078
+    20-30m: n=25; pass clearly better 0%, shot clearly better 84% ; mean shot 0.128 vs pass 0.056; realised chain 0.101
+  KNOWN GROUPS: realised chain of passes classed 'pass clearly better' 0.2598 (n=21) vs 'shot clearly better' 0.0533 (n=104); difference +0.2065 [+0.0899,+0.3368]  => PASS
+  shot-clearly-better passes: the shot would have been worth 0.146 (model) vs the pass chain realised 0.053; ex-ante pass value 0.065
+  CALIBRATION among could-shoot passes: realised / ex-ante = 0.754 [0.515,1.028]  => within 0.7-1.3
+
+[IN-SAMPLE (reference only); could-shoot threshold 0.05] ground passes from x>=90: 12243; with a shot worth >= 0.05: 2133 (17.4%); mean shot value 0.085; mean ex-ante value of the pass taken 0.064; best available pass 0.073; realised chain 0.048
+  was the pass taken right? pass clearly better 8.8% | shot clearly better 66.4% | ambiguous 24.8%
+  versus the BEST pass available: some pass clearly better than the shot 14.0% | the shot clearly better than every pass 56.6% | ambiguous 29.3%
+    completed: n=1551, pass clearly better 7%, shot clearly better 72%
+    failed: n=582, pass clearly better 15%, shot clearly better 53%
+    <12m: n=101; pass clearly better 30%, shot clearly better 44% ; mean shot 0.177 vs pass 0.188; realised chain 0.108
+    12-20m: n=974; pass clearly better 12%, shot clearly better 54% ; mean shot 0.091 vs pass 0.077; realised chain 0.057
+    20-30m: n=1051; pass clearly better 4%, shot clearly better 80% ; mean shot 0.072 vs pass 0.039; realised chain 0.034
+  KNOWN GROUPS: realised chain of passes classed 'pass clearly better' 0.1215 (n=188) vs 'shot clearly better' 0.0334 (n=1416); difference +0.0881 [+0.0580,+0.1230]  => PASS
+  shot-clearly-better passes: the shot would have been worth 0.087 (model) vs the pass chain realised 0.033; ex-ante pass value 0.039
+  CALIBRATION among could-shoot passes: realised / ex-ante = 0.757 [0.655,0.854]  => within 0.7-1.3

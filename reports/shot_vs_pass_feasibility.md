@@ -406,3 +406,34 @@ Pre-registration `research/dq/PREREG_DQ_v9.txt`; scripts `fetch_v9.py`, `eval_v9
 **What this means.**
 * The pass value is near the limit of what this kind of data (single frames of 360 or a freeze frame) can give. The remaining uncertainty is the +-30% band, which we should keep reporting as is.
 * Improvements would need **different information**, not more modelling of the same frames: player movement (velocities and runs, available only from tracking), the identity or quality of the passer and receiver, or a different target (for example, the value after a longer horizon). We have not tested these. Tracking from Metrica (3 matches, 68 shots) is too small to learn a chain value.
+
+## 16. DQ-v10: the reverse case, passes made when a shot was available
+
+Pre-registration `research/dq/PREREG_DQ_v10.txt` (written before the download); scripts `fetch_v10.py` and `eval_v10.py`; output `eval_v10_out.txt`. 436 MB transferred (the 351 matches of the 360-frame competitions), processed in memory, tables deleted. All models are the frozen ones from v2, v6 and v8, fitted on other competitions. Test competitions: Euro 2024, Bundesliga 2023/24, MLS 2023.
+
+**Question.** For ground passes made by a player at x >= 90 (within about 26 m of the goal line), in how many was a shot available and worth at least as much, and was the pass the right call?
+* "Could have shot" = the modelled value of a shot from the passer's situation (location, keeper, defenders in the shooting triangle, defenders near him) is at least 0.05. This model was trained on shots that were actually taken, so it is optimistic for situations in which nobody shoots (blocked lane, bad angle, a teammate better placed).
+* The ex-ante value of the pass taken = xP x chain value at its target, from the 360 frame at pass time. No outcome enters it.
+
+**Results on the test competitions** (4,890 passes from that area; **790 (16%)** had a shot worth at least 0.05; the mean shot value was 0.084, the mean ex-ante value of the pass taken 0.066, the best available pass 0.078, the chain value actually realised 0.046):
+
+| Verdict (pass value x0.7 to x1.3) | Pass taken clearly better | Shot clearly better | Ambiguous |
+|---|---|---|---|
+| **All 790 passes** | **8.7%** | **63.9%** | 27.3% |
+| Completed (568) | 7% | 70% | |
+| Failed (222) | 12% | 48% | |
+| < 12 m from goal (43) | 37% | 33% | |
+| 12-20 m (377) | 11% | 54% | |
+| 20-30 m (367) | 3% | 78% | |
+| Threshold 0.10 instead of 0.05 (160 passes) | 13% | 65% | 22% |
+
+* **Against the best pass available** (any visible teammate): some pass was clearly better than shooting in 15.9%; the shot was clearly better than every pass in **53.7%**; ambiguous in 30.4%.
+* **So, in situations where a shot was worth at least 0.05, most passes were not the best use of the moment according to the model.** The passes that were "clearly worse than the shot" produced a realised chain of 0.027, against a shot worth 0.085 (ex-ante pass value 0.039).
+* **Very close to goal (under 12 m)** the picture is balanced (37% / 33%), as with the shot-first decisions in section 13.
+
+**Validity check, the part that can improve the model.** The verdict uses no outcomes, so the realised results can test it.
+* **Known groups: passed.** The realised chain of passes classed "pass clearly better" was **0.167** (69 passes) against **0.027** (505) for those classed "shot clearly better"; difference +0.140 [+0.091, +0.191]. The ex-ante values separate good and poor pass decisions where it matters. The same holds at threshold 0.10 (0.260 vs 0.053), and in the training competitions (0.122 vs 0.033).
+* **Calibration:** among these passes the realised/ex-ante ratio is 0.70 [0.59, 0.82] (0.75 with the 0.10 threshold), i.e. the ex-ante value overstates what was realised by about 30%. For *completed* passes the ratio over the whole area is **0.95** (all 360 competitions: 1.08), so the chain value is well calibrated once a pass arrives. The gap comes from failed passes, where the ex-ante value is too high.
+* **Why not recalibrate xP from this data.** The completion probability looks over-optimistic in this area (mean xP 0.91 vs completion rate 0.85; for recorded lengths up to 5 units 0.96 vs 0.45), but the check is confounded: **for a failed pass the only target we know is the point where the ball was stopped**, which is a truncated path whose survival probability is high by construction. The pre-registered target approximation therefore inflates the ex-ante value of failed passes, so the 0.70 is a pessimistic reading of calibration and the verdicts for failed passes are conservative (they favour the pass). An honest recalibration needs the intended target of failed passes, which this data does not provide. No change was made to xP.
+
+**Limits.** Players pass when they see something the model does not (body orientation, a teammate's run, a blocked lane, orders); the shot value of a situation where nobody shoots is an extrapolation; only players visible in the 360 frame are used; failed-pass targets are approximated.
