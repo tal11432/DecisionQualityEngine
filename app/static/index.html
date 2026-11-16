@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Decision Score</title>
+<style>
+:root{--bg:#f4f5f2;--panel:#fff;--ink:#1d2a22;--mute:#667068;--line:#d9dcd5;--acc:#1d6b45;--warn:#9a5b00;--red:#c0392b;--blue:#2457b3}
+@media (prefers-color-scheme:dark){:root{--bg:#121714;--panel:#1b221e;--ink:#e6ece7;--mute:#9aa59d;--line:#2e3832;--acc:#4cc38a;--warn:#e3a53b;--red:#ee7466;--blue:#7aa2f0}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,"Segoe UI",Arial,sans-serif}
+header{padding:12px 16px;border-bottom:1px solid var(--line);background:var(--panel)}h1{margin:0;font-size:18px}header p{margin:2px 0 0;color:var(--mute);font-size:13px}
+main{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:14px;padding:14px 16px;max-width:1500px;margin:0 auto}
+@media (max-width:1000px){main{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.tool{border:2px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit}
+.tool.on{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 16%,transparent)}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-inline-end:6px;vertical-align:-1px}
+button.p{background:var(--acc);color:#fff;border:0;border-radius:8px;padding:7px 12px;cursor:pointer;font:inherit}
+button.s{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit}
+label{font-size:13px;color:var(--mute)}input[type=range]{vertical-align:middle}select{font:inherit;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px}
+#wrap{position:relative;direction:ltr}canvas{width:100%;height:auto;display:block;border-radius:8px;touch-action:none;cursor:crosshair}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:5px 4px;border-bottom:1px solid var(--line);text-align:start}tr.sel{background:color-mix(in srgb,var(--acc) 14%,transparent)}tr{cursor:pointer}
+.sc{font-weight:700;font-size:15px;direction:ltr;display:inline-block;min-width:34px}
+.warn{color:var(--warn);font-size:13px;margin:6px 0}.mute{color:var(--mute);font-size:13px}.err{color:var(--red);font-size:13px}
+.legend span{margin-inline-end:12px;font-size:13px}
+</style></head>
+<body>
+<header><h1>Decision Score &mdash; ציון לכל אפשרות</h1><p>מעלים צילום מסך, מסמנים את מיקומי השחקנים, ומקבלים ציון לכל אפשרות (עד 10 הטובות ביותר מעל הסף). הכול רץ במחשב שלך; התמונה לא נשלחת לשום מקום.</p></header>
+<main>
+<section class="card">
+  <div class="bar">
+    <input type="file" id="file" accept="image/*">
+    <label>חלון התמונה:
+      <select id="win"><option value="0">כל המגרש</option><option value="60" selected>החצי ההתקפי (x ≥ 60)</option><option value="80">השליש ההתקפי (x ≥ 80)</option></select></label>
+    <label>שקיפות <input type="range" id="op" min="0" max="100" value="55"></label>
+  </div>
+  <div class="bar" id="tools">
+    <button class="tool on" data-t="carrier"><span class="dot" style="background:#e8b400"></span>מחזיק הכדור</button>
+    <button class="tool" data-t="mate"><span class="dot" style="background:#2457b3"></span>חבר קבוצה</button>
+    <button class="tool" data-t="opp"><span class="dot" style="background:#c0392b"></span>יריב</button>
+    <button class="tool" data-t="gk"><span class="dot" style="background:#7b2d8b"></span>שוער יריב</button>
+    <button class="s" id="clear">נקה הכול</button>
+  </div>
+  <div id="wrap"><canvas id="cv" width="1200" height="800"></canvas></div>
+  <p class="mute">הקבוצה עם הכדור תוקפת ימינה. לחיצה: מניחה שחקן מהסוג שנבחר. גרירה: מזיזה. קליק ימני (או לחיצה ארוכה): מוחק. הצבעים: <span class="legend"><span><span class="dot" style="background:#e8b400"></span>הכדור</span><span><span class="dot" style="background:#2457b3"></span>חבר</span><span><span class="dot" style="background:#c0392b"></span>יריב</span><span><span class="dot" style="background:#7b2d8b"></span>שוער</span></span></p>
+</section>
+<aside class="card">
+  <div class="bar"><label>סף ציון <b id="thv">26</b> <input type="range" id="th" min="0" max="100" value="26"></label></div>
+  <div class="bar"><label><input type="checkbox" id="auto" checked> חשב אוטומטית</label><button class="p" id="go">חשב</button></div>
+  <div id="msg" class="mute">הניחו את מחזיק הכדור, חברי קבוצה ויריבים.</div>
+  <div id="warns"></div>
+  <table id="tbl" hidden><thead><tr><th>#</th><th>אפשרות</th><th>ציון</th><th>Q (xG)</th><th>סיכוי</th></tr></thead><tbody></tbody></table>
+  <p class="mute" id="foot"></p>
+  <p class="mute" style="border-top:1px solid var(--line);padding-top:8px">הציון: 25 = אפשרות שלא משנה כלום בציפייה, 100 = לפחות 0.70 xG, 0 = עלות של 0.231 xG. הציון <b>מאומת רק בשליש ההתקפי</b> (x ≥ 80); בשאר המגרש קראו את הסדר ולא את המספרים. אפשרויות: בעיטה (מ-x ≥ 60) ומסירות קרקע של 3–40 מ' לחברים שסומנו. לא נבחנות: נשיאה, כדור גבוה, כדור עומק, מרכז, כדרור. לא נבדק על ידי מומחים.</p>
+</aside>
+</main>
+<script>
+const W=1200,H=800,cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+let tool='carrier',img=null,x0=60,res=null,sel=-1,drag=null;
+const S={carrier:null,mates:[],opps:[],gk:null};
+const COL={carrier:'#e8b400',mate:'#2457b3',opp:'#c0392b',gk:'#7b2d8b'};
+const px=x=>(x-x0)/(120-x0)*W, py=y=>y/80*H, ux=p=>x0+p/W*(120-x0), uy=p=>p/H*80;
+function scoreColor(s){return s>=60?'#1d9a5b':s>=40?'#7aa84a':s>=30?'#d1a21c':'#8a8f8c'}
+function draw(){
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#2f7a4f';ctx.fillRect(0,0,W,H);
+  if(img){ctx.globalAlpha=document.getElementById('op').value/100;ctx.drawImage(img,0,0,W,H);ctx.globalAlpha=1}
+  ctx.strokeStyle='rgba(255,255,255,.85)';ctx.lineWidth=2;
+  const L=(a,b,c,d)=>{ctx.beginPath();ctx.moveTo(px(a),py(b));ctx.lineTo(px(c),py(d));ctx.stroke()};
+  const R=(a,b,c,d)=>{ctx.strokeRect(px(a),py(b),px(c)-px(a),py(d)-py(b))};
+  R(0.2,0.2,119.8,79.8);L(60,0,60,80);R(102,18,119.8,62);R(114,30,119.8,50);R(119.8,36,121.5,44);
+  ctx.beginPath();ctx.arc(px(60),py(40),10/(120-x0)*W,0,7);ctx.stroke();
+  if(res){res.options.forEach((o,i)=>{const a=S.carrier;if(!a)return;const tx=px(o.target[0]),ty=py(o.target[1]),c=scoreColor(o.score);
+    ctx.strokeStyle=c;ctx.lineWidth=i===sel?7:3.5;ctx.globalAlpha=i===sel?1:.8;ctx.beginPath();ctx.moveTo(px(a[0]),py(a[1]));ctx.lineTo(tx,ty);ctx.stroke();
+    const ang=Math.atan2(ty-py(a[1]),tx-px(a[0]));ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(tx-16*Math.cos(ang-.4),ty-16*Math.sin(ang-.4));ctx.lineTo(tx-16*Math.cos(ang+.4),ty-16*Math.sin(ang+.4));ctx.fill();ctx.globalAlpha=1;
+    const f=o.kind==='shot'?.45:.5,mx=px(a[0])+(tx-px(a[0]))*f,my=py(a[1])+(ty-py(a[1]))*f-(o.kind==='shot'?26:0);ctx.font='bold 26px system-ui';const t=o.kind==='shot'?'בעיטה '+o.score:o.score;ctx.fillStyle='rgba(0,0,0,.65)';const w=ctx.measureText(t).width+14;ctx.fillRect(mx-w/2,my-17,w,30);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(t,mx,my+6);ctx.textAlign='start'})}
+  const dot=(p,c,l)=>{if(!p)return;ctx.fillStyle=c;ctx.beginPath();ctx.arc(px(p[0]),py(p[1]),15,0,7);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.stroke();if(l){ctx.fillStyle='#fff';ctx.font='bold 17px system-ui';ctx.textAlign='center';ctx.fillText(l,px(p[0]),py(p[1])+6);ctx.textAlign='start'}};
+  S.opps.forEach(p=>dot(p,COL.opp));S.mates.forEach((p,i)=>dot(p,COL.mate));dot(S.gk,COL.gk,'GK');dot(S.carrier,COL.carrier,'⚽');
+}
+function pos(e){const r=cv.getBoundingClientRect();return [(e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H]}
+function hit(p){const all=[];if(S.carrier)all.push(['carrier',0,S.carrier]);S.mates.forEach((q,i)=>all.push(['mate',i,q]));S.opps.forEach((q,i)=>all.push(['opp',i,q]));if(S.gk)all.push(['gk',0,S.gk]);
+  for(const [k,i,q] of all){if(Math.hypot(px(q[0])-p[0],py(q[1])-p[1])<22)return {k,i}}return null}
+function setPt(k,i,v){if(k==='carrier')S.carrier=v;else if(k==='gk')S.gk=v;else if(k==='mate')S.mates[i]=v;else S.opps[i]=v}
+function del(k,i){if(k==='carrier')S.carrier=null;else if(k==='gk')S.gk=null;else if(k==='mate')S.mates.splice(i,1);else S.opps.splice(i,1)}
+cv.addEventListener('contextmenu',e=>{e.preventDefault();const h=hit(pos(e));if(h){del(h.k,h.i);changed()}});
+cv.addEventListener('pointerdown',e=>{if(e.button===2)return;const p=pos(e),h=hit(p);if(h){drag=h;cv.setPointerCapture(e.pointerId);return}
+  const v=[Math.max(0,Math.min(120,ux(p[0]))),Math.max(0,Math.min(80,uy(p[1])))];
+  if(tool==='carrier')S.carrier=v;else if(tool==='gk')S.gk=v;else if(tool==='mate')S.mates.push(v);else S.opps.push(v);changed()});
+cv.addEventListener('pointermove',e=>{if(!drag)return;const p=pos(e);setPt(drag.k,drag.i,[Math.max(0,Math.min(120,ux(p[0]))),Math.max(0,Math.min(80,uy(p[1])))]);draw();schedule()});
+cv.addEventListener('pointerup',()=>{if(drag){drag=null;changed()}});
+document.getElementById('tools').addEventListener('click',e=>{const b=e.target.closest('.tool');if(!b)return;tool=b.dataset.t;document.querySelectorAll('.tool').forEach(x=>x.classList.toggle('on',x===b))});
+document.getElementById('clear').onclick=()=>{S.carrier=null;S.mates=[];S.opps=[];S.gk=null;res=null;sel=-1;render();draw()};
+document.getElementById('file').onchange=e=>{const f=e.target.files[0];if(!f)return;const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{img=im;draw()};im.src=u};
+document.getElementById('win').onchange=e=>{x0=+e.target.value;draw();changed()};document.getElementById('op').oninput=draw;
+const th=document.getElementById('th');th.oninput=()=>{document.getElementById('thv').textContent=th.value;schedule()};
+document.getElementById('go').onclick=run;let timer=null;
+function schedule(){if(document.getElementById('auto').checked){clearTimeout(timer);timer=setTimeout(run,250)}}
+function changed(){draw();schedule()}
+async function run(){const msg=document.getElementById('msg');
+  if(!S.carrier){msg.textContent='הניחו את מחזיק הכדור.';msg.className='mute';return}
+  try{const r=await fetch('/api/score',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({carrier:S.carrier,teammates:S.mates,opponents:S.opps,keeper:S.gk,threshold:+th.value,top:10})});
+    const j=await r.json();if(!r.ok){msg.textContent=j.error||'שגיאה';msg.className='err';res=null;render();draw();return}res=j;sel=-1;render();draw()}catch(err){msg.textContent='אין חיבור לשרת המקומי';msg.className='err'}}
+function render(){const msg=document.getElementById('msg'),tb=document.getElementById('tbl'),w=document.getElementById('warns'),foot=document.getElementById('foot');
+  w.innerHTML='';if(!res){tb.hidden=true;foot.textContent='';return}
+  msg.className='mute';msg.textContent=res.options.length?`${res.options.length} אפשרויות מעל הסף ${res.threshold} (מתוך ${res.n_options} שנבחנו)`:`אין אפשרות מעל הסף ${res.threshold} (נבחנו ${res.n_options}). הורידו את הסף כדי לראות.`;
+  res.warnings.forEach(t=>{const d=document.createElement('div');d.className='warn';d.textContent='⚠ '+t;w.appendChild(d)});
+  tb.hidden=!res.options.length;const body=tb.querySelector('tbody');body.innerHTML='';
+  res.options.forEach((o,i)=>{const tr=document.createElement('tr');
+    const name=o.kind==='shot'?'בעיטה':`מסירה ${o.dist_m.toFixed(0)} מ'`+(o.status.startsWith('DOUBT')?' (נבדל בספק)':'');
+    tr.innerHTML=`<td>${o.rank}</td><td>${name}${o.counter_assumed?' <span title="הנחה מסומנת A1">†</span>':''}</td><td><span class="sc" style="color:${scoreColor(o.score)}">${o.score}</span></td><td>${o.q.toFixed(3)}</td><td>${o.kind==='shot'?'xG '+o.xg.toFixed(2):Math.round(o.xp*100)+'%'}</td>`;
+    tr.onmouseenter=()=>{sel=i;draw()};tr.onmouseleave=()=>{sel=-1;draw()};body.appendChild(tr)});
+  foot.textContent=`ציון איבוד כדור יזום כאן: ${res.turnover.score}` + (res.n_offside?` · ${res.n_offside} מסירות לנבדל ודאי הוסתרו`:'')}
+draw();
+</script>
+</body></html>
