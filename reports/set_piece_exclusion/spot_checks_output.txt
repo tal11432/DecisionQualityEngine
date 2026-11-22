@@ -1,0 +1,20 @@
+== 1. EVENT STRUCTURE (does the SET PIECE marker and the delivery coincide?) ==
+G1: SET PIECE events 77; max |marker duration| 0.04s; followed (same team, same player, <= 1.0s) by PASS/BALL LOST/SHOT: 72; gap median 0.00s, share exactly 0: 85%, max 0.40s; other followers: {'BALL OUT': 3, 'PASS': 1, 'BALL LOST': 1}
+G2: SET PIECE events 80; max |marker duration| 0.00s; followed (same team, same player, <= 1.0s) by PASS/BALL LOST/SHOT: 79; gap median 0.00s, share exactly 0: 90%, max 0.68s; other followers: {'BALL LOST': 1}
+G3: SET PIECE events 90; max |marker duration| 0.00s; followed (same team, same player, <= 1.0s) by PASS/BALL LOST/SHOT: 90; gap median 0.00s, share exactly 0: 100%, max 0.00s; other followers: {}
+
+== 2. SCENARIO-A ELIGIBLE POPULATION (legacy labels) ==
+eligible n=2983; deliveries 221 (7.4%): completed 195, intercepted 26
+by restart subtype: {'THROW IN': 104, 'FREE KICK': 54, 'FREE KICK-INDIRECT': 23, 'CORNER KICK': 21, 'KICK OFF': 16, 'FREE KICK-RETAKEN': 2, 'KICK OFF-RETAKEN': 1}
+interception rate: deliveries 0.118, open play 0.112
+
+== 3. TRACKING SPOT CHECKS at the event frame (all pass-related candidates with labels) ==
+                                   deliveries   open play
+n                                         225        2858
+ball untracked in all 25 frames before event   96.9%       0.3%
+tracked ball coincides with passer (<1 cm)     97.3%       9.0%
+median ball speed over next 0.4 s (m/s)          9.7       11.3
+ball position by restart type (median x, y; share on the expected spot):
+  THROW IN  n=105: ball within 1 m of a touch/goal line 99% (open play: 2.8%)
+  CORNER    n=21: distance ball -> nearest corner flag: median 2.2 m, max 8.1 m (taker stands a few metres off the flag)
+  KICK OFF  n=17: ball within 1.5 m of the centre spot 100%

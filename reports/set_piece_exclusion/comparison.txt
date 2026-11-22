@@ -1,0 +1,68 @@
+
+[cross_game_results.txt] scenario A: PRIMARY logistic (train>test): n int | AUC | dBrier | dLogLoss  (base -> excl; * = CI excludes 0)
+  G1>G2  n 1023->950  int 111->101 | AUC 0.583->0.606 (+0.023) | dBrier -0.0012->-0.0018* | dLL -0.0061*->-0.0087* | prob.skill:partial, ranking:yes -> prob.skill:yes, ranking:yes
+  G1>G3  n 1088->1010  int 97->89 | AUC 0.691->0.712 (+0.021) | dBrier -0.0033*->-0.0039* | dLL -0.0144*->-0.0166* | prob.skill:yes, ranking:yes -> prob.skill:yes, ranking:yes
+  G2>G1  n 872->802  int 126->118 | AUC 0.610->0.612 (+0.002) | dBrier -0.0013*->-0.0024* | dLL -0.0061*->-0.0110* | prob.skill:yes, ranking:yes -> prob.skill:yes, ranking:yes
+  G2>G3  n 1088->1010  int 97->89 | AUC 0.676->0.717 (+0.041) | dBrier -0.0012*->-0.0031* | dLL -0.0058*->-0.0160* | prob.skill:yes, ranking:yes -> prob.skill:yes, ranking:yes
+  G3>G1  n 872->802  int 126->118 | AUC 0.603->0.603 (+0.000) | dBrier -0.0024->-0.0019 | dLL -0.0018->+0.0044 | prob.skill:no, ranking:yes -> prob.skill:no, ranking:yes
+  G3>G2  n 1023->950  int 111->101 | AUC 0.559->0.585 (+0.026) | dBrier +0.0006->+0.0003 | dLL +0.0099->+0.0040 | prob.skill:no, ranking:yes -> prob.skill:no, ranking:yes
+  mean primary AUC over 6 runs: 0.620 -> 0.639 ; mean boosted AUC 0.664 -> 0.660
+
+[cross_game_results.txt] scenario B: PRIMARY logistic (train>test): n int | AUC | dBrier | dLogLoss  (base -> excl; * = CI excludes 0)
+  G1>G2  n 591->558  int 37->34 | AUC 0.767->0.754 (-0.013) | dBrier -0.0061->-0.0040 | dLL -0.0337*->-0.0281* | prob.skill:partial, ranking:yes -> prob.skill:partial, ranking:yes
+  G1>G3  n 642->607  int 36->36 | AUC 0.778->0.794 (+0.016) | dBrier +0.0013->-0.0013 | dLL -0.0251*->-0.0340* | prob.skill:partial, ranking:yes -> prob.skill:partial, ranking:yes
+  G2>G1  n 487->449  int 45->43 | AUC 0.828->0.822 (-0.006) | dBrier -0.0084->-0.0088 | dLL -0.0535*->-0.0533* | prob.skill:partial, ranking:yes -> prob.skill:partial, ranking:yes
+  G2>G3  n 642->607  int 36->36 | AUC 0.776->0.788 (+0.012) | dBrier +0.0063*->+0.0033 | dLL -0.0018->-0.0090 | prob.skill:no, ranking:yes -> prob.skill:no, ranking:yes
+  G3>G1  n 487->449  int 45->43 | AUC 0.744->0.742 (-0.002) | dBrier -0.0073*->-0.0089* | dLL -0.0376*->-0.0403* | prob.skill:yes, ranking:yes -> prob.skill:yes, ranking:yes
+  G3>G2  n 591->558  int 37->34 | AUC 0.783->0.781 (-0.002) | dBrier -0.0039*->-0.0036 | dLL -0.0269*->-0.0246 | prob.skill:yes, ranking:yes -> prob.skill:no, ranking:yes
+  mean primary AUC over 6 runs: 0.779 -> 0.780 ; mean boosted AUC 0.837 -> 0.839
+  skill ('A', 'feasibility baseline') (3, 1, 2) -> (4, 0, 2)
+  skill ('A', 'primary logistic') (3, 1, 2) -> (4, 0, 2)
+  skill ('A', 'boosted trees') (5, 1, 0) -> (4, 2, 0)
+  skill ('B', 'feasibility baseline') (3, 1, 2) -> (3, 2, 1)
+  skill ('B', 'primary logistic') (2, 3, 1) -> (1, 3, 2)
+  skill ('B', 'boosted trees') (3, 3, 0) -> (3, 3, 0)
+
+[cross_game_results_fix_identity.txt] scenario A: PRIMARY logistic (train>test): n int | AUC | dBrier | dLogLoss  (base -> excl; * = CI excludes 0)
+  G1>G2  n 1023->950  int 111->101 | AUC 0.583->0.606 (+0.023) | dBrier -0.0012->-0.0018* | dLL -0.0061*->-0.0087* | prob.skill:partial, ranking:yes -> prob.skill:yes, ranking:yes
+  G1>G3  n 1161->1079  int 105->97 | AUC 0.682->0.701 (+0.019) | dBrier -0.0031*->-0.0037* | dLL -0.0138*->-0.0158* | prob.skill:yes, ranking:yes -> prob.skill:yes, ranking:yes
+  G2>G1  n 872->802  int 126->118 | AUC 0.610->0.612 (+0.002) | dBrier -0.0013*->-0.0024* | dLL -0.0061*->-0.0110* | prob.skill:yes, ranking:yes -> prob.skill:yes, ranking:yes
+  G2>G3  n 1161->1079  int 105->97 | AUC 0.666->0.706 (+0.040) | dBrier -0.0011*->-0.0030* | dLL -0.0056*->-0.0153* | prob.skill:yes, ranking:yes -> prob.skill:yes, ranking:yes
+  G3>G1  n 872->802  int 126->118 | AUC 0.602->0.601 (-0.001) | dBrier -0.0025->-0.0019 | dLL -0.0025->+0.0032 | prob.skill:no, ranking:yes -> prob.skill:no, ranking:yes
+  G3>G2  n 1023->950  int 111->101 | AUC 0.557->0.584 (+0.027) | dBrier +0.0005->+0.0002 | dLL +0.0094->+0.0030 | prob.skill:no, ranking:yes -> prob.skill:no, ranking:yes
+  mean primary AUC over 6 runs: 0.617 -> 0.635 ; mean boosted AUC 0.662 -> 0.657
+
+[cross_game_results_fix_identity.txt] scenario B: PRIMARY logistic (train>test): n int | AUC | dBrier | dLogLoss  (base -> excl; * = CI excludes 0)
+  G1>G2  n 591->558  int 37->34 | AUC 0.767->0.754 (-0.013) | dBrier -0.0061->-0.0040 | dLL -0.0337*->-0.0281* | prob.skill:partial, ranking:yes -> prob.skill:partial, ranking:yes
+  G1>G3  n 684->646  int 39->39 | AUC 0.769->0.784 (+0.015) | dBrier +0.0005->-0.0019 | dLL -0.0246*->-0.0326* | prob.skill:partial, ranking:yes -> prob.skill:partial, ranking:yes
+  G2>G1  n 487->449  int 45->43 | AUC 0.828->0.822 (-0.006) | dBrier -0.0084->-0.0088 | dLL -0.0535*->-0.0533* | prob.skill:partial, ranking:yes -> prob.skill:partial, ranking:yes
+  G2>G3  n 684->646  int 39->39 | AUC 0.775->0.785 (+0.010) | dBrier +0.0054*->+0.0027 | dLL -0.0044->-0.0110 | prob.skill:no, ranking:yes -> prob.skill:no, ranking:yes
+  G3>G1  n 487->449  int 45->43 | AUC 0.759->0.754 (-0.005) | dBrier -0.0076*->-0.0090* | dLL -0.0425*->-0.0444* | prob.skill:yes, ranking:yes -> prob.skill:yes, ranking:yes
+  G3>G2  n 591->558  int 37->34 | AUC 0.802->0.797 (-0.005) | dBrier -0.0043*->-0.0041* | dLL -0.0303*->-0.0278* | prob.skill:yes, ranking:yes -> prob.skill:yes, ranking:yes
+  mean primary AUC over 6 runs: 0.783 -> 0.783 ; mean boosted AUC 0.842 -> 0.841
+  skill ('A', 'feasibility baseline') (3, 1, 2) -> (4, 0, 2)
+  skill ('A', 'primary logistic') (3, 1, 2) -> (4, 0, 2)
+  skill ('A', 'boosted trees') (5, 0, 1) -> (4, 1, 1)
+  skill ('B', 'feasibility baseline') (3, 2, 1) -> (3, 2, 1)
+  skill ('B', 'primary logistic') (2, 3, 1) -> (2, 3, 1)
+  skill ('B', 'boosted trees') (3, 3, 0) -> (5, 1, 0)
+
+[pooled_validation_results.txt]  M3 (single score) and M2: AUC | dBrier | dLogLoss | cal slope
+ A test G1: n 872->802 int 126->118 rate 0.144->0.147
+     M2: AUC 0.612->0.608 | dB -0.0028*->-0.0028* | dLL -0.0114*->-0.0100 | slope 0.98->0.72
+     M3: AUC 0.597->0.597 | dB -0.0025*->-0.0025 | dLL -0.0093->-0.0068 | slope 0.82->0.61
+ A test G2: n 1023->950 int 111->101 rate 0.109->0.106
+     M2: AUC 0.570->0.596 | dB -0.0004->-0.0010 | dLL -0.0020->-0.0075 | slope 0.57->0.75
+     M3: AUC 0.550->0.580 | dB +0.0003->-0.0005 | dLL +0.0028->-0.0052 | slope 0.39->0.62
+ A test G3: n 1088->1010 int 97->89 rate 0.089->0.088
+     M2: AUC 0.684->0.716 | dB -0.0027*->-0.0039* | dLL -0.0122*->-0.0184* | slope 2.37->2.45
+     M3: AUC 0.697->0.720 | dB -0.0030*->-0.0042* | dLL -0.0151*->-0.0210* | slope 2.76->2.63
+ B test G1: n 487->449 int 45->43 rate 0.092->0.096
+     M2: AUC 0.829->0.822 | dB -0.0081*->-0.0083* | dLL -0.0500*->-0.0498* | slope 1.19->1.13
+     M3: AUC 0.829->0.822 | dB -0.0082*->-0.0084* | dLL -0.0509*->-0.0506* | slope 1.12->1.07
+ B test G2: n 591->558 int 37->34 rate 0.063->0.061
+     M2: AUC 0.863->0.856 | dB -0.0063*->-0.0056* | dLL -0.0395*->-0.0367* | slope 1.60->1.52
+     M3: AUC 0.863->0.856 | dB -0.0065*->-0.0057* | dLL -0.0411*->-0.0380* | slope 1.48->1.43
+ B test G3: n 642->607 int 36->36 rate 0.056->0.059
+     M2: AUC 0.776->0.788 | dB +0.0057*->+0.0036 | dLL -0.0048->-0.0101 | slope 0.59->0.66
+     M3: AUC 0.776->0.788 | dB +0.0064*->+0.0043 | dLL -0.0035->-0.0090 | slope 0.57->0.63

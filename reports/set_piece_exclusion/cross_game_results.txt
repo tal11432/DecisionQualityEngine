@@ -1,0 +1,215 @@
+== VALIDATION GATE (tracking validation, event synchronization, label availability) ==
+G1: PASS  source=metrica_csv  frames=145006  players=28  validation=PASS (warnings: missing_values, coordinates, continuity)  events synced 1745/1745  labels: 692 completed / 120 intercepted
+     timestamps: rate 25.00 Hz; 0 non-increasing times, 0 irregular steps, 0 frame/time disagreements
+G2: PASS  source=metrica_csv  frames=141156  players=26  validation=PASS (warnings: missing_values, coordinates, continuity)  events synced 1935/1935  labels: 853 completed / 104 intercepted
+     timestamps: rate 25.00 Hz; 0 non-increasing times, 0 irregular steps, 0 frame/time disagreements
+G3: PASS  source=epts  frames=143761  players=35  validation=PASS (warnings: missing_values, coordinates, continuity)  events synced 3620/3620  labels: 993 completed / 97 intercepted
+     timestamps: rate 25.00 Hz; 0 non-increasing times, 0 irregular steps, 0 frame/time disagreements
+     WARNING identity swap: Home period 2: tracking slots P3573 and P3580 look exchanged vs events (90% of 71 / 97% of 142 events have the ball at the other player). Default: data kept as supplied (those passers fail the possession filter -> excluded, non-randomly); --fix-identity applies the swap.
+gate passed for all games
+
+contract DecisionContract(offset_frames=0, velocity_window_frames=5, possession_max_ball_dist_m=3.0, min_pass_length_m=3.0, heading_window_frames=6, heading_min_displacement_m=1.0, heading_max_deviation_deg=15.0, heading_min_gap_deg=5.0)
+feasibility params FeasibilityParams(ball_speed=11.9, player_speed=7.0, reaction_time=0.3, lane_samples=60)
+bootstrap 1000 resamples (paired, shared per test game); '*' = 95% CI excludes 0
+
+==========================================================================================
+SCENARIO A: DECISION-TIME (target-free), prediction frame = ball release
+==========================================================================================
+-- samples per game
+game    n  intercepted  completed  completion_rate  excl_rate_completed  excl_rate_intercepted  unknown_outcome_events
+  G1  802          118        684            0.853                0.012                  0.017                     244
+  G2  950          101        849            0.894                0.005                  0.029                     240
+  G3 1010           89        921            0.912                0.073                  0.082                     319
+-- feature set selected on each TRAINING game (1-SE rule): G1: A3 feasibility (option set); G2: A3 feasibility (option set); G3: A3 feasibility (option set)
+
+-- RUNS (train -> test). Brier/log-loss differences are model minus the TRAINING-game base-rate predictor on the same test samples (negative = better)
+
+G1 -> G2: n=950 (101 intercepted; test completion rate 0.894 vs train 0.853)
+   distance/location baseline   ROC-AUC 0.451 [0.389, 0.522]  PR-AUC 0.110  dBrier +0.0002 [-0.0000, +0.0003]   dLogLoss +0.0006 [-0.0002, +0.0014]   -> prob.skill:no, ranking:no
+   feasibility baseline         ROC-AUC 0.606 [0.552, 0.659]  PR-AUC 0.159  dBrier -0.0018 [-0.0034, -0.0001]*  dLogLoss -0.0087 [-0.0149, -0.0027]*  -> prob.skill:yes, ranking:yes
+   PRIMARY logistic             ROC-AUC 0.606 [0.552, 0.659]  PR-AUC 0.159  dBrier -0.0018 [-0.0034, -0.0001]*  dLogLoss -0.0087 [-0.0149, -0.0027]*  -> prob.skill:yes, ranking:yes
+   boosted trees (exploratory)  ROC-AUC 0.653 [0.603, 0.702]  PR-AUC 0.171  dBrier -0.0020 [-0.0039, -0.0003]*  dLogLoss -0.0101 [-0.0160, -0.0045]*  -> prob.skill:yes, ranking:yes
+   (no-skill PR-AUC = 0.106; base-rate predictor Brier 0.0967, log-loss 0.3460)
+
+G1 -> G3: n=1010 (89 intercepted; test completion rate 0.912 vs train 0.853)
+   distance/location baseline   ROC-AUC 0.511 [0.445, 0.575]  PR-AUC 0.110  dBrier -0.0002 [-0.0003, +0.0000]   dLogLoss -0.0007 [-0.0013, +0.0000]   -> prob.skill:no, ranking:no
+   feasibility baseline         ROC-AUC 0.712 [0.658, 0.764]  PR-AUC 0.256  dBrier -0.0039 [-0.0057, -0.0022]*  dLogLoss -0.0166 [-0.0229, -0.0108]*  -> prob.skill:yes, ranking:yes
+   PRIMARY logistic             ROC-AUC 0.712 [0.658, 0.764]  PR-AUC 0.256  dBrier -0.0039 [-0.0057, -0.0022]*  dLogLoss -0.0166 [-0.0229, -0.0108]*  -> prob.skill:yes, ranking:yes
+   boosted trees (exploratory)  ROC-AUC 0.731 [0.677, 0.783]  PR-AUC 0.227  dBrier -0.0047 [-0.0065, -0.0029]*  dLogLoss -0.0188 [-0.0249, -0.0131]*  -> prob.skill:yes, ranking:yes
+   (no-skill PR-AUC = 0.088; base-rate predictor Brier 0.0838, log-loss 0.3140)
+
+G2 -> G1: n=802 (118 intercepted; test completion rate 0.853 vs train 0.894)
+   distance/location baseline   ROC-AUC 0.539 [0.471, 0.599]  PR-AUC 0.209  dBrier -0.0001 [-0.0005, +0.0004]   dLogLoss -0.0000 [-0.0024, +0.0026]   -> prob.skill:no, ranking:no
+   feasibility baseline         ROC-AUC 0.612 [0.557, 0.669]  PR-AUC 0.222  dBrier -0.0024 [-0.0040, -0.0009]*  dLogLoss -0.0110 [-0.0182, -0.0041]*  -> prob.skill:yes, ranking:yes
+   PRIMARY logistic             ROC-AUC 0.612 [0.557, 0.669]  PR-AUC 0.222  dBrier -0.0024 [-0.0040, -0.0009]*  dLogLoss -0.0110 [-0.0182, -0.0041]*  -> prob.skill:yes, ranking:yes
+   boosted trees (exploratory)  ROC-AUC 0.605 [0.550, 0.659]  PR-AUC 0.225  dBrier -0.0023 [-0.0044, -0.0003]*  dLogLoss -0.0093 [-0.0187, -0.0003]*  -> prob.skill:yes, ranking:yes
+   (no-skill PR-AUC = 0.147; base-rate predictor Brier 0.1272, log-loss 0.4256)
+
+G2 -> G3: n=1010 (89 intercepted; test completion rate 0.912 vs train 0.894)
+   distance/location baseline   ROC-AUC 0.536 [0.469, 0.598]  PR-AUC 0.117  dBrier -0.0003 [-0.0005, +0.0000]   dLogLoss -0.0014 [-0.0029, +0.0003]   -> prob.skill:no, ranking:no
+   feasibility baseline         ROC-AUC 0.717 [0.663, 0.768]  PR-AUC 0.255  dBrier -0.0031 [-0.0044, -0.0019]*  dLogLoss -0.0160 [-0.0217, -0.0105]*  -> prob.skill:yes, ranking:yes
+   PRIMARY logistic             ROC-AUC 0.717 [0.663, 0.768]  PR-AUC 0.255  dBrier -0.0031 [-0.0044, -0.0019]*  dLogLoss -0.0160 [-0.0217, -0.0105]*  -> prob.skill:yes, ranking:yes
+   boosted trees (exploratory)  ROC-AUC 0.683 [0.624, 0.732]  PR-AUC 0.168  dBrier -0.0022 [-0.0040, -0.0006]*  dLogLoss -0.0130 [-0.0202, -0.0060]*  -> prob.skill:yes, ranking:yes
+   (no-skill PR-AUC = 0.088; base-rate predictor Brier 0.0807, log-loss 0.3000)
+
+G3 -> G1: n=802 (118 intercepted; test completion rate 0.853 vs train 0.912)
+   distance/location baseline   ROC-AUC 0.456 [0.394, 0.524]  PR-AUC 0.168  dBrier +0.0005 [+0.0001, +0.0008]*  dLogLoss +0.0032 [+0.0009, +0.0053]*  -> prob.skill:no, ranking:no
+   feasibility baseline         ROC-AUC 0.603 [0.548, 0.657]  PR-AUC 0.216  dBrier -0.0019 [-0.0059, +0.0019]   dLogLoss +0.0044 [-0.0158, +0.0244]   -> prob.skill:no, ranking:yes
+   PRIMARY logistic             ROC-AUC 0.603 [0.548, 0.657]  PR-AUC 0.216  dBrier -0.0019 [-0.0059, +0.0019]   dLogLoss +0.0044 [-0.0158, +0.0244]   -> prob.skill:no, ranking:yes
+   boosted trees (exploratory)  ROC-AUC 0.637 [0.584, 0.692]  PR-AUC 0.258  dBrier -0.0049 [-0.0089, -0.0015]*  dLogLoss -0.0157 [-0.0335, +0.0002]   -> prob.skill:partial, ranking:yes
+   (no-skill PR-AUC = 0.147; base-rate predictor Brier 0.1290, log-loss 0.4361)
+
+G3 -> G2: n=950 (101 intercepted; test completion rate 0.894 vs train 0.912)
+   distance/location baseline   ROC-AUC 0.531 [0.461, 0.595]  PR-AUC 0.167  dBrier -0.0001 [-0.0003, +0.0002]   dLogLoss -0.0002 [-0.0017, +0.0014]   -> prob.skill:no, ranking:no
+   feasibility baseline         ROC-AUC 0.585 [0.527, 0.640]  PR-AUC 0.147  dBrier +0.0003 [-0.0027, +0.0033]   dLogLoss +0.0040 [-0.0114, +0.0204]   -> prob.skill:no, ranking:yes
+   PRIMARY logistic             ROC-AUC 0.585 [0.527, 0.640]  PR-AUC 0.147  dBrier +0.0003 [-0.0027, +0.0033]   dLogLoss +0.0040 [-0.0114, +0.0204]   -> prob.skill:no, ranking:yes
+   boosted trees (exploratory)  ROC-AUC 0.653 [0.600, 0.703]  PR-AUC 0.159  dBrier -0.0015 [-0.0039, +0.0007]   dLogLoss -0.0117 [-0.0224, -0.0006]*  -> prob.skill:partial, ranking:yes
+   (no-skill PR-AUC = 0.106; base-rate predictor Brier 0.0953, log-loss 0.3407)
+
+-- SUMMARY MATRICES: ROC-AUC (train rows x test columns; diagonal not evaluated)
+distance/location baseline:
+          test G1  test G2  test G3
+train G1      NaN    0.451    0.511
+train G2    0.539      NaN    0.536
+train G3    0.456    0.531      NaN
+feasibility baseline:
+          test G1  test G2  test G3
+train G1      NaN    0.606    0.712
+train G2    0.612      NaN    0.717
+train G3    0.603    0.585      NaN
+primary logistic:
+          test G1  test G2  test G3
+train G1      NaN    0.606    0.712
+train G2    0.612      NaN    0.717
+train G3    0.603    0.585      NaN
+boosted trees:
+          test G1  test G2  test G3
+train G1      NaN    0.653    0.731
+train G2    0.605      NaN    0.683
+train G3    0.637    0.653      NaN
+
+-- PAIRED COMPARISONS ON IDENTICAL TEST SAMPLES (first minus second; '*' = CI excludes 0)
+run      feasibility - location (AUC)                  (log-loss)                        boosted - logistic (AUC)          (log-loss)                        
+G1->G2  +0.155 [+0.077, +0.232]*                    -0.009 [-0.015, -0.003]*          +0.047 [-0.011, +0.107]           -0.001 [-0.007, +0.004]           
+G1->G3  +0.201 [+0.116, +0.285]*                    -0.016 [-0.022, -0.010]*          +0.019 [-0.029, +0.073]           -0.002 [-0.007, +0.003]           
+G2->G1  +0.073 [-0.003, +0.154]                     -0.011 [-0.019, -0.003]*          -0.007 [-0.055, +0.046]           +0.002 [-0.007, +0.010]           
+G2->G3  +0.181 [+0.100, +0.260]*                    -0.015 [-0.021, -0.009]*          -0.034 [-0.087, +0.015]           +0.003 [-0.002, +0.009]           
+G3->G1  +0.147 [+0.057, +0.231]*                    +0.001 [-0.019, +0.022]           +0.035 [+0.003, +0.069]*          -0.020 [-0.032, -0.008]*          
+G3->G2  +0.054 [-0.039, +0.155]                     +0.004 [-0.011, +0.021]           +0.068 [+0.021, +0.110]*          -0.016 [-0.026, -0.005]*          
+
+-- PROBABILITY QUALITY: calibration slope / intercept of logit P(intercepted) on the test game (diagnostic, never applied; ideal 1 / 0)
+G1->G2: primary slope 1.27 int +0.12 | boosted slope 1.35 int +0.27 | predicted P(int) 0.094-0.204 vs observed 0.042-0.142 (5 bins)
+G1->G3: primary slope 2.75 int +2.29 | boosted slope 2.49 int +1.97 | predicted P(int) 0.094-0.206 vs observed 0.025-0.208 (5 bins)
+G2->G1: primary slope 1.47 int +1.32 | boosted slope 0.95 int +0.24 | predicted P(int) 0.073-0.152 vs observed 0.093-0.244 (5 bins)
+G2->G3: primary slope 3.15 int +4.07 | boosted slope 1.61 int +0.95 | predicted P(int) 0.068-0.150 vs observed 0.015-0.198 (5 bins)
+G3->G1: primary slope 0.44 int -0.66 | boosted slope 0.77 int +0.07 | predicted P(int) 0.019-0.200 vs observed 0.099-0.231 (5 bins)
+G3->G2: primary slope 0.43 int -1.03 | boosted slope 0.80 int -0.22 | predicted P(int) 0.016-0.189 vs observed 0.037-0.153 (5 bins)
+
+-- DOES A MODEL BEAT THE TRAINING BASE RATE ON BOTH Brier AND log-loss (6 runs)?
+feasibility baseline   prob.skill yes 4, partial 0, no 2 | ranking (AUC CI > 0.5) in 6/6 runs
+primary logistic       prob.skill yes 4, partial 0, no 2 | ranking (AUC CI > 0.5) in 6/6 runs
+boosted trees          prob.skill yes 4, partial 2, no 0 | ranking (AUC CI > 0.5) in 6/6 runs
+by test game (mean ROC-AUC over the two training games): G1: b2 0.607, prim 0.607, gbt 0.621; G2: b2 0.596, prim 0.596, gbt 0.653; G3: b2 0.714, prim 0.714, gbt 0.707
+by train game (mean ROC-AUC over the two test games): G1: b2 0.659, prim 0.659, gbt 0.692; G2: b2 0.664, prim 0.664, gbt 0.644; G3: b2 0.594, prim 0.594, gbt 0.645
+figure: reports/set_piece_exclusion/fig/cross_game_reliability_A.png
+
+==========================================================================================
+SCENARIO B: EARLY-FLIGHT (identified target), prediction frame = release + 6 frames. NOT decision-time
+==========================================================================================
+-- samples per game
+game   n  intercepted  completed  completion_rate  excl_rate_completed  excl_rate_intercepted  unknown_outcome_events
+  G1 449           43        406            0.904                0.413                  0.642                     244
+  G2 558           34        524            0.939                0.386                  0.673                     240
+  G3 607           36        571            0.941                0.425                  0.629                     319
+-- feature set selected on each TRAINING game (1-SE rule): G1: B5 no feasibility; G2: B2 feasibility (static margin); G3: B4 distance + feasibility
+
+-- RUNS (train -> test). Brier/log-loss differences are model minus the TRAINING-game base-rate predictor on the same test samples (negative = better)
+
+G1 -> G2: n=558 (34 intercepted; test completion rate 0.939 vs train 0.904)
+   distance/location baseline   ROC-AUC 0.656 [0.558, 0.756]  PR-AUC 0.143  dBrier -0.0017 [-0.0033, -0.0004]*  dLogLoss -0.0099 [-0.0172, -0.0038]*  -> prob.skill:yes, ranking:yes
+   feasibility baseline         ROC-AUC 0.856 [0.796, 0.906]  PR-AUC 0.253  dBrier -0.0066 [-0.0118, -0.0020]*  dLogLoss -0.0416 [-0.0580, -0.0263]*  -> prob.skill:yes, ranking:yes
+   PRIMARY logistic             ROC-AUC 0.754 [0.649, 0.845]  PR-AUC 0.227  dBrier -0.0040 [-0.0098, +0.0017]   dLogLoss -0.0281 [-0.0542, -0.0009]*  -> prob.skill:partial, ranking:yes
+   boosted trees (exploratory)  ROC-AUC 0.872 [0.829, 0.913]  PR-AUC 0.262  dBrier -0.0078 [-0.0148, -0.0013]*  dLogLoss -0.0590 [-0.0812, -0.0384]*  -> prob.skill:yes, ranking:yes
+   (no-skill PR-AUC = 0.061; base-rate predictor Brier 0.0584, log-loss 0.2375)
+
+G1 -> G3: n=607 (36 intercepted; test completion rate 0.941 vs train 0.904)
+   distance/location baseline   ROC-AUC 0.424 [0.341, 0.518]  PR-AUC 0.051  dBrier +0.0017 [+0.0007, +0.0027]*  dLogLoss +0.0071 [+0.0018, +0.0124]*  -> prob.skill:no, ranking:no
+   feasibility baseline         ROC-AUC 0.788 [0.739, 0.836]  PR-AUC 0.132  dBrier +0.0016 [-0.0019, +0.0054]   dLogLoss -0.0153 [-0.0271, -0.0023]*  -> prob.skill:partial, ranking:yes
+   PRIMARY logistic             ROC-AUC 0.794 [0.708, 0.862]  PR-AUC 0.169  dBrier -0.0013 [-0.0065, +0.0040]   dLogLoss -0.0340 [-0.0542, -0.0113]*  -> prob.skill:partial, ranking:yes
+   boosted trees (exploratory)  ROC-AUC 0.847 [0.775, 0.902]  PR-AUC 0.227  dBrier -0.0059 [-0.0125, +0.0003]   dLogLoss -0.0521 [-0.0733, -0.0302]*  -> prob.skill:partial, ranking:yes
+   (no-skill PR-AUC = 0.059; base-rate predictor Brier 0.0571, log-loss 0.2338)
+
+G2 -> G1: n=449 (43 intercepted; test completion rate 0.904 vs train 0.939)
+   distance/location baseline   ROC-AUC 0.664 [0.578, 0.742]  PR-AUC 0.177  dBrier -0.0025 [-0.0064, +0.0007]   dLogLoss -0.0157 [-0.0344, +0.0011]   -> prob.skill:no, ranking:yes
+   feasibility baseline         ROC-AUC 0.822 [0.749, 0.882]  PR-AUC 0.293  dBrier -0.0088 [-0.0186, +0.0000]   dLogLoss -0.0533 [-0.0878, -0.0205]*  -> prob.skill:partial, ranking:yes
+   PRIMARY logistic             ROC-AUC 0.822 [0.749, 0.882]  PR-AUC 0.293  dBrier -0.0088 [-0.0186, +0.0000]   dLogLoss -0.0533 [-0.0878, -0.0205]*  -> prob.skill:partial, ranking:yes
+   boosted trees (exploratory)  ROC-AUC 0.854 [0.788, 0.907]  PR-AUC 0.379  dBrier -0.0155 [-0.0239, -0.0080]*  dLogLoss -0.0828 [-0.1187, -0.0471]*  -> prob.skill:yes, ranking:yes
+   (no-skill PR-AUC = 0.096; base-rate predictor Brier 0.0878, log-loss 0.3248)
+
+G2 -> G3: n=607 (36 intercepted; test completion rate 0.941 vs train 0.939)
+   distance/location baseline   ROC-AUC 0.424 [0.341, 0.518]  PR-AUC 0.051  dBrier +0.0035 [+0.0019, +0.0052]*  dLogLoss +0.0187 [+0.0083, +0.0291]*  -> prob.skill:no, ranking:no
+   feasibility baseline         ROC-AUC 0.788 [0.739, 0.836]  PR-AUC 0.132  dBrier +0.0033 [-0.0005, +0.0075]   dLogLoss -0.0090 [-0.0249, +0.0073]   -> prob.skill:no, ranking:yes
+   PRIMARY logistic             ROC-AUC 0.788 [0.739, 0.836]  PR-AUC 0.132  dBrier +0.0033 [-0.0005, +0.0075]   dLogLoss -0.0090 [-0.0249, +0.0073]   -> prob.skill:no, ranking:yes
+   boosted trees (exploratory)  ROC-AUC 0.821 [0.763, 0.877]  PR-AUC 0.239  dBrier -0.0046 [-0.0097, +0.0003]   dLogLoss -0.0356 [-0.0586, -0.0127]*  -> prob.skill:partial, ranking:yes
+   (no-skill PR-AUC = 0.059; base-rate predictor Brier 0.0558, log-loss 0.2251)
+
+G3 -> G1: n=449 (43 intercepted; test completion rate 0.904 vs train 0.941)
+   distance/location baseline   ROC-AUC 0.337 [0.258, 0.422]  PR-AUC 0.068  dBrier +0.0001 [+0.0000, +0.0001]*  dLogLoss +0.0005 [+0.0002, +0.0008]*  -> prob.skill:no, ranking:no
+   feasibility baseline         ROC-AUC 0.822 [0.749, 0.882]  PR-AUC 0.293  dBrier -0.0069 [-0.0113, -0.0031]*  dLogLoss -0.0432 [-0.0653, -0.0228]*  -> prob.skill:yes, ranking:yes
+   PRIMARY logistic             ROC-AUC 0.742 [0.657, 0.823]  PR-AUC 0.296  dBrier -0.0089 [-0.0162, -0.0020]*  dLogLoss -0.0403 [-0.0744, -0.0059]*  -> prob.skill:yes, ranking:yes
+   boosted trees (exploratory)  ROC-AUC 0.844 [0.791, 0.892]  PR-AUC 0.374  dBrier -0.0130 [-0.0203, -0.0055]*  dLogLoss -0.0737 [-0.1053, -0.0404]*  -> prob.skill:yes, ranking:yes
+   (no-skill PR-AUC = 0.096; base-rate predictor Brier 0.0879, log-loss 0.3258)
+
+G3 -> G2: n=558 (34 intercepted; test completion rate 0.939 vs train 0.941)
+   distance/location baseline   ROC-AUC 0.344 [0.244, 0.442]  PR-AUC 0.048  dBrier +0.0000 [+0.0000, +0.0001]*  dLogLoss +0.0004 [+0.0001, +0.0006]*  -> prob.skill:no, ranking:no
+   feasibility baseline         ROC-AUC 0.856 [0.796, 0.906]  PR-AUC 0.253  dBrier -0.0045 [-0.0074, -0.0019]*  dLogLoss -0.0314 [-0.0463, -0.0181]*  -> prob.skill:yes, ranking:yes
+   PRIMARY logistic             ROC-AUC 0.781 [0.703, 0.849]  PR-AUC 0.182  dBrier -0.0036 [-0.0078, +0.0003]   dLogLoss -0.0246 [-0.0476, +0.0023]   -> prob.skill:no, ranking:yes
+   boosted trees (exploratory)  ROC-AUC 0.798 [0.724, 0.862]  PR-AUC 0.189  dBrier -0.0035 [-0.0089, +0.0012]   dLogLoss -0.0317 [-0.0567, -0.0075]*  -> prob.skill:partial, ranking:yes
+   (no-skill PR-AUC = 0.061; base-rate predictor Brier 0.0572, log-loss 0.2295)
+
+-- SUMMARY MATRICES: ROC-AUC (train rows x test columns; diagonal not evaluated)
+distance/location baseline:
+          test G1  test G2  test G3
+train G1      NaN    0.656    0.424
+train G2    0.664      NaN    0.424
+train G3    0.337    0.344      NaN
+feasibility baseline:
+          test G1  test G2  test G3
+train G1      NaN    0.856    0.788
+train G2    0.822      NaN    0.788
+train G3    0.822    0.856      NaN
+primary logistic:
+          test G1  test G2  test G3
+train G1      NaN    0.754    0.794
+train G2    0.822      NaN    0.788
+train G3    0.742    0.781      NaN
+boosted trees:
+          test G1  test G2  test G3
+train G1      NaN    0.872    0.847
+train G2    0.854      NaN    0.821
+train G3    0.844    0.798      NaN
+
+-- PAIRED COMPARISONS ON IDENTICAL TEST SAMPLES (first minus second; '*' = CI excludes 0)
+run      feasibility - distance (AUC)                  (log-loss)                        boosted - logistic (AUC)          (log-loss)                        
+G1->G2  +0.199 [+0.132, +0.272]*                    -0.032 [-0.043, -0.020]*          +0.117 [+0.045, +0.202]*          -0.031 [-0.052, -0.013]*          
+G1->G3  +0.364 [+0.299, +0.428]*                    -0.022 [-0.032, -0.012]*          +0.053 [+0.011, +0.102]*          -0.018 [-0.033, -0.004]*          
+G2->G1  +0.158 [+0.089, +0.229]*                    -0.038 [-0.061, -0.015]*          +0.032 [-0.013, +0.083]           -0.029 [-0.052, -0.008]*          
+G2->G3  +0.364 [+0.299, +0.428]*                    -0.028 [-0.040, -0.016]*          +0.033 [-0.002, +0.067]           -0.027 [-0.042, -0.011]*          
+G3->G1  +0.485 [+0.347, +0.608]*                    -0.044 [-0.066, -0.023]*          +0.101 [+0.044, +0.159]*          -0.033 [-0.057, -0.010]*          
+G3->G2  +0.512 [+0.362, +0.657]*                    -0.032 [-0.047, -0.018]*          +0.018 [-0.037, +0.075]           -0.007 [-0.027, +0.012]           
+
+-- PROBABILITY QUALITY: calibration slope / intercept of logit P(intercepted) on the test game (diagnostic, never applied; ideal 1 / 0)
+G1->G2: primary slope 0.80 int -0.73 | boosted slope 1.07 int -0.14 | predicted P(int) 0.018-0.179 vs observed 0.027-0.140 (3 bins)
+G1->G3: primary slope 0.78 int -0.72 | boosted slope 1.00 int -0.37 | predicted P(int) 0.013-0.177 vs observed 0.015-0.139 (3 bins)
+G2->G1: primary slope 0.89 int +0.09 | boosted slope 1.17 int +0.67 | predicted P(int) 0.018-0.204 vs observed 0.018-0.277 (4 bins)
+G2->G3: primary slope 0.63 int -0.95 | boosted slope 0.89 int -0.30 | predicted P(int) 0.018-0.140 vs observed 0.000-0.124 (3 bins)
+G3->G1: primary slope 0.82 int -0.03 | boosted slope 1.07 int +0.65 | predicted P(int) 0.008-0.178 vs observed 0.027-0.205 (4 bins)
+G3->G2: primary slope 0.90 int -0.35 | boosted slope 0.81 int -0.43 | predicted P(int) 0.011-0.143 vs observed 0.005-0.134 (3 bins)
+
+-- DOES A MODEL BEAT THE TRAINING BASE RATE ON BOTH Brier AND log-loss (6 runs)?
+feasibility baseline   prob.skill yes 3, partial 2, no 1 | ranking (AUC CI > 0.5) in 6/6 runs
+primary logistic       prob.skill yes 1, partial 3, no 2 | ranking (AUC CI > 0.5) in 6/6 runs
+boosted trees          prob.skill yes 3, partial 3, no 0 | ranking (AUC CI > 0.5) in 6/6 runs
+by test game (mean ROC-AUC over the two training games): G1: b2 0.822, prim 0.782, gbt 0.849; G2: b2 0.856, prim 0.768, gbt 0.835; G3: b2 0.788, prim 0.791, gbt 0.834
+by train game (mean ROC-AUC over the two test games): G1: b2 0.822, prim 0.774, gbt 0.859; G2: b2 0.805, prim 0.805, gbt 0.838; G3: b2 0.839, prim 0.762, gbt 0.821
+figure: reports/set_piece_exclusion/fig/cross_game_reliability_B.png

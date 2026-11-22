@@ -1,0 +1,79 @@
+diff --git a/src/pass_dataset.py b/src/pass_dataset.py
+index 3c9c775..2aafaa3 100644
+--- a/src/pass_dataset.py
++++ b/src/pass_dataset.py
+@@ -108,8 +108,34 @@ def assign_target_by_heading(origin, mates_xy: np.ndarray, heading: np.ndarray,
+     return int(order[0]), None
+ 
+ 
+-def candidate_events(events: pd.DataFrame) -> pd.DataFrame:
+-    """In-universe events with label from type/subtype ONLY. Other columns are not read here."""
++SET_PIECE_MAX_GAP_S = 1.0
++
++
++def set_piece_delivery_mask(events: pd.DataFrame, max_gap_s: float = SET_PIECE_MAX_GAP_S) -> pd.Series:
++    """True for PASS / BALL LOST events that ARE the delivery of a restart (throw-in, free kick, corner, kick-off ...).
++
++    Metrica records a restart as a zero-duration ``SET PIECE`` marker ("the player brings the ball back into play")
++    immediately followed by the ``PASS`` (or the failed-pass ``BALL LOST``) by the SAME player at the same instant.
++    Marker and delivery are one action, so the delivery is not an open-play ground pass. Rule: the event immediately
++    preceding it in the table is a SET PIECE of the same team and the same player, in the same period, ending at most
++    ``max_gap_s`` before it. ``events`` must be the FULL event table in chronological order (ties in file order); the
++    result is aligned to ``events.index``. Only type/team/player/period/time columns are read (no outcome information).
++    """
++    ev = events.sort_index()
++    prev = ev.shift(1)
++    m = ((ev["type"].isin(["PASS", "BALL LOST"])) & (prev["type"] == "SET PIECE") & (prev["team"] == ev["team"])
++         & (prev["from_player"] == ev["from_player"]) & (prev["period"] == ev["period"])
++         & ((ev["start_time_s"] - prev["end_time_s"]) <= max_gap_s))
++    return m.reindex(events.index, fill_value=False)
++
++
++def candidate_events(events: pd.DataFrame, exclude_set_piece_deliveries: bool = True) -> pd.DataFrame:
++    """In-universe events with label from type/subtype ONLY. Other columns are not read here.
++
++    Set-piece deliveries (see ``set_piece_delivery_mask``) are not open-play passes and are left out unless
++    ``exclude_set_piece_deliveries=False`` (legacy population, used to reproduce earlier reports)."""
++    if exclude_set_piece_deliveries:
++        events = events[~set_piece_delivery_mask(events)]
+     comp = events[(events["type"] == "PASS") & events["subtype"].isna()].assign(label=0)
+     icpt = events[(events["type"] == "BALL LOST") & (events["subtype"] == "INTERCEPTION")].assign(label=1)
+     return pd.concat([comp, icpt]).sort_index()
+diff --git a/src/pass_completion_features.py b/src/pass_completion_features.py
+index 0e40eea..1d8d3f3 100644
+--- a/src/pass_completion_features.py
++++ b/src/pass_completion_features.py
+@@ -28,7 +28,7 @@ import pandas as pd
+ 
+ from src.analytics.feasibility import FeasibilityParams, interception_margin
+ from src.analytics.geometry import angle_to_goal, passing_lane_obstruction
+-from src.pass_dataset import DecisionContract, assign_target_by_heading
++from src.pass_dataset import DecisionContract, assign_target_by_heading, set_piece_delivery_mask
+ from src.processing.sync import synchronize_events
+ from src.schema import TrackingData
+ 
+@@ -65,16 +65,21 @@ FEATURES_B = [k for k, v in FEATURES.items() if v[0] == "B"]
+ 
+ 
+ # ---------------------------------------------------------------- labels
+-def label_events(events: pd.DataFrame) -> pd.DataFrame:
++def label_events(events: pd.DataFrame, exclude_set_piece_deliveries: bool = True) -> pd.DataFrame:
+     """Outcome per pass-related event. Columns: event_idx, outcome ('completed'|'intercepted'|None), reason.
+ 
+     Only PASS and BALL LOST events are pass-related; SET PIECE / RECOVERY / CHALLENGE / SHOT ... are not
+-    classified at all (not unknown, simply out of scope).
++    classified at all (not unknown, simply out of scope). A PASS / BALL LOST that is the delivery of a restart
++    (``pass_dataset.set_piece_delivery_mask``) is outcome-unknown here: it is not an open-play ground pass.
++    ``exclude_set_piece_deliveries=False`` restores the legacy population.
+     """
+     rows = []
++    is_delivery = set_piece_delivery_mask(events) if exclude_set_piece_deliveries else None
+     for idx, e in events[events["type"].isin(["PASS", "BALL LOST"])].iterrows():
+         sub = e["subtype"] if pd.notna(e["subtype"]) else None
+-        if e["type"] == "PASS":
++        if is_delivery is not None and is_delivery[idx]:
++            rows.append((idx, None, "unknown: set-piece delivery (restart by the SET PIECE taker, not an open-play pass)"))
++        elif e["type"] == "PASS":
+             if sub is not None:
+                 rows.append((idx, None, f"unknown: PASS with subtype ({'aerial/special' if sub else ''})"))
+             elif pd.isna(e["to_player"]):
