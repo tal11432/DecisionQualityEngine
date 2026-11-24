@@ -56,13 +56,13 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:5px 4px;b
   <div id="msg" class="mute">הניחו את מחזיק הכדור, חברי קבוצה ויריבים.</div>
   <div id="warns"></div>
   <table id="tbl" hidden><thead><tr><th>#</th><th>אפשרות</th><th>ציון</th><th>Q (xG)</th><th>סיכוי</th></tr></thead><tbody></tbody></table>
-  <p class="mute" id="foot"></p>
+  <p class="mute" id="foot"></p><p class="mute">לחיצה על שורה בטבלה מציגה את האפשרות על התמונה (אפשר כמה שורות); לחיצה נוספת מסתירה אותה.</p>
   <p class="mute" style="border-top:1px solid var(--line);padding-top:8px">הציון: 25 = אפשרות שלא משנה כלום בציפייה, 100 = לפחות 0.70 xG, 0 = עלות של 0.231 xG. הציון <b>מאומת רק בשליש ההתקפי</b> (x ≥ 80); בשאר המגרש קראו את הסדר ולא את המספרים. אפשרויות: בעיטה (מ-x ≥ 60) ומסירות קרקע של 3–40 מ' לחברים שסומנו. לא נבחנות: נשיאה, כדור גבוה, כדור עומק, מרכז, כדרור. לא נבדק על ידי מומחים.</p>
 </aside>
 </main>
 <script>
 const W=1200,H=800,cv=document.getElementById('cv'),ctx=cv.getContext('2d'),mm=document.getElementById('mm'),mctx=mm.getContext('2d');
-let adjusting=false,calImg=[],preset0=null,tool='carrier',img=null,x0=60,res=null,sel=-1,drag=null,calib=null,Hc=null,Hi=null,calPts=[];
+let picked=new Set(),adjusting=false,calImg=[],preset0=null,tool='carrier',img=null,x0=60,res=null,sel=-1,drag=null,calib=null,Hc=null,Hi=null,calPts=[];
 const S={carrier:null,mates:[],opps:[],gk:null};
 const COL={carrier:'#e8b400',mate:'#2457b3',opp:'#c0392b',gk:'#7b2d8b'};
 const PRESETS={box16:{names:['פינת רחבת ה-16 הרחוקה מהשער, בצד שמאל (שמאל של שחקן שפניו לשער)','פינת רחבת ה-16 הרחוקה מהשער, בצד ימין','פינת רחבת ה-16 על קו השער, בצד ימין','פינת רחבת ה-16 על קו השער, בצד שמאל'],pts:[[101.14,16.28],[101.14,63.72],[120,63.72],[120,16.28]]},
@@ -83,6 +83,7 @@ const imode=()=>!!(img&&Hc);
 function P2C(p){if(imode()){const q=ap(Hi,p),f=fit();return [q[0]*f.s+f.ox,q[1]*f.s+f.oy]}return [(p[0]-x0)/(120-x0)*W,p[1]/80*H]}
 function C2P(c){if(imode()){const f=fit();return ap(Hc,[(c[0]-f.ox)/f.s,(c[1]-f.oy)/f.s])}return [x0+c[0]/W*(120-x0),c[1]/H*80]}
 const clampP=p=>[Math.max(0,Math.min(120,p[0])),Math.max(0,Math.min(80,p[1]))];
+const key=o=>o.kind+':'+o.target[0].toFixed(1)+','+o.target[1].toFixed(1);
 function scoreColor(s){return s>=60?'#1d9a5b':s>=40?'#7aa84a':s>=30?'#d1a21c':'#8a8f8c'}
 function lines(c,map,lw){c.strokeStyle='rgba(255,255,255,.9)';c.lineWidth=lw;
   const poly=pts=>{c.beginPath();pts.forEach((p,i)=>{const q=map(p);i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1])});c.stroke()};
@@ -90,22 +91,22 @@ function lines(c,map,lw){c.strokeStyle='rgba(255,255,255,.9)';c.lineWidth=lw;
   const rect=(a,b,cc,d)=>{seg([a,b],[cc,b]);seg([cc,b],[cc,d]);seg([cc,d],[a,d]);seg([a,d],[a,b])};
   rect(0,0,120,80);seg([60,0],[60,80]);rect(101.14,16.28,120,63.72);rect(113.71,29.22,120,50.78);c.strokeStyle='#ffe14d';rect(120,35.69,121.6,44.31);c.strokeStyle='rgba(255,255,255,.9)';
   const circ=[];for(let k=0;k<=60;k++){const t=k/60*2*Math.PI;circ.push([60+10.46*Math.cos(t),40+10.76*Math.sin(t)])}poly(circ)}
-function drawPitch(c,map,lw,dotr,lab){const dot=(p,col,l)=>{if(!p)return;const q=map(p);c.fillStyle=col;c.beginPath();c.arc(q[0],q[1],dotr,0,7);c.fill();c.strokeStyle='#fff';c.lineWidth=Math.max(2,dotr/5);c.stroke();if(l&&lab){c.fillStyle='#fff';c.font=`bold ${dotr}px system-ui`;c.textAlign='center';c.fillText(l,q[0],q[1]+dotr/3);c.textAlign='start'}};
-  if(res&&S.carrier)res.options.forEach((o,i)=>{const a=map(S.carrier),t=map(o.target),col=scoreColor(o.score);c.strokeStyle=col;c.lineWidth=(i===sel?2:1)*lw*1.8;c.globalAlpha=i===sel?1:.85;c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(t[0],t[1]);c.stroke();
-    const ang=Math.atan2(t[1]-a[1],t[0]-a[0]),hs=dotr*1.1;c.fillStyle=col;c.beginPath();c.moveTo(t[0],t[1]);c.lineTo(t[0]-hs*Math.cos(ang-.4),t[1]-hs*Math.sin(ang-.4));c.lineTo(t[0]-hs*Math.cos(ang+.4),t[1]-hs*Math.sin(ang+.4));c.fill();c.globalAlpha=1;
-    if(lab){const f=o.kind==='shot'?.45:.5,mx=a[0]+(t[0]-a[0])*f,my=a[1]+(t[1]-a[1])*f-(o.kind==='shot'?dotr*1.6:0);c.font=`bold ${dotr*1.7}px system-ui`;const tx=o.kind==='shot'?'בעיטה '+o.score:''+o.score,w=c.measureText(tx).width+14;c.fillStyle='rgba(0,0,0,.65)';c.fillRect(mx-w/2,my-dotr*1.1,w,dotr*2);c.fillStyle='#fff';c.textAlign='center';c.fillText(tx,mx,my+dotr*.5);c.textAlign='start'}});
-  S.opps.forEach(p=>dot(p,COL.opp));S.mates.forEach(p=>dot(p,COL.mate));dot(S.gk,COL.gk,'GK');dot(S.carrier,COL.carrier,'⚽')}
+function drawPitch(c,map,lw,dotr,lab){const dot=(p,col,l)=>{if(!p)return;const q=map(p);c.fillStyle=col;c.beginPath();c.arc(q[0],q[1],dotr,0,7);c.fill();c.strokeStyle='#fff';c.lineWidth=Math.max(2,dotr/5);c.stroke();if(l&&lab){c.fillStyle='#fff';c.font='bold 11px system-ui';c.fillStyle='#fff';c.textAlign='center';c.fillText(l,q[0]+dotr+9,q[1]-dotr);c.textAlign='start'}};
+  if(res&&S.carrier)res.options.forEach((o,i)=>{if(!picked.has(key(o))&&!(i===sel))return;const a=map(S.carrier),t=map(o.target),col=scoreColor(o.score);c.strokeStyle=col;c.lineWidth=(i===sel?2:1)*lw*(lab?1.2:1);c.globalAlpha=i===sel?1:.85;c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(t[0],t[1]);c.stroke();
+    const ang=Math.atan2(t[1]-a[1],t[0]-a[0]),hs=lab?11:5;c.fillStyle=col;c.beginPath();c.moveTo(t[0],t[1]);c.lineTo(t[0]-hs*Math.cos(ang-.4),t[1]-hs*Math.sin(ang-.4));c.lineTo(t[0]-hs*Math.cos(ang+.4),t[1]-hs*Math.sin(ang+.4));c.fill();c.globalAlpha=1;
+    if(lab){const f=o.kind==='shot'?.45:.5,mx=a[0]+(t[0]-a[0])*f,my=a[1]+(t[1]-a[1])*f-(o.kind==='shot'?22:0);c.font='bold 20px system-ui';const tx=o.kind==='shot'?'בעיטה '+o.score:''+o.score,w=c.measureText(tx).width+14;c.fillStyle='rgba(0,0,0,.65)';c.fillRect(mx-w/2,my-15,w,28);c.fillStyle='#fff';c.textAlign='center';c.fillText(tx,mx,my+6);c.textAlign='start'}});
+  S.opps.forEach(p=>dot(p,COL.opp));S.mates.forEach(p=>dot(p,COL.mate));dot(S.gk,COL.gk,'GK');dot(S.carrier,COL.carrier,'')}
 function draw(){
   ctx.clearRect(0,0,W,H);ctx.fillStyle='#2f7a4f';ctx.fillRect(0,0,W,H);
   if(img){const f=fit();if(imode()){ctx.globalAlpha=1;ctx.drawImage(img,f.ox,f.oy,img.width*f.s,img.height*f.s)}else{ctx.globalAlpha=document.getElementById('op').value/100;ctx.drawImage(img,0,0,W,H);ctx.globalAlpha=1}}
   lines(ctx,P2C,2.5);
   calPts.forEach((q,i)=>{const f=fit(),c=[q[0]*f.s+f.ox,q[1]*f.s+f.oy];ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(c[0],c[1],9,0,7);ctx.fill();ctx.fillStyle='#000';ctx.font='bold 14px system-ui';ctx.textAlign='center';ctx.fillText(i+1,c[0],c[1]+5);ctx.textAlign='start'});
   if(imode()&&adjusting){const f=fit();calImg.forEach((q,i)=>{const c=[q[0]*f.s+f.ox,q[1]*f.s+f.oy];ctx.strokeStyle='#ff9800';ctx.lineWidth=3;ctx.strokeRect(c[0]-9,c[1]-9,18,18);ctx.fillStyle='#ff9800';ctx.font='bold 15px system-ui';ctx.fillText(i+1,c[0]+12,c[1]-10)})}
-  drawPitch(ctx,P2C,3.5,15,true);
-  if(imode()){mm.hidden=false;mctx.fillStyle='#2f7a4f';mctx.fillRect(0,0,600,400);const m=p=>[p[0]/120*600,p[1]/80*400];lines(mctx,m,1.5);drawPitch(mctx,m,2,7,false)}else mm.hidden=true}
+  drawPitch(ctx,P2C,3.5,6,true);
+  if(imode()){mm.hidden=false;mctx.fillStyle='#2f7a4f';mctx.fillRect(0,0,600,400);const m=p=>[p[0]/120*600,p[1]/80*400];lines(mctx,m,1.5);drawPitch(mctx,m,2,5,false)}else mm.hidden=true}
 function pos(e){const r=cv.getBoundingClientRect();return [(e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H]}
 function hit(p){const all=[];if(S.carrier)all.push(['carrier',0,S.carrier]);S.mates.forEach((q,i)=>all.push(['mate',i,q]));S.opps.forEach((q,i)=>all.push(['opp',i,q]));if(S.gk)all.push(['gk',0,S.gk]);
-  for(const [k,i,q] of all){const c=P2C(q);if(Math.hypot(c[0]-p[0],c[1]-p[1])<22)return {k,i}}return null}
+  for(const [k,i,q] of all){const c=P2C(q);if(Math.hypot(c[0]-p[0],c[1]-p[1])<16)return {k,i}}return null}
 function setPt(k,i,v){if(k==='carrier')S.carrier=v;else if(k==='gk')S.gk=v;else if(k==='mate')S.mates[i]=v;else S.opps[i]=v}
 function del(k,i){if(k==='carrier')S.carrier=null;else if(k==='gk')S.gk=null;else if(k==='mate')S.mates.splice(i,1);else S.opps.splice(i,1)}
 cv.addEventListener('contextmenu',e=>{e.preventDefault();const h=hit(pos(e));if(h){del(h.k,h.i);changed()}});
@@ -138,7 +139,7 @@ function changed(){draw();schedule()}
 async function run(){const msg=document.getElementById('msg');
   if(!S.carrier){msg.textContent='הניחו את מחזיק הכדור.';msg.className='mute';return}
   try{const r=await fetch('/api/score',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({carrier:S.carrier,teammates:S.mates,opponents:S.opps,keeper:S.gk,threshold:+th.value,top:10})});
-    const j=await r.json();if(!r.ok){msg.textContent=j.error||'שגיאה';msg.className='err';res=null;render();draw();return}res=j;sel=-1;render();draw()}catch(err){msg.textContent='אין חיבור לשרת המקומי';msg.className='err'}}
+    const j=await r.json();if(!r.ok){msg.textContent=j.error||'שגיאה';msg.className='err';res=null;render();draw();return}res=j;sel=-1;const ks=new Set(j.options.map(key));picked=new Set([...picked].filter(k=>ks.has(k)));render();draw()}catch(err){msg.textContent='אין חיבור לשרת המקומי';msg.className='err'}}
 function render(){const msg=document.getElementById('msg'),tb=document.getElementById('tbl'),w=document.getElementById('warns'),foot=document.getElementById('foot');
   w.innerHTML='';if(!res){tb.hidden=true;foot.textContent='';return}
   msg.className='mute';msg.textContent=res.options.length?`${res.options.length} אפשרויות מעל הסף ${res.threshold} (מתוך ${res.n_options} שנבחנו)`:`אין אפשרות מעל הסף ${res.threshold} (נבחנו ${res.n_options}). הורידו את הסף כדי לראות.`;
@@ -146,8 +147,10 @@ function render(){const msg=document.getElementById('msg'),tb=document.getElemen
   tb.hidden=!res.options.length;const body=tb.querySelector('tbody');body.innerHTML='';
   res.options.forEach((o,i)=>{const tr=document.createElement('tr');
     const name=o.kind==='shot'?'בעיטה':`מסירה ${o.dist_m.toFixed(0)} מ'`+(o.status.startsWith('DOUBT')?' (נבדל בספק)':'');
-    tr.innerHTML=`<td>${o.rank}</td><td>${name}${o.counter_assumed?' <span title="הנחה מסומנת A1">†</span>':''}</td><td><span class="sc" style="color:${scoreColor(o.score)}">${o.score}</span></td><td>${o.q.toFixed(3)}</td><td>${o.kind==='shot'?'xG '+o.xg.toFixed(2):Math.round(o.xp*100)+'%'}</td>`;
-    tr.onmouseenter=()=>{sel=i;draw()};tr.onmouseleave=()=>{sel=-1;draw()};body.appendChild(tr)});
+    const det=o.kind==='shot'?`<div class="mute" style="font-size:12px">מרחק ${o.dist_m.toFixed(0)} מ', זווית ${o.angle_deg.toFixed(0)}°, ${o.n_tri} מגינים במשולש הבעיטה, שוער ${o.gk_m.toFixed(0)} מ' מהשער</div>`:'';
+    tr.className=picked.has(key(o))?'sel':'';
+    tr.innerHTML=`<td>${o.rank}</td><td>${name}${det}${o.counter_assumed?' <span title="הנחה מסומנת A1">†</span>':''}</td><td><span class="sc" style="color:${scoreColor(o.score)}">${o.score}</span></td><td>${o.q.toFixed(3)}</td><td>${o.kind==='shot'?'xG '+o.xg.toFixed(2):Math.round(o.xp*100)+'%'}</td>`;
+    tr.onmouseenter=()=>{sel=i;draw()};tr.onmouseleave=()=>{sel=-1;draw()};tr.onclick=()=>{const k=key(o);picked.has(k)?picked.delete(k):picked.add(k);tr.classList.toggle('sel',picked.has(k));draw()};body.appendChild(tr)});
   foot.textContent=`ציון איבוד כדור יזום כאן: ${res.turnover.score}` + (res.n_offside?` · ${res.n_offside} מסירות לנבדל ודאי הוסתרו`:'')}
 draw();
 </script>

@@ -32,7 +32,8 @@ def score_situation(payload):
         if o["kind"] == "turnover": turnover = dict(score=o["score"], q=o["v"], counter_assumed=bool(o.get("counter_assumed"))); continue
         if o["status"] == "certain offside": offside += 1; continue
         row = dict(kind=o["kind"], score=int(o["score"]), q=float(o["v"]), status=o["status"], counter_assumed=bool(o.get("counter_assumed", False)))
-        if o["kind"] == "shot": row.update(target=[120.0, 40.0], xg=float(o["xg"]), cont=float(o["cont"]))
+        if o["kind"] == "shot":
+            f = core.shot_features(s); row.update(target=[120.0, 40.0], xg=float(o["xg"]), cont=float(o["cont"]), dist_m=float(f["dist"] * 105 / 120), angle_deg=float(np.degrees(f["angle"])), n_tri=int(f["n_tri"]), gk_m=float(f["gk_d"] * 105 / 120))
         else: row.update(target=[float(o["target"][0]), float(o["target"][1])], xp=float(o["xp"]), chain=float(o["xa"]), dist_m=float(o["d"]), loss=float(o["loss"]))
         out.append(row)
     out.sort(key=lambda r: -r["q"]); kept = [r for r in out if r["score"] >= thr][:top]
