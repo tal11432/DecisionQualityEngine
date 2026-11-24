@@ -34,6 +34,11 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:5px 4px;b
       <select id="win"><option value="0">כל המגרש</option><option value="60" selected>החצי ההתקפי (x ≥ 60)</option><option value="80">השליש ההתקפי (x ≥ 80)</option></select></label>
     <label>שקיפות <input type="range" id="op" min="0" max="100" value="55"></label>
   </div>
+  <div class="bar" id="calbar" hidden>
+    <label>כיול פרספקטיבה, לחצו על 4 פינות ידועות בתמונה:
+      <select id="preset"><option value="box16">פינות הרחבה (16 מ')</option><option value="box6">פינות רחבת ה-6</option><option value="goal">קורות השער + נקודות על הקו (ראו הנחיה)</option></select></label>
+    <button class="s" id="calstart">התחל כיול</button><button class="s" id="calreset">חזרה למגרש מתוח</button><span id="calmsg" class="mute"></span>
+  </div>
   <div class="bar" id="tools">
     <button class="tool on" data-t="carrier"><span class="dot" style="background:#e8b400"></span>מחזיק הכדור</button>
     <button class="tool" data-t="mate"><span class="dot" style="background:#2457b3"></span>חבר קבוצה</button>
@@ -42,7 +47,8 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:5px 4px;b
     <button class="s" id="clear">נקה הכול</button>
   </div>
   <div id="wrap"><canvas id="cv" width="1200" height="800"></canvas></div>
-  <p class="mute">הקבוצה עם הכדור תוקפת ימינה. לחיצה: מניחה שחקן מהסוג שנבחר. גרירה: מזיזה. קליק ימני (או לחיצה ארוכה): מוחק. הצבעים: <span class="legend"><span><span class="dot" style="background:#e8b400"></span>הכדור</span><span><span class="dot" style="background:#2457b3"></span>חבר</span><span><span class="dot" style="background:#c0392b"></span>יריב</span><span><span class="dot" style="background:#7b2d8b"></span>שוער</span></span></p>
+  <canvas id="mm" width="600" height="400" style="width:50%;margin-top:8px;border-radius:6px" hidden></canvas>
+  <p class="mute">הקבוצה עם הכדור תוקפת ימינה, והשער נמצא תמיד בצד הימני של המגרש המצויר (בתמונה מכוילת הוא מצויר צהוב על התמונה). לחיצה: מניחה שחקן מהסוג שנבחר. גרירה: מזיזה. קליק ימני (או לחיצה ארוכה): מוחק. הצבעים: <span class="legend"><span><span class="dot" style="background:#e8b400"></span>הכדור</span><span><span class="dot" style="background:#2457b3"></span>חבר</span><span><span class="dot" style="background:#c0392b"></span>יריב</span><span><span class="dot" style="background:#7b2d8b"></span>שוער</span></span></p>
 </section>
 <aside class="card">
   <div class="bar"><label>סף ציון <b id="thv">26</b> <input type="range" id="th" min="0" max="100" value="26"></label></div>
@@ -55,42 +61,69 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:5px 4px;b
 </aside>
 </main>
 <script>
-const W=1200,H=800,cv=document.getElementById('cv'),ctx=cv.getContext('2d');
-let tool='carrier',img=null,x0=60,res=null,sel=-1,drag=null;
+const W=1200,H=800,cv=document.getElementById('cv'),ctx=cv.getContext('2d'),mm=document.getElementById('mm'),mctx=mm.getContext('2d');
+let tool='carrier',img=null,x0=60,res=null,sel=-1,drag=null,calib=null,Hc=null,Hi=null,calPts=[];
 const S={carrier:null,mates:[],opps:[],gk:null};
 const COL={carrier:'#e8b400',mate:'#2457b3',opp:'#c0392b',gk:'#7b2d8b'};
-const px=x=>(x-x0)/(120-x0)*W, py=y=>y/80*H, ux=p=>x0+p/W*(120-x0), uy=p=>p/H*80;
+const PRESETS={box16:{names:['פינת הרחבה: קו הרחבה הרחוק מהשער, הצד העליון','פינת הרחבה: קו הרחבה הרחוק מהשער, הצד התחתון','פינת הרחבה: קו השער, הצד התחתון','פינת הרחבה: קו השער, הצד העליון'],pts:[[102,18],[102,62],[120,62],[120,18]]},
+ box6:{names:['פינת רחבת ה-6: הרחוקה מהשער, עליון','פינת רחבת ה-6: הרחוקה מהשער, תחתון','פינת רחבת ה-6: על קו השער, תחתון','פינת רחבת ה-6: על קו השער, עליון'],pts:[[114,30],[114,50],[120,50],[120,30]]},
+ goal:{names:['קורה עליונה: צד אחד (בסיס הקורה על הקו)','קורה: הצד השני (בסיס הקורה על הקו)','נקודה על קו השער בצד העליון של רחבת ה-6','נקודה על קו השער בצד התחתון של רחבת ה-6'],pts:[[120,36],[120,44],[120,30],[120,50]]}};
+// ---- homography
+function solveH(src,dst){const A=[],b=[];for(let i=0;i<4;i++){const [x,y]=src[i],[u,v]=dst[i];A.push([x,y,1,0,0,0,-u*x,-u*y]);b.push(u);A.push([0,0,0,x,y,1,-v*x,-v*y]);b.push(v)}
+  const n=8;for(let c=0;c<n;c++){let p=c;for(let r=c+1;r<n;r++)if(Math.abs(A[r][c])>Math.abs(A[p][c]))p=r;[A[c],A[p]]=[A[p],A[c]];[b[c],b[p]]=[b[p],b[c]];if(Math.abs(A[c][c])<1e-9)return null;
+    for(let r=0;r<n;r++){if(r===c)continue;const f=A[r][c]/A[c][c];for(let k=c;k<n;k++)A[r][k]-=f*A[c][k];b[r]-=f*b[c]}}
+  const h=b.map((v,i)=>v/A[i][i]);return [[h[0],h[1],h[2]],[h[3],h[4],h[5]],[h[6],h[7],1]]}
+function inv3(m){const [a,b,c]=m[0],[d,e,f]=m[1],[g,h,i]=m[2];const A=e*i-f*h,B=-(d*i-f*g),C=d*h-e*g,D=-(b*i-c*h),E=a*i-c*g,F=-(a*h-b*g),G=b*f-c*e,Hh=-(a*f-c*d),I=a*e-b*d,det=a*A+b*B+c*C;if(Math.abs(det)<1e-12)return null;return [[A/det,D/det,G/det],[B/det,E/det,Hh/det],[C/det,F/det,I/det]]}
+function ap(m,p){const w=m[2][0]*p[0]+m[2][1]*p[1]+m[2][2];return [(m[0][0]*p[0]+m[0][1]*p[1]+m[0][2])/w,(m[1][0]*p[0]+m[1][1]*p[1]+m[1][2])/w]}
+// ---- image <-> canvas (contain) and pitch <-> canvas
+function fit(){if(!img)return {s:1,ox:0,oy:0};const s=Math.min(W/img.width,H/img.height);return {s,ox:(W-img.width*s)/2,oy:(H-img.height*s)/2}}
+const imode=()=>!!(img&&Hc);
+function P2C(p){if(imode()){const q=ap(Hi,p),f=fit();return [q[0]*f.s+f.ox,q[1]*f.s+f.oy]}return [(p[0]-x0)/(120-x0)*W,p[1]/80*H]}
+function C2P(c){if(imode()){const f=fit();return ap(Hc,[(c[0]-f.ox)/f.s,(c[1]-f.oy)/f.s])}return [x0+c[0]/W*(120-x0),c[1]/H*80]}
+const clampP=p=>[Math.max(0,Math.min(120,p[0])),Math.max(0,Math.min(80,p[1]))];
 function scoreColor(s){return s>=60?'#1d9a5b':s>=40?'#7aa84a':s>=30?'#d1a21c':'#8a8f8c'}
+function lines(c,map,lw){c.strokeStyle='rgba(255,255,255,.9)';c.lineWidth=lw;
+  const poly=pts=>{c.beginPath();pts.forEach((p,i)=>{const q=map(p);i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1])});c.stroke()};
+  const seg=(a,b)=>{const pts=[];for(let k=0;k<=24;k++)pts.push([a[0]+(b[0]-a[0])*k/24,a[1]+(b[1]-a[1])*k/24]);poly(pts)};
+  const rect=(a,b,cc,d)=>{seg([a,b],[cc,b]);seg([cc,b],[cc,d]);seg([cc,d],[a,d]);seg([a,d],[a,b])};
+  rect(0,0,120,80);seg([60,0],[60,80]);rect(102,18,120,62);rect(114,30,120,50);c.strokeStyle='#ffe14d';rect(120,36,121.6,44);c.strokeStyle='rgba(255,255,255,.9)';
+  const circ=[];for(let k=0;k<=60;k++){const t=k/60*2*Math.PI;circ.push([60+10*Math.cos(t),40+10*Math.sin(t)])}poly(circ)}
+function drawPitch(c,map,lw,dotr,lab){const dot=(p,col,l)=>{if(!p)return;const q=map(p);c.fillStyle=col;c.beginPath();c.arc(q[0],q[1],dotr,0,7);c.fill();c.strokeStyle='#fff';c.lineWidth=Math.max(2,dotr/5);c.stroke();if(l&&lab){c.fillStyle='#fff';c.font=`bold ${dotr}px system-ui`;c.textAlign='center';c.fillText(l,q[0],q[1]+dotr/3);c.textAlign='start'}};
+  if(res&&S.carrier)res.options.forEach((o,i)=>{const a=map(S.carrier),t=map(o.target),col=scoreColor(o.score);c.strokeStyle=col;c.lineWidth=(i===sel?2:1)*lw*1.8;c.globalAlpha=i===sel?1:.85;c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(t[0],t[1]);c.stroke();
+    const ang=Math.atan2(t[1]-a[1],t[0]-a[0]),hs=dotr*1.1;c.fillStyle=col;c.beginPath();c.moveTo(t[0],t[1]);c.lineTo(t[0]-hs*Math.cos(ang-.4),t[1]-hs*Math.sin(ang-.4));c.lineTo(t[0]-hs*Math.cos(ang+.4),t[1]-hs*Math.sin(ang+.4));c.fill();c.globalAlpha=1;
+    if(lab){const f=o.kind==='shot'?.45:.5,mx=a[0]+(t[0]-a[0])*f,my=a[1]+(t[1]-a[1])*f-(o.kind==='shot'?dotr*1.6:0);c.font=`bold ${dotr*1.7}px system-ui`;const tx=o.kind==='shot'?'בעיטה '+o.score:''+o.score,w=c.measureText(tx).width+14;c.fillStyle='rgba(0,0,0,.65)';c.fillRect(mx-w/2,my-dotr*1.1,w,dotr*2);c.fillStyle='#fff';c.textAlign='center';c.fillText(tx,mx,my+dotr*.5);c.textAlign='start'}});
+  S.opps.forEach(p=>dot(p,COL.opp));S.mates.forEach(p=>dot(p,COL.mate));dot(S.gk,COL.gk,'GK');dot(S.carrier,COL.carrier,'⚽')}
 function draw(){
   ctx.clearRect(0,0,W,H);ctx.fillStyle='#2f7a4f';ctx.fillRect(0,0,W,H);
-  if(img){ctx.globalAlpha=document.getElementById('op').value/100;ctx.drawImage(img,0,0,W,H);ctx.globalAlpha=1}
-  ctx.strokeStyle='rgba(255,255,255,.85)';ctx.lineWidth=2;
-  const L=(a,b,c,d)=>{ctx.beginPath();ctx.moveTo(px(a),py(b));ctx.lineTo(px(c),py(d));ctx.stroke()};
-  const R=(a,b,c,d)=>{ctx.strokeRect(px(a),py(b),px(c)-px(a),py(d)-py(b))};
-  R(0.2,0.2,119.8,79.8);L(60,0,60,80);R(102,18,119.8,62);R(114,30,119.8,50);R(119.8,36,121.5,44);
-  ctx.beginPath();ctx.arc(px(60),py(40),10/(120-x0)*W,0,7);ctx.stroke();
-  if(res){res.options.forEach((o,i)=>{const a=S.carrier;if(!a)return;const tx=px(o.target[0]),ty=py(o.target[1]),c=scoreColor(o.score);
-    ctx.strokeStyle=c;ctx.lineWidth=i===sel?7:3.5;ctx.globalAlpha=i===sel?1:.8;ctx.beginPath();ctx.moveTo(px(a[0]),py(a[1]));ctx.lineTo(tx,ty);ctx.stroke();
-    const ang=Math.atan2(ty-py(a[1]),tx-px(a[0]));ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(tx-16*Math.cos(ang-.4),ty-16*Math.sin(ang-.4));ctx.lineTo(tx-16*Math.cos(ang+.4),ty-16*Math.sin(ang+.4));ctx.fill();ctx.globalAlpha=1;
-    const f=o.kind==='shot'?.45:.5,mx=px(a[0])+(tx-px(a[0]))*f,my=py(a[1])+(ty-py(a[1]))*f-(o.kind==='shot'?26:0);ctx.font='bold 26px system-ui';const t=o.kind==='shot'?'בעיטה '+o.score:o.score;ctx.fillStyle='rgba(0,0,0,.65)';const w=ctx.measureText(t).width+14;ctx.fillRect(mx-w/2,my-17,w,30);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(t,mx,my+6);ctx.textAlign='start'})}
-  const dot=(p,c,l)=>{if(!p)return;ctx.fillStyle=c;ctx.beginPath();ctx.arc(px(p[0]),py(p[1]),15,0,7);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.stroke();if(l){ctx.fillStyle='#fff';ctx.font='bold 17px system-ui';ctx.textAlign='center';ctx.fillText(l,px(p[0]),py(p[1])+6);ctx.textAlign='start'}};
-  S.opps.forEach(p=>dot(p,COL.opp));S.mates.forEach((p,i)=>dot(p,COL.mate));dot(S.gk,COL.gk,'GK');dot(S.carrier,COL.carrier,'⚽');
-}
+  if(img){const f=fit();if(imode()){ctx.globalAlpha=1;ctx.drawImage(img,f.ox,f.oy,img.width*f.s,img.height*f.s)}else{ctx.globalAlpha=document.getElementById('op').value/100;ctx.drawImage(img,0,0,W,H);ctx.globalAlpha=1}}
+  lines(ctx,P2C,2.5);
+  calPts.forEach((q,i)=>{const f=fit(),c=[q[0]*f.s+f.ox,q[1]*f.s+f.oy];ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(c[0],c[1],9,0,7);ctx.fill();ctx.fillStyle='#000';ctx.font='bold 14px system-ui';ctx.textAlign='center';ctx.fillText(i+1,c[0],c[1]+5);ctx.textAlign='start'});
+  drawPitch(ctx,P2C,3.5,15,true);
+  if(imode()){mm.hidden=false;mctx.fillStyle='#2f7a4f';mctx.fillRect(0,0,600,400);const m=p=>[p[0]/120*600,p[1]/80*400];lines(mctx,m,1.5);drawPitch(mctx,m,2,7,false)}else mm.hidden=true}
 function pos(e){const r=cv.getBoundingClientRect();return [(e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H]}
 function hit(p){const all=[];if(S.carrier)all.push(['carrier',0,S.carrier]);S.mates.forEach((q,i)=>all.push(['mate',i,q]));S.opps.forEach((q,i)=>all.push(['opp',i,q]));if(S.gk)all.push(['gk',0,S.gk]);
-  for(const [k,i,q] of all){if(Math.hypot(px(q[0])-p[0],py(q[1])-p[1])<22)return {k,i}}return null}
+  for(const [k,i,q] of all){const c=P2C(q);if(Math.hypot(c[0]-p[0],c[1]-p[1])<22)return {k,i}}return null}
 function setPt(k,i,v){if(k==='carrier')S.carrier=v;else if(k==='gk')S.gk=v;else if(k==='mate')S.mates[i]=v;else S.opps[i]=v}
 function del(k,i){if(k==='carrier')S.carrier=null;else if(k==='gk')S.gk=null;else if(k==='mate')S.mates.splice(i,1);else S.opps.splice(i,1)}
 cv.addEventListener('contextmenu',e=>{e.preventDefault();const h=hit(pos(e));if(h){del(h.k,h.i);changed()}});
-cv.addEventListener('pointerdown',e=>{if(e.button===2)return;const p=pos(e),h=hit(p);if(h){drag=h;cv.setPointerCapture(e.pointerId);return}
-  const v=[Math.max(0,Math.min(120,ux(p[0]))),Math.max(0,Math.min(80,uy(p[1])))];
-  if(tool==='carrier')S.carrier=v;else if(tool==='gk')S.gk=v;else if(tool==='mate')S.mates.push(v);else S.opps.push(v);changed()});
-cv.addEventListener('pointermove',e=>{if(!drag)return;const p=pos(e);setPt(drag.k,drag.i,[Math.max(0,Math.min(120,ux(p[0]))),Math.max(0,Math.min(80,uy(p[1])))]);draw();schedule()});
+cv.addEventListener('pointerdown',e=>{if(e.button===2)return;const p=pos(e);
+  if(calib){const f=fit();calPts.push([(p[0]-f.ox)/f.s,(p[1]-f.oy)/f.s]);calStep();draw();return}
+  const h=hit(p);if(h){drag=h;cv.setPointerCapture(e.pointerId);return}
+  const v=clampP(C2P(p));if(tool==='carrier')S.carrier=v;else if(tool==='gk')S.gk=v;else if(tool==='mate')S.mates.push(v);else S.opps.push(v);changed()});
+cv.addEventListener('pointermove',e=>{if(!drag)return;setPt(drag.k,drag.i,clampP(C2P(pos(e))));draw();schedule()});
 cv.addEventListener('pointerup',()=>{if(drag){drag=null;changed()}});
 document.getElementById('tools').addEventListener('click',e=>{const b=e.target.closest('.tool');if(!b)return;tool=b.dataset.t;document.querySelectorAll('.tool').forEach(x=>x.classList.toggle('on',x===b))});
 document.getElementById('clear').onclick=()=>{S.carrier=null;S.mates=[];S.opps=[];S.gk=null;res=null;sel=-1;render();draw()};
-document.getElementById('file').onchange=e=>{const f=e.target.files[0];if(!f)return;const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{img=im;draw()};im.src=u};
+document.getElementById('file').onchange=e=>{const f=e.target.files[0];if(!f)return;const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{img=im;Hc=Hi=null;calPts=[];calib=null;document.getElementById('calbar').hidden=false;document.getElementById('calmsg').textContent='אם התמונה אלכסונית: לחצו "התחל כיול".';draw()};im.src=u};
 document.getElementById('win').onchange=e=>{x0=+e.target.value;draw();changed()};document.getElementById('op').oninput=draw;
+// ---- calibration
+function calStep(){const P=PRESETS[document.getElementById('preset').value],m=document.getElementById('calmsg');
+  if(calPts.length<4){m.textContent=`נקודה ${calPts.length+1} מתוך 4: ${P.names[calPts.length]}`;return}
+  const h=solveH(calPts,P.pts),hi=h&&inv3(h);calib=null;if(!h||!hi){m.textContent='הכיול נכשל (הנקודות על קו אחד?). נסו שוב.';calPts=[];return}
+  Hc=h;Hi=hi;m.textContent='הכיול הושלם. בדקו שקו הרחבה והשער הצהוב מצוירים נכון על התמונה; אם לא, התחילו כיול מחדש.';calPts=[];res=null;render();changed()}
+document.getElementById('calstart').onclick=()=>{if(!img)return;Hc=Hi=null;calPts=[];calib=true;res=null;calStep();draw()};
+document.getElementById('calreset').onclick=()=>{Hc=Hi=null;calPts=[];calib=null;document.getElementById('calmsg').textContent='חזרה למגרש מתוח.';draw()};
+// ---- scoring
 const th=document.getElementById('th');th.oninput=()=>{document.getElementById('thv').textContent=th.value;schedule()};
 document.getElementById('go').onclick=run;let timer=null;
 function schedule(){if(document.getElementById('auto').checked){clearTimeout(timer);timer=setTimeout(run,250)}}
