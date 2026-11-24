@@ -36,7 +36,7 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:5px 4px;b
   </div>
   <div class="bar" id="calbar" hidden>
     <label>כיול פרספקטיבה, לחצו על 4 פינות ידועות בתמונה:
-      <select id="preset"><option value="box16">פינות הרחבה (16 מ')</option><option value="box6">פינות רחבת ה-6</option><option value="goal">קורות השער + נקודות על הקו (ראו הנחיה)</option></select></label>
+      <select id="preset"><option value="box16">פינות הרחבה (16 מ')</option><option value="box6">פינות רחבת ה-6</option><option value="goal">קורות השער + פינות רחבת ה-6 הקדמיות</option></select></label>
     <button class="s" id="calstart">התחל כיול</button><button class="s" id="calreset">חזרה למגרש מתוח</button><span id="calmsg" class="mute"></span>
   </div>
   <div class="bar" id="tools">
@@ -65,9 +65,9 @@ const W=1200,H=800,cv=document.getElementById('cv'),ctx=cv.getContext('2d'),mm=d
 let tool='carrier',img=null,x0=60,res=null,sel=-1,drag=null,calib=null,Hc=null,Hi=null,calPts=[];
 const S={carrier:null,mates:[],opps:[],gk:null};
 const COL={carrier:'#e8b400',mate:'#2457b3',opp:'#c0392b',gk:'#7b2d8b'};
-const PRESETS={box16:{names:['פינת הרחבה: קו הרחבה הרחוק מהשער, הצד העליון','פינת הרחבה: קו הרחבה הרחוק מהשער, הצד התחתון','פינת הרחבה: קו השער, הצד התחתון','פינת הרחבה: קו השער, הצד העליון'],pts:[[102,18],[102,62],[120,62],[120,18]]},
- box6:{names:['פינת רחבת ה-6: הרחוקה מהשער, עליון','פינת רחבת ה-6: הרחוקה מהשער, תחתון','פינת רחבת ה-6: על קו השער, תחתון','פינת רחבת ה-6: על קו השער, עליון'],pts:[[114,30],[114,50],[120,50],[120,30]]},
- goal:{names:['קורה עליונה: צד אחד (בסיס הקורה על הקו)','קורה: הצד השני (בסיס הקורה על הקו)','נקודה על קו השער בצד העליון של רחבת ה-6','נקודה על קו השער בצד התחתון של רחבת ה-6'],pts:[[120,36],[120,44],[120,30],[120,50]]}};
+const PRESETS={box16:{names:['פינת רחבת ה-16 הרחוקה מהשער, בצד שמאל (שמאל של שחקן שפניו לשער)','פינת רחבת ה-16 הרחוקה מהשער, בצד ימין','פינת רחבת ה-16 על קו השער, בצד ימין','פינת רחבת ה-16 על קו השער, בצד שמאל'],pts:[[102,18],[102,62],[120,62],[120,18]]},
+ box6:{names:['פינת רחבת ה-6 הרחוקה מהשער, בצד שמאל (שמאל של שחקן שפניו לשער)','פינת רחבת ה-6 הרחוקה מהשער, בצד ימין','פינת רחבת ה-6 על קו השער, בצד ימין','פינת רחבת ה-6 על קו השער, בצד שמאל'],pts:[[114,30],[114,50],[120,50],[120,30]]},
+ goal:{names:['הקורה השמאלית של השער (בסיסה על הדשא; שמאל של שחקן שפניו לשער)','הקורה הימנית של השער (בסיסה על הדשא)','פינת רחבת ה-6 הקדמית הימנית (הרחוקה מהשער)','פינת רחבת ה-6 הקדמית השמאלית (הרחוקה מהשער)'],pts:[[120,36],[120,44],[114,50],[114,30]]}};
 // ---- homography
 function solveH(src,dst){const A=[],b=[];for(let i=0;i<4;i++){const [x,y]=src[i],[u,v]=dst[i];A.push([x,y,1,0,0,0,-u*x,-u*y]);b.push(u);A.push([0,0,0,x,y,1,-v*x,-v*y]);b.push(v)}
   const n=8;for(let c=0;c<n;c++){let p=c;for(let r=c+1;r<n;r++)if(Math.abs(A[r][c])>Math.abs(A[p][c]))p=r;[A[c],A[p]]=[A[p],A[c]];[b[c],b[p]]=[b[p],b[c]];if(Math.abs(A[c][c])<1e-9)return null;
