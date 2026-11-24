@@ -35,9 +35,9 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:5px 4px;b
     <label>שקיפות <input type="range" id="op" min="0" max="100" value="55"></label>
   </div>
   <div class="bar" id="calbar" hidden>
-    <label>כיול פרספקטיבה, לחצו על 4 פינות ידועות בתמונה:
-      <select id="preset"><option value="box16">פינות הרחבה (16 מ')</option><option value="box6">פינות רחבת ה-6</option><option value="goal">קורות השער + פינות רחבת ה-6 הקדמיות</option></select></label>
-    <button class="s" id="calstart">התחל כיול</button><button class="s" id="calreset">חזרה למגרש מתוח</button><span id="calmsg" class="mute"></span>
+    <label>כיול פרספקטיבה, לחצו על פינות ידועות בתמונה:
+      <select id="preset"><option value="box16">פינות הרחבה (16 מ')</option><option value="box6p16" selected>רחבת ה-6 (4 פינות) + פינת רחבת ה-16 (5 נקודות, מדויק יותר)</option><option value="box6">פינות רחבת ה-6 בלבד (4)</option><option value="goal">קורות השער + פינות רחבת ה-6 הקדמיות</option></select></label>
+    <label><input type="checkbox" id="adj"> כוונון נקודות הכיול</label><button class="s" id="calstart">התחל כיול</button><button class="s" id="calreset">חזרה למגרש מתוח</button><span id="calmsg" class="mute"></span>
   </div>
   <div class="bar" id="tools">
     <button class="tool on" data-t="carrier"><span class="dot" style="background:#e8b400"></span>מחזיק הכדור</button>
@@ -62,15 +62,17 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:5px 4px;b
 </main>
 <script>
 const W=1200,H=800,cv=document.getElementById('cv'),ctx=cv.getContext('2d'),mm=document.getElementById('mm'),mctx=mm.getContext('2d');
-let tool='carrier',img=null,x0=60,res=null,sel=-1,drag=null,calib=null,Hc=null,Hi=null,calPts=[];
+let adjusting=false,calImg=[],preset0=null,tool='carrier',img=null,x0=60,res=null,sel=-1,drag=null,calib=null,Hc=null,Hi=null,calPts=[];
 const S={carrier:null,mates:[],opps:[],gk:null};
 const COL={carrier:'#e8b400',mate:'#2457b3',opp:'#c0392b',gk:'#7b2d8b'};
-const PRESETS={box16:{names:['פינת רחבת ה-16 הרחוקה מהשער, בצד שמאל (שמאל של שחקן שפניו לשער)','פינת רחבת ה-16 הרחוקה מהשער, בצד ימין','פינת רחבת ה-16 על קו השער, בצד ימין','פינת רחבת ה-16 על קו השער, בצד שמאל'],pts:[[102,18],[102,62],[120,62],[120,18]]},
- box6:{names:['פינת רחבת ה-6 הרחוקה מהשער, בצד שמאל (שמאל של שחקן שפניו לשער)','פינת רחבת ה-6 הרחוקה מהשער, בצד ימין','פינת רחבת ה-6 על קו השער, בצד ימין','פינת רחבת ה-6 על קו השער, בצד שמאל'],pts:[[114,30],[114,50],[120,50],[120,30]]},
- goal:{names:['הקורה השמאלית של השער (בסיסה על הדשא; שמאל של שחקן שפניו לשער)','הקורה הימנית של השער (בסיסה על הדשא)','פינת רחבת ה-6 הקדמית הימנית (הרחוקה מהשער)','פינת רחבת ה-6 הקדמית השמאלית (הרחוקה מהשער)'],pts:[[120,36],[120,44],[114,50],[114,30]]}};
+const PRESETS={box16:{names:['פינת רחבת ה-16 הרחוקה מהשער, בצד שמאל (שמאל של שחקן שפניו לשער)','פינת רחבת ה-16 הרחוקה מהשער, בצד ימין','פינת רחבת ה-16 על קו השער, בצד ימין','פינת רחבת ה-16 על קו השער, בצד שמאל'],pts:[[101.14,16.28],[101.14,63.72],[120,63.72],[120,16.28]]},
+ box6:{names:['פינת רחבת ה-6 הרחוקה מהשער, בצד שמאל (שמאל של שחקן שפניו לשער)','פינת רחבת ה-6 הרחוקה מהשער, בצד ימין','פינת רחבת ה-6 על קו השער, בצד ימין','פינת רחבת ה-6 על קו השער, בצד שמאל'],pts:[[113.71,29.22],[113.71,50.78],[120,50.78],[120,29.22]]},
+ box6p16:{names:['פינת רחבת ה-6 הרחוקה מהשער, בצד שמאל (שמאל של שחקן שפניו לשער)','פינת רחבת ה-6 הרחוקה מהשער, בצד ימין','פינת רחבת ה-6 על קו השער, בצד ימין','פינת רחבת ה-6 על קו השער, בצד שמאל','פינת רחבת ה-16 הקרובה אליכם: הפינה הקדמית בצד ימין (אם נראית)'],pts:[[113.71,29.22],[113.71,50.78],[120,50.78],[120,29.22],[101.14,63.72]]},
+ goal:{names:['הקורה השמאלית של השער (בסיסה על הדשא; שמאל של שחקן שפניו לשער)','הקורה הימנית של השער (בסיסה על הדשא)','פינת רחבת ה-6 הקדמית הימנית (הרחוקה מהשער)','פינת רחבת ה-6 הקדמית השמאלית (הרחוקה מהשער)'],pts:[[120,35.69],[120,44.31],[113.71,50.78],[113.71,29.22]]}};
 // ---- homography
-function solveH(src,dst){const A=[],b=[];for(let i=0;i<4;i++){const [x,y]=src[i],[u,v]=dst[i];A.push([x,y,1,0,0,0,-u*x,-u*y]);b.push(u);A.push([0,0,0,x,y,1,-v*x,-v*y]);b.push(v)}
-  const n=8;for(let c=0;c<n;c++){let p=c;for(let r=c+1;r<n;r++)if(Math.abs(A[r][c])>Math.abs(A[p][c]))p=r;[A[c],A[p]]=[A[p],A[c]];[b[c],b[p]]=[b[p],b[c]];if(Math.abs(A[c][c])<1e-9)return null;
+function solveH(src,dst){const rows=[],rhs=[];for(let i=0;i<src.length;i++){const [x,y]=src[i],[u,v]=dst[i];rows.push([x,y,1,0,0,0,-u*x,-u*y]);rhs.push(u);rows.push([0,0,0,x,y,1,-v*x,-v*y]);rhs.push(v)}
+  const n=8,A=[],b=[];for(let i=0;i<n;i++){A.push(new Array(n).fill(0));b.push(0);for(let j=0;j<n;j++)for(let k=0;k<rows.length;k++)A[i][j]+=rows[k][i]*rows[k][j];for(let k=0;k<rows.length;k++)b[i]+=rows[k][i]*rhs[k]}   // least squares (normal equations); exact for 4 points
+  for(let c=0;c<n;c++){let p=c;for(let r=c+1;r<n;r++)if(Math.abs(A[r][c])>Math.abs(A[p][c]))p=r;[A[c],A[p]]=[A[p],A[c]];[b[c],b[p]]=[b[p],b[c]];if(Math.abs(A[c][c])<1e-12)return null;
     for(let r=0;r<n;r++){if(r===c)continue;const f=A[r][c]/A[c][c];for(let k=c;k<n;k++)A[r][k]-=f*A[c][k];b[r]-=f*b[c]}}
   const h=b.map((v,i)=>v/A[i][i]);return [[h[0],h[1],h[2]],[h[3],h[4],h[5]],[h[6],h[7],1]]}
 function inv3(m){const [a,b,c]=m[0],[d,e,f]=m[1],[g,h,i]=m[2];const A=e*i-f*h,B=-(d*i-f*g),C=d*h-e*g,D=-(b*i-c*h),E=a*i-c*g,F=-(a*h-b*g),G=b*f-c*e,Hh=-(a*f-c*d),I=a*e-b*d,det=a*A+b*B+c*C;if(Math.abs(det)<1e-12)return null;return [[A/det,D/det,G/det],[B/det,E/det,Hh/det],[C/det,F/det,I/det]]}
@@ -86,8 +88,8 @@ function lines(c,map,lw){c.strokeStyle='rgba(255,255,255,.9)';c.lineWidth=lw;
   const poly=pts=>{c.beginPath();pts.forEach((p,i)=>{const q=map(p);i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1])});c.stroke()};
   const seg=(a,b)=>{const pts=[];for(let k=0;k<=24;k++)pts.push([a[0]+(b[0]-a[0])*k/24,a[1]+(b[1]-a[1])*k/24]);poly(pts)};
   const rect=(a,b,cc,d)=>{seg([a,b],[cc,b]);seg([cc,b],[cc,d]);seg([cc,d],[a,d]);seg([a,d],[a,b])};
-  rect(0,0,120,80);seg([60,0],[60,80]);rect(102,18,120,62);rect(114,30,120,50);c.strokeStyle='#ffe14d';rect(120,36,121.6,44);c.strokeStyle='rgba(255,255,255,.9)';
-  const circ=[];for(let k=0;k<=60;k++){const t=k/60*2*Math.PI;circ.push([60+10*Math.cos(t),40+10*Math.sin(t)])}poly(circ)}
+  rect(0,0,120,80);seg([60,0],[60,80]);rect(101.14,16.28,120,63.72);rect(113.71,29.22,120,50.78);c.strokeStyle='#ffe14d';rect(120,35.69,121.6,44.31);c.strokeStyle='rgba(255,255,255,.9)';
+  const circ=[];for(let k=0;k<=60;k++){const t=k/60*2*Math.PI;circ.push([60+10.46*Math.cos(t),40+10.76*Math.sin(t)])}poly(circ)}
 function drawPitch(c,map,lw,dotr,lab){const dot=(p,col,l)=>{if(!p)return;const q=map(p);c.fillStyle=col;c.beginPath();c.arc(q[0],q[1],dotr,0,7);c.fill();c.strokeStyle='#fff';c.lineWidth=Math.max(2,dotr/5);c.stroke();if(l&&lab){c.fillStyle='#fff';c.font=`bold ${dotr}px system-ui`;c.textAlign='center';c.fillText(l,q[0],q[1]+dotr/3);c.textAlign='start'}};
   if(res&&S.carrier)res.options.forEach((o,i)=>{const a=map(S.carrier),t=map(o.target),col=scoreColor(o.score);c.strokeStyle=col;c.lineWidth=(i===sel?2:1)*lw*1.8;c.globalAlpha=i===sel?1:.85;c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(t[0],t[1]);c.stroke();
     const ang=Math.atan2(t[1]-a[1],t[0]-a[0]),hs=dotr*1.1;c.fillStyle=col;c.beginPath();c.moveTo(t[0],t[1]);c.lineTo(t[0]-hs*Math.cos(ang-.4),t[1]-hs*Math.sin(ang-.4));c.lineTo(t[0]-hs*Math.cos(ang+.4),t[1]-hs*Math.sin(ang+.4));c.fill();c.globalAlpha=1;
@@ -98,6 +100,7 @@ function draw(){
   if(img){const f=fit();if(imode()){ctx.globalAlpha=1;ctx.drawImage(img,f.ox,f.oy,img.width*f.s,img.height*f.s)}else{ctx.globalAlpha=document.getElementById('op').value/100;ctx.drawImage(img,0,0,W,H);ctx.globalAlpha=1}}
   lines(ctx,P2C,2.5);
   calPts.forEach((q,i)=>{const f=fit(),c=[q[0]*f.s+f.ox,q[1]*f.s+f.oy];ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(c[0],c[1],9,0,7);ctx.fill();ctx.fillStyle='#000';ctx.font='bold 14px system-ui';ctx.textAlign='center';ctx.fillText(i+1,c[0],c[1]+5);ctx.textAlign='start'});
+  if(imode()&&adjusting){const f=fit();calImg.forEach((q,i)=>{const c=[q[0]*f.s+f.ox,q[1]*f.s+f.oy];ctx.strokeStyle='#ff9800';ctx.lineWidth=3;ctx.strokeRect(c[0]-9,c[1]-9,18,18);ctx.fillStyle='#ff9800';ctx.font='bold 15px system-ui';ctx.fillText(i+1,c[0]+12,c[1]-10)})}
   drawPitch(ctx,P2C,3.5,15,true);
   if(imode()){mm.hidden=false;mctx.fillStyle='#2f7a4f';mctx.fillRect(0,0,600,400);const m=p=>[p[0]/120*600,p[1]/80*400];lines(mctx,m,1.5);drawPitch(mctx,m,2,7,false)}else mm.hidden=true}
 function pos(e){const r=cv.getBoundingClientRect();return [(e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H]}
@@ -108,19 +111,23 @@ function del(k,i){if(k==='carrier')S.carrier=null;else if(k==='gk')S.gk=null;els
 cv.addEventListener('contextmenu',e=>{e.preventDefault();const h=hit(pos(e));if(h){del(h.k,h.i);changed()}});
 cv.addEventListener('pointerdown',e=>{if(e.button===2)return;const p=pos(e);
   if(calib){const f=fit();calPts.push([(p[0]-f.ox)/f.s,(p[1]-f.oy)/f.s]);calStep();draw();return}
+  if(adjusting&&imode()){const f=fit();for(let i=0;i<calImg.length;i++){const c=[calImg[i][0]*f.s+f.ox,calImg[i][1]*f.s+f.oy];if(Math.hypot(c[0]-p[0],c[1]-p[1])<20){drag={cal:i};cv.setPointerCapture(e.pointerId);return}}}
   const h=hit(p);if(h){drag=h;cv.setPointerCapture(e.pointerId);return}
   const v=clampP(C2P(p));if(tool==='carrier')S.carrier=v;else if(tool==='gk')S.gk=v;else if(tool==='mate')S.mates.push(v);else S.opps.push(v);changed()});
-cv.addEventListener('pointermove',e=>{if(!drag)return;setPt(drag.k,drag.i,clampP(C2P(pos(e))));draw();schedule()});
-cv.addEventListener('pointerup',()=>{if(drag){drag=null;changed()}});
+cv.addEventListener('pointermove',e=>{if(!drag)return;
+  if(drag.cal!==undefined){const f=fit(),p=pos(e);calImg[drag.cal]=[(p[0]-f.ox)/f.s,(p[1]-f.oy)/f.s];const h=solveH(calImg,PRESETS[preset0].pts),hi=h&&inv3(h);if(h&&hi){Hc=h;Hi=hi}draw();return}
+  setPt(drag.k,drag.i,clampP(C2P(pos(e))));draw();schedule()});
+cv.addEventListener('pointerup',()=>{if(drag){const was=drag.cal!==undefined;drag=null;if(was){res=null;render();schedule()}else changed()}});
 document.getElementById('tools').addEventListener('click',e=>{const b=e.target.closest('.tool');if(!b)return;tool=b.dataset.t;document.querySelectorAll('.tool').forEach(x=>x.classList.toggle('on',x===b))});
 document.getElementById('clear').onclick=()=>{S.carrier=null;S.mates=[];S.opps=[];S.gk=null;res=null;sel=-1;render();draw()};
 document.getElementById('file').onchange=e=>{const f=e.target.files[0];if(!f)return;const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{img=im;Hc=Hi=null;calPts=[];calib=null;document.getElementById('calbar').hidden=false;document.getElementById('calmsg').textContent='אם התמונה אלכסונית: לחצו "התחל כיול".';draw()};im.src=u};
 document.getElementById('win').onchange=e=>{x0=+e.target.value;draw();changed()};document.getElementById('op').oninput=draw;
 // ---- calibration
 function calStep(){const P=PRESETS[document.getElementById('preset').value],m=document.getElementById('calmsg');
-  if(calPts.length<4){m.textContent=`נקודה ${calPts.length+1} מתוך 4: ${P.names[calPts.length]}`;return}
+  if(calPts.length<P.pts.length){m.textContent=`נקודה ${calPts.length+1} מתוך ${P.pts.length}: ${P.names[calPts.length]}`;return}
   const h=solveH(calPts,P.pts),hi=h&&inv3(h);calib=null;if(!h||!hi){m.textContent='הכיול נכשל (הנקודות על קו אחד?). נסו שוב.';calPts=[];return}
-  Hc=h;Hi=hi;m.textContent='הכיול הושלם. בדקו שקו הרחבה והשער הצהוב מצוירים נכון על התמונה; אם לא, התחילו כיול מחדש.';calPts=[];res=null;render();changed()}
+  calImg=calPts.map(q=>q.slice());preset0=document.getElementById('preset').value;Hc=h;Hi=hi;document.getElementById('adj').checked=true;adjusting=true;m.textContent='הכיול הושלם. אפשר לכוונן: גררו את הריבועים הכתומים (1-4) עד שהקווים יושבים בדיוק על הקווים האמיתיים. בדקו שקו הרחבה והשער הצהוב מצוירים נכון על התמונה; אם לא, התחילו כיול מחדש.';calPts=[];res=null;render();changed()}
+document.getElementById('adj').onchange=e=>{adjusting=e.target.checked;draw()};
 document.getElementById('calstart').onclick=()=>{if(!img)return;Hc=Hi=null;calPts=[];calib=true;res=null;calStep();draw()};
 document.getElementById('calreset').onclick=()=>{Hc=Hi=null;calPts=[];calib=null;document.getElementById('calmsg').textContent='חזרה למגרש מתוח.';draw()};
 // ---- scoring
