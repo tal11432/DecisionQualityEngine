@@ -57,9 +57,11 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:5px 4px;b
   <div id="warns"></div>
   <table id="tbl" hidden><thead><tr><th>#</th><th>אפשרות</th><th>ציון</th><th>Q (xG)</th><th>סיכוי</th></tr></thead><tbody></tbody></table>
   <p class="mute" id="foot"></p><p class="mute">לחיצה על שורה בטבלה מציגה את האפשרות על התמונה (אפשר כמה שורות); לחיצה נוספת מסתירה אותה.</p>
-  <p class="mute" style="border-top:1px solid var(--line);padding-top:8px">הציון: 25 = אפשרות שלא משנה כלום בציפייה, 100 = לפחות 0.70 xG, 0 = עלות של 0.231 xG. הציון <b>מאומת רק בשליש ההתקפי</b> (x ≥ 80); בשאר המגרש קראו את הסדר ולא את המספרים. אפשרויות: בעיטה (מ-x ≥ 60) ומסירות קרקע של 3–40 מ' לחברים שסומנו. לא נבחנות: נשיאה, כדור גבוה, כדור עומק, מרכז, כדרור. לא נבדק על ידי מומחים.</p>
+  <p class="mute" style="border-top:1px solid var(--line);padding-top:8px">הציון: 25 = אפשרות שלא משנה כלום בציפייה, 100 = לפחות 0.70 xG, 0 = עלות של 0.231 xG. הציון <b>מאומת רק בשליש ההתקפי</b> (x ≥ 80); בשאר המגרש קראו את הסדר ולא את המספרים. אפשרויות: בעיטה (מ-x ≥ 60) ומסירות קרקע של 3–40 מ' לחברים שסומנו. לא נבחנות: נשיאה, כדור גבוה, כדור עומק, מרכז, כדרור. לא נבדק על ידי מומחים. המודלים אומנו על נתוני StatsBomb הפתוחים (ייחוס: StatsBomb). כל החישוב מתבצע בדפדפן שלכם; שום דבר לא נשלח ולא נשמר.</p>
 </aside>
 </main>
+<script src="models.js"></script>
+<script src="engine.js"></script>
 <script>
 const W=1200,H=800,cv=document.getElementById('cv'),ctx=cv.getContext('2d'),mm=document.getElementById('mm'),mctx=mm.getContext('2d');
 let picked=new Set(),adjusting=false,calImg=[],preset0=null,tool='carrier',img=null,x0=60,res=null,sel=-1,drag=null,calib=null,Hc=null,Hi=null,calPts=[];
@@ -136,14 +138,22 @@ const th=document.getElementById('th');th.oninput=()=>{document.getElementById('
 document.getElementById('go').onclick=run;let timer=null;
 function schedule(){if(document.getElementById('auto').checked){clearTimeout(timer);timer=setTimeout(run,250)}}
 function changed(){draw();schedule()}
-async function run(){const msg=document.getElementById('msg');
+function run(){const msg=document.getElementById('msg');
   if(!S.carrier){msg.textContent='הניחו את מחזיק הכדור.';msg.className='mute';return}
-  try{const r=await fetch('/api/score',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({carrier:S.carrier,teammates:S.mates,opponents:S.opps,keeper:S.gk,threshold:+th.value,top:10})});
-    const j=await r.json();if(!r.ok){msg.textContent=j.error||'שגיאה';msg.className='err';res=null;render();draw();return}res=j;sel=-1;const ks=new Set(j.options.map(key));picked=new Set([...picked].filter(k=>ks.has(k)));render();draw()}catch(err){msg.textContent='אין חיבור לשרת המקומי';msg.className='err'}}
+  try{res=DS.scoreSituation({carrier:S.carrier,teammates:S.mates,opponents:S.opps,keeper:S.gk,threshold:+th.value,top:10});
+    sel=-1;const ks=new Set(res.options.map(key));picked=new Set([...picked].filter(k=>ks.has(k)));render();draw()}
+  catch(err){msg.textContent=hebErr(err.message);msg.className='err';res=null;render();draw()}}
+const HEB=[[/^the ball carrier is in the (.+) zone/,m=>`מחזיק הכדור נמצא ב${{'own third':'שליש שלנו','middle':'אמצע המגרש'}[m[1]]||m[1]}: באזור הזה הציון לא מאומת (ההבדלים בין אפשרויות הם אלפיות xG); קראו את הסדר ולא את המספרים`],
+ [/^no shot option below x = 60/,()=>'אין אפשרות בעיטה מתחת ל-x = 60'],[/^no opposing keeper marked/,()=>'לא סומן שוער יריב: מניחים אותו ב-(118, 40) לצורך הבעיטה'],
+ [/^only (\d+) opponents marked/,m=>`סומנו רק ${m[1]} יריבים: כשיש מעט יריבים קו הנבדל וסיכון המסירה פחות אמינים`]];
+function heb(t){for(const [re,f] of HEB){const m=t.match(re);if(m)return f(m)}return t}
+function hebErr(t){return {'place the ball carrier':'הניחו את מחזיק הכדור.','place at least one opponent (or the opposing keeper)':'סמנו לפחות יריב אחד (או את השוער היריב).'}[t]||t}
 function render(){const msg=document.getElementById('msg'),tb=document.getElementById('tbl'),w=document.getElementById('warns'),foot=document.getElementById('foot');
   w.innerHTML='';if(!res){tb.hidden=true;foot.textContent='';return}
   msg.className='mute';msg.textContent=res.options.length?`${res.options.length} אפשרויות מעל הסף ${res.threshold} (מתוך ${res.n_options} שנבחנו)`:`אין אפשרות מעל הסף ${res.threshold} (נבחנו ${res.n_options}). הורידו את הסף כדי לראות.`;
-  res.warnings.forEach(t=>{const d=document.createElement('div');d.className='warn';d.textContent='⚠ '+t;w.appendChild(d)});
+  res.warnings.forEach(t=>{const d=document.createElement('div');d.className='warn';d.textContent='⚠ '+heb(t);w.appendChild(d)});
+  if(res.options.length>=2){const a=res.options[0],b=res.options[1],fl=((a.kind==='pass'&&a.dist_m>15)||(b.kind==='pass'&&b.dist_m>15))?0.05:0.03,d=a.q-b.q,v=document.createElement('div');v.className='mute';v.style.fontWeight='600';
+    v.textContent=d<fl?`פסק דין: אין הבדל ברור בין שתי האפשרויות הראשונות (הפרש ${d.toFixed(3)} xG, מתחת לסף הרעש ${fl}).`:`פסק דין: האפשרות הראשונה עדיפה בבירור (הפרש ${d.toFixed(3)} xG, מעל סף הרעש ${fl}).`;w.appendChild(v)}
   tb.hidden=!res.options.length;const body=tb.querySelector('tbody');body.innerHTML='';
   res.options.forEach((o,i)=>{const tr=document.createElement('tr');
     const name=o.kind==='shot'?'בעיטה':`מסירה ${o.dist_m.toFixed(0)} מ'`+(o.status.startsWith('DOUBT')?' (נבדל בספק)':'');
